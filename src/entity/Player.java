@@ -7,6 +7,7 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
+import java.io.File;
 
 public class Player extends Entity{
 
@@ -30,24 +31,21 @@ public class Player extends Entity{
         direction = "down";
     }
 
-    public void getPlayerImage(){
-
-        try{
-
-            up1 = ImageIO.read(getClass().getResourceAsStream("/res/player/player_up_1.png"));
-            up2 = ImageIO.read(getClass().getResourceAsStream("/res/player/player_up_2.png"));
-            down1 = ImageIO.read(getClass().getResourceAsStream("/res/player/player_down_1.png"));
-            down2 = ImageIO.read(getClass().getResourceAsStream("/res/player/player_down_2.png"));
-            left1 = ImageIO.read(getClass().getResourceAsStream("/res/player/player_left_1.png"));
-            left2 = ImageIO.read(getClass().getResourceAsStream("/res/player/player_left_2.png"));
-            right1 = ImageIO.read(getClass().getResourceAsStream("/res/player/player_right_1.png"));
-            right2 = ImageIO.read(getClass().getResourceAsStream("/res/player/player_right_2.png"));
-
-        }
-        catch(IOException e){
-            e.printStackTrace();
-        }
+public void getPlayerImage() {
+    try {
+        // Use File() with a relative path to load images
+        up1 = ImageIO.read(new File("res/player/player_up_1.png"));
+        up2 = ImageIO.read(new File("res/player/player_up_2.png"));
+        down1 = ImageIO.read(new File("res/player/player_down_1.png"));
+        down2 = ImageIO.read(new File("res/player/player_down_2.png"));
+        left1 = ImageIO.read(new File("res/player/player_left_1.png"));
+        left2 = ImageIO.read(new File("res/player/player_left_2.png"));
+        right1 = ImageIO.read(new File("res/player/player_right_1.png"));
+        right2 = ImageIO.read(new File("res/player/player_right_2.png"));
+    } catch (IOException e) {
+        e.printStackTrace();
     }
+}
 
     public void update(){
 
