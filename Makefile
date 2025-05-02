@@ -1,18 +1,18 @@
-# Variabel
-SRC_DIR=src/main
+# Variables
+SRC_DIR=src
 BIN_DIR=bin
 CLASSES=$(BIN_DIR)/Main.class
 MAIN_CLASS=main.Main
 
-# Aturan default: compile semua dan jalankan
+# Default rule: compile all and run
 run: $(CLASSES)
 	java -cp $(BIN_DIR) $(MAIN_CLASS)
 
-# Compile semua file .java di src/main
+# Compile all .java files in src
 $(CLASSES):
 	if not exist $(BIN_DIR) mkdir $(BIN_DIR)
-	javac -d $(BIN_DIR) $(SRC_DIR)/*.java
+	javac -d $(BIN_DIR) $(SRC_DIR)/main/*.java $(SRC_DIR)/entity/*.java
 
-# Bersihkan file hasil kompilasi (Windows version)
+# Clean compiled files
 clean:
 	if exist $(BIN_DIR) rmdir /s /q $(BIN_DIR)
