@@ -4,6 +4,9 @@ import main.GamePanel;
 import main.KeyHandler;
 import java.awt.Graphics2D;
 import java.awt.Color;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 
 public class Player extends Entity{
 
@@ -16,6 +19,7 @@ public class Player extends Entity{
         this.keyH = keyH;
 
         setDefultValues();
+        getPlayerImage();
     }
 
     public void setDefultValues(){
@@ -23,6 +27,26 @@ public class Player extends Entity{
         x = 200;
         y = 200;
         speed = 5;
+        direction = "down";
+    }
+
+    public void getPlayerImage(){
+
+        try{
+
+            up1 = ImageIO.read(getClass().getResourceAsStream("/res/player/player_up_1.png"));
+            up2 = ImageIO.read(getClass().getResourceAsStream("/res/player/player_up_2.png"));
+            down1 = ImageIO.read(getClass().getResourceAsStream("/res/player/player_down_1.png"));
+            down2 = ImageIO.read(getClass().getResourceAsStream("/res/player/player_down_2.png"));
+            left1 = ImageIO.read(getClass().getResourceAsStream("/res/player/player_left_1.png"));
+            left2 = ImageIO.read(getClass().getResourceAsStream("/res/player/player_left_2.png"));
+            right1 = ImageIO.read(getClass().getResourceAsStream("/res/player/player_right_1.png"));
+            right2 = ImageIO.read(getClass().getResourceAsStream("/res/player/player_right_2.png"));
+
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        }
     }
 
     public void update(){
@@ -30,21 +54,44 @@ public class Player extends Entity{
 
         if (keyH.upPressed == true){
             y-=speed;
+            direction = "up";
         }
         else if (keyH.downPressed == true){
             y+=speed;
+            direction = "down";
         }
         else if (keyH.leftPressed == true){
             x-=speed;
+            direction = "left";
         }
         else if (keyH.rightPressed == true){
             x+=speed;
+            direction = "right";
         }
     }
 
     public void draw(Graphics2D g2){
-        g2.setColor(Color.white);
+        // g2.setColor(Color.white);
 
-        g2.fillRect(x, y, gp.tileSize, gp.tileSize);
+        // g2.fillRect(x, y, gp.tileSize, gp.tileSize);
+
+        BufferedImage image = null;
+
+        switch(direction){
+            case "up":
+                image = up1;
+                break;
+            case "down":
+                image = down1;
+                break;
+            case "left":
+                image = left1;
+                break;
+            case "right":
+                image = right1;
+                break;
+        }
+
+        g2.drawImage(image, x, y, gp.tileSize, gp.tileSize, null);
     }
 }
