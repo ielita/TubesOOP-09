@@ -44,6 +44,11 @@ public class TileManager{
         
             tile[2] = new Tile();
             tile[2].image = ImageIO.read(new File("res/tiles/water.png"));
+
+            tile[3] = new Tile();
+            tile[3].image = ImageIO.read(new File("res/tiles/land.png"));
+
+        
         
         }
         catch(IOException e){
