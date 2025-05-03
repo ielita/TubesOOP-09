@@ -8,6 +8,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import java.io.File;
+import java.awt.Rectangle;
 
 public class Player extends Entity{
 
@@ -24,6 +25,12 @@ public class Player extends Entity{
 
         screenX = gp.screenWidth/2 - (gp.tileSize/2);
         screenY = gp.screenHeight/2 - (gp.tileSize/2);
+
+        solidArea = new Rectangle();
+        solidArea.x = 9;
+        solidArea.y = 11;
+        solidArea.width = 14;
+        solidArea.height = 13;
 
         setDefultValues();
         getPlayerImage();
@@ -58,21 +65,45 @@ public void getPlayerImage() {
         if (keyH.upPressed == true || keyH.downPressed == true || keyH.leftPressed == true || keyH.rightPressed == true ){
 
             if (keyH.upPressed == true){
-                worldY-=speed;
+                
                 direction = "up";
             }
             else if (keyH.downPressed == true){
-                worldY+=speed;
+                
                 direction = "down";
             }
             else if (keyH.leftPressed == true){
-                worldX-=speed;
+                
                 direction = "left";
             }
             else if (keyH.rightPressed == true){
-                worldX+=speed;
+                
                 direction = "right";
             }
+
+            // CHECK TILE COLLISION
+            collisionOn = false;
+            gp.cChecker.checkTile(this);
+
+
+            // IF COLLISION IS FALSE, PLAYER CAN MOVE
+            if(collisionOn == false){
+                switch(direction){
+                    case "up":
+                        worldY-=speed;
+                        break;
+                    case "down":
+                        worldY+=speed;
+                        break;
+                    case "left":
+                        worldX-=speed;
+                        break;
+                    case "right":
+                        worldX+=speed;
+                        break;
+                }
+            }
+
 
             spriteCounter++;
             if (spriteCounter > 11){
