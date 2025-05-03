@@ -1,7 +1,9 @@
 package tile;
 
+
 import main.GamePanel;
 import java.io.IOException;
+import java.io.FileNotFoundException;
 import java.awt.Graphics2D;
 import javax.imageio.ImageIO;
 import java.io.File;
@@ -25,7 +27,7 @@ public class TileManager{
 
         this.gp = gp;
 
-        tile = new Tile[10];
+        tile = new Tile[20];
         mapTileNum = new int[gp.maxWorldCol][gp.maxWorldRow]; 
 
         getTileImage();
@@ -43,19 +45,28 @@ public class TileManager{
             tile[1].image = ImageIO.read(new File("res/tiles/land.png"));
         
             tile[2] = new Tile();
-            tile[2].image = ImageIO.read(new File("res/tiles/wall.png"));
+            tile[2].image = ImageIO.read(new File("res/tiles/tree.png"));
 
             tile[3] = new Tile();
-            tile[3].image = ImageIO.read(new File("res/tiles/wall2.png"));
+            tile[3].image = ImageIO.read(new File("res/tiles/tree2.png"));
 
             tile[4] = new Tile();
-            tile[4].image = ImageIO.read(new File("res/tiles/water.png"));
+            tile[4].image = ImageIO.read(new File("res/tiles/wall.png"));
         
+            tile[5] = new Tile();
+            tile[5].image = ImageIO.read(new File("res/tiles/wall2.png"));
+            
+            tile[6] = new Tile();
+            tile[6].image = ImageIO.read(new File("res/tiles/water.png"));
         
         }
         catch(IOException e){
-            e.printStackTrace();
+            // e.printStackTrace();
+            System.out.print("file not found");
+            // NOTE TAMBAHIN UNTUK TIAP FILENYA!
         }
+        // catch(FileNotFoundException e){
+        // }
     }
 
     public void loadMap(){
