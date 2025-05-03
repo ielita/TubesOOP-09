@@ -11,7 +11,7 @@ run: $(CLASSES)
 # Compile all .java files in src
 $(CLASSES):
 	if not exist $(BIN_DIR) mkdir $(BIN_DIR)
-	javac -d $(BIN_DIR) $(SRC_DIR)/main/*.java $(SRC_DIR)/entity/*.java
+	javac -d $(BIN_DIR) $(SRC_DIR)/main/*.java $(SRC_DIR)/entity/*.java $(SRC_DIR)/tile/*.java
 
 # Clean compiled files
 clean:
