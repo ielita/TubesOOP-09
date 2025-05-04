@@ -80,8 +80,6 @@ public class TileManager{
             FileInputStream fis = new FileInputStream("res/maps/world.txt");
             InputStreamReader isr = new InputStreamReader(fis);
             BufferedReader br = new BufferedReader(isr);
-            // InputStream is = FileReader("res/maps/map1.txt");
-            // BufferedReader br = new BufferedReader(new InputStreamReader(is));
 
             int col = 0;
             int row = 0;
