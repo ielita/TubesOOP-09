@@ -163,5 +163,10 @@ public void getPlayerImage() {
         }
 
         g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null);
+
+
+        // COLLISION AREA
+        // g2.setColor(Color.YELLOW);
+        // g2.drawRect(screenX + solidArea.x, screenY + solidArea.y, solidArea.width, solidArea.height);
     }
 }
