@@ -3,6 +3,7 @@ package object;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import main.GamePanel;
+import main.UtilityTool;
 import java.io.InputStream;
 
 public class SuperObject{
@@ -11,6 +12,8 @@ public class SuperObject{
     public String name;
     public boolean collision = false;
     public int worldX, worldY;
+    UtilityTool uTool = new UtilityTool();
+
 
     public void draw(Graphics2D g2, GamePanel gp){
 
