@@ -13,7 +13,6 @@ import main.UtilityTool;
 
 public class Player extends Entity{
 
-    GamePanel gp;
     KeyHandler keyH;
 
     public final int screenX;
@@ -21,55 +20,42 @@ public class Player extends Entity{
 
     public Player(GamePanel gp,KeyHandler keyH){
 
-        this.gp = gp;
+        super(gp);
         this.keyH = keyH;
 
         screenX = gp.screenWidth/2 - (gp.tileSize/2);
         screenY = gp.screenHeight/2 - (gp.tileSize/2);
 
         solidArea = new Rectangle();
-        solidArea.x = 19;
+        solidArea.x = 19;   
         solidArea.y = 25;
         solidArea.width = 25;
         solidArea.height = 25;
 
-        setDefultValues();
-        getPlayerImage();
+        setDefaultValues();
+        getImage();
     }
 
-    public void setDefultValues(){
+    public void setDefaultValues(){
 
-        worldX = gp.tileSize * 4;
-        worldY = gp.tileSize * 43;
+        worldX = gp.tileSize * 41;
+        worldY = gp.tileSize * 40;
         speed = 5;
         direction = "down";
     }
 
-public void getPlayerImage() {
+    public void getImage() {
 
-    up1 = setup("player_up_1");
-    up2 = setup("player_up_2");
-    down1 = setup("player_down_1");
-    down2 = setup("player_down_2");
-    left1 = setup("player_left_1");
-    left2 = setup("player_left_2");
-    right1 = setup("player_right_1");
-    right2 = setup("player_right_2");
-}
-
-    public BufferedImage  setup(String imageName){
-        UtilityTool uTool = new UtilityTool();
-        BufferedImage image = null;
-
-        try{
-            image = ImageIO.read(new File("res/player/" + imageName + ".png"));
-            image = uTool.scaleImage(image, gp.tileSize, gp.tileSize);
-        }
-        catch(IOException e){
-            e.printStackTrace();
-        }
-        return image;
+        up1 = setup("player/player_up_1");
+        up2 = setup("player/player_up_2");
+        down1 = setup("player/player_down_1");
+        down2 = setup("player/player_down_2");
+        left1 = setup("player/player_left_1");
+        left2 = setup("player/player_left_2");
+        right1 = setup("player/player_right_1");
+        right2 = setup("player/player_right_2");
     }
+
     public void update(){
 
         if (keyH.upPressed == true || keyH.downPressed == true || keyH.leftPressed == true || keyH.rightPressed == true ){
