@@ -29,6 +29,9 @@ public class Player extends Entity{
         solidArea = new Rectangle();
         solidArea.x = 19;   
         solidArea.y = 25;
+        solidAreaDefaultX = solidArea.x;
+        solidAreaDefaultY = solidArea.y;
+
         solidArea.width = 25;
         solidArea.height = 25;
 
@@ -80,6 +83,9 @@ public class Player extends Entity{
             // CHECK TILE COLLISION
             collisionOn = false;
             gp.cChecker.checkTile(this);
+
+            // CHECK OBJECT COLLISION
+            int objIndex = gp.cChecker.checkObject(this, true);
 
 
             // IF COLLISION IS FALSE, PLAYER CAN MOVE
@@ -161,7 +167,7 @@ public class Player extends Entity{
         g2.drawImage(image, screenX, screenY, null);
 
 
-        // COLLISION AREA
+        //COLLISION AREA (player)
         // g2.setColor(Color.YELLOW);
         // g2.drawRect(screenX + solidArea.x, screenY + solidArea.y, solidArea.width, solidArea.height);
     }
