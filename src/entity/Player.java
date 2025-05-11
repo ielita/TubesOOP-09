@@ -9,10 +9,10 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.awt.Rectangle;
+import main.UtilityTool;
 
 public class Player extends Entity{
 
-    GamePanel gp;
     KeyHandler keyH;
 
     public final int screenX;
@@ -20,45 +20,44 @@ public class Player extends Entity{
 
     public Player(GamePanel gp,KeyHandler keyH){
 
-        this.gp = gp;
+        super(gp);
         this.keyH = keyH;
 
         screenX = gp.screenWidth/2 - (gp.tileSize/2);
         screenY = gp.screenHeight/2 - (gp.tileSize/2);
 
         solidArea = new Rectangle();
-        solidArea.x = 19;
+        solidArea.x = 19;   
         solidArea.y = 25;
+        solidAreaDefaultX = solidArea.x;
+        solidAreaDefaultY = solidArea.y;
+
         solidArea.width = 25;
         solidArea.height = 25;
 
-        setDefultValues();
-        getPlayerImage();
+        setDefaultValues();
+        getImage();
     }
 
-    public void setDefultValues(){
+    public void setDefaultValues(){
 
-        worldX = gp.tileSize * 13;
-        worldY = gp.tileSize * 11;
+        worldX = gp.tileSize * 41;
+        worldY = gp.tileSize * 40;
         speed = 5;
         direction = "down";
     }
 
-public void getPlayerImage() {
-    try {
-        // Use File() with a relative path to load images
-        up1 = ImageIO.read(new File("res/player/player_up_1.png"));
-        up2 = ImageIO.read(new File("res/player/player_up_2.png"));
-        down1 = ImageIO.read(new File("res/player/player_down_1.png"));
-        down2 = ImageIO.read(new File("res/player/player_down_2.png"));
-        left1 = ImageIO.read(new File("res/player/player_left_1.png"));
-        left2 = ImageIO.read(new File("res/player/player_left_2.png"));
-        right1 = ImageIO.read(new File("res/player/player_right_1.png"));
-        right2 = ImageIO.read(new File("res/player/player_right_2.png"));
-    } catch (IOException e) {
-        e.printStackTrace();
+    public void getImage() {
+
+        up1 = setup("player/player_up_1");
+        up2 = setup("player/player_up_2");
+        down1 = setup("player/player_down_1");
+        down2 = setup("player/player_down_2");
+        left1 = setup("player/player_left_1");
+        left2 = setup("player/player_left_2");
+        right1 = setup("player/player_right_1");
+        right2 = setup("player/player_right_2");
     }
-}
 
     public void update(){
 
@@ -84,6 +83,9 @@ public void getPlayerImage() {
             // CHECK TILE COLLISION
             collisionOn = false;
             gp.cChecker.checkTile(this);
+
+            // CHECK OBJECT COLLISION
+            int objIndex = gp.cChecker.checkObject(this, true);
 
 
             // IF COLLISION IS FALSE, PLAYER CAN MOVE
@@ -162,6 +164,11 @@ public void getPlayerImage() {
                 break;
         }
 
-        g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null);
+        g2.drawImage(image, screenX, screenY, null);
+
+
+        //COLLISION AREA (player)
+        // g2.setColor(Color.YELLOW);
+        // g2.drawRect(screenX + solidArea.x, screenY + solidArea.y, solidArea.width, solidArea.height);
     }
 }
