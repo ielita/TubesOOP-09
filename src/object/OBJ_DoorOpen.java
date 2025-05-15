@@ -35,17 +35,17 @@ public class OBJ_DoorOpen extends SuperObject {
         
         // Only use trigger area for map change
         triggerArea = new Rectangle(
-            gp.tileSize / 4,    // Start a quarter tile from left
-            gp.tileSize / 4,    // Start a quarter tile from top
-            6*gp.tileSize/7 ,    // Half tile width
-            6*gp.tileSize/7      // Half tile height
+            0,    
+            0,    
+            gp.tileSize, 
+            gp.tileSize 
         );
         
         // Set solidArea to zero size to prevent any collision
         solidArea = new Rectangle(0, 0, 0, 0);
     }
 
-
+    
     public void update() {
         // Check if player is in trigger area
         if (!hasTriggered && isPlayerNearby(gp)) {
@@ -53,18 +53,7 @@ public class OBJ_DoorOpen extends SuperObject {
             message = "Going to " + destinationMap + "...";
             gp.tileM.mapManager.changeMap(destinationMap, destinationX, destinationY);
             hasTriggered = true;
-            System.out.println("Auto-door triggered: Changing to " + destinationMap);
-        }
-        
-        // Reset trigger when player moves away
-        if (hasTriggered && !isPlayerNearby(gp)) {
-            hasTriggered = false;
-        }
     }
-
-    @Override
-    protected void onInteract() {
-        // Empty - door triggers automatically on touch
     }
 
     private boolean isPlayerNearby(GamePanel gp) {
@@ -84,4 +73,6 @@ public class OBJ_DoorOpen extends SuperObject {
 
         return playerBounds.intersects(doorTrigger);
     }
+
+
 }

@@ -37,10 +37,10 @@ public class AssetSetter {
             gp.obj[0].worldY = 6 * gp.tileSize;
 
             // Auto-transition door
-            gp.obj[1] = new OBJ_DoorOpen(gp, "town", 2, 3);
+            gp.obj[1] = new OBJ_DoorOpen(gp, "town", 3, 3);
             gp.obj[1].worldX = 30 * gp.tileSize;
             gp.obj[1].worldY = 15 * gp.tileSize;
-            gp.obj[2] = new OBJ_DoorOpen(gp, "town", 2, 4);
+            gp.obj[2] = new OBJ_DoorOpen(gp, "town", 3, 4);
             gp.obj[2].worldX = 30 * gp.tileSize;
             gp.obj[2].worldY = 16 * gp.tileSize;
         }
@@ -48,12 +48,12 @@ public class AssetSetter {
         else if (mapName.equals("town")) {
             // Regular door
 
-            gp.obj[0] = new OBJ_DoorOpen(gp, "farm", 28, 15);
-            gp.obj[0].worldX = 0 * gp.tileSize;
+            gp.obj[0] = new OBJ_DoorOpen(gp, "farm", 27, 15);
+            gp.obj[0].worldX = 1 * gp.tileSize;
             gp.obj[0].worldY = 3 * gp.tileSize;
 
-            gp.obj[1] = new OBJ_DoorOpen(gp, "farm", 28, 16);
-            gp.obj[1].worldX = 0 * gp.tileSize;
+            gp.obj[1] = new OBJ_DoorOpen(gp, "farm", 27, 16);
+            gp.obj[1].worldX = 1 * gp.tileSize;
             gp.obj[1].worldY = 4 * gp.tileSize;
         }
 
