@@ -15,6 +15,7 @@ public class SuperObject{
     public int worldX, worldY;
 
     public Rectangle solidArea = new Rectangle(0, 0, 63, 63);
+    public Rectangle triggerArea = new Rectangle(0, 0, 0, 0);
     public int solidAreaDefaultX = 0;
     public int solidAreaDefaultY = 0;
     GamePanel gp;
@@ -53,7 +54,7 @@ public class SuperObject{
     
     public void interact(GamePanel gp, KeyHandler keyH) {
         if (keyH != null) {
-            int interactionRange = gp.tileSize;
+            int interactionRange = (int)(gp.tileSize * 1.5);
             boolean inRange = isPlayerInRange(gp, interactionRange);
             
             if (inRange && keyH.interactPressed) {
@@ -69,4 +70,8 @@ public class SuperObject{
     
     // Override this in subclasses
     protected void onInteract() {}
+
+    public void update() {
+        // Default empty implementation
+    }
 }

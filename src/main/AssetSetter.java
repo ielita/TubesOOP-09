@@ -3,6 +3,7 @@ package main;
 // import main.GamePanel;
 import object.OBJ_Chest;
 import object.OBJ_Door;
+import object.OBJ_DoorOpen;
 
 public class AssetSetter {
     GamePanel gp;
@@ -30,10 +31,32 @@ public class AssetSetter {
         }
 
         else if (mapName.equals("farm")) {
-            gp.obj[0] = new OBJ_Door(gp, "insideHouse", 2, 3);  // Changed from index 2 to 0
+            // Regular door
+            gp.obj[0] = new OBJ_Door(gp, "insideHouse", 2, 3);
             gp.obj[0].worldX = 3 * gp.tileSize;
-            gp.obj[0].worldY = 7 * gp.tileSize;
+            gp.obj[0].worldY = 6 * gp.tileSize;
+
+            // Auto-transition door
+            gp.obj[1] = new OBJ_DoorOpen(gp, "town", 2, 3);
+            gp.obj[1].worldX = 30 * gp.tileSize;
+            gp.obj[1].worldY = 15 * gp.tileSize;
+            gp.obj[2] = new OBJ_DoorOpen(gp, "town", 2, 4);
+            gp.obj[2].worldX = 30 * gp.tileSize;
+            gp.obj[2].worldY = 16 * gp.tileSize;
         }
+
+        else if (mapName.equals("town")) {
+            // Regular door
+
+            gp.obj[0] = new OBJ_DoorOpen(gp, "farm", 28, 15);
+            gp.obj[0].worldX = 0 * gp.tileSize;
+            gp.obj[0].worldY = 3 * gp.tileSize;
+
+            gp.obj[1] = new OBJ_DoorOpen(gp, "farm", 28, 16);
+            gp.obj[1].worldX = 0 * gp.tileSize;
+            gp.obj[1].worldY = 4 * gp.tileSize;
+        }
+
     }
 
     public void setNPC(){
