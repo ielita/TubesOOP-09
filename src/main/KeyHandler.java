@@ -7,7 +7,8 @@ public class KeyHandler implements KeyListener{
 
     GamePanel gp;
     public boolean upPressed, downPressed, leftPressed, rightPressed, interactPressed;
-
+    public boolean showDebug = false;
+    public boolean sprintPressed = false;
     public KeyHandler(GamePanel gp){
         this.gp = gp;
     }
@@ -42,6 +43,14 @@ public class KeyHandler implements KeyListener{
             }
         }
 
+        if (code == KeyEvent.VK_O){
+            showDebug = !showDebug;
+        }
+
+        if (code == KeyEvent.VK_P){
+            sprintPressed = true;
+        }
+
         if (code == KeyEvent.VK_I){
             interactPressed = true;
         }
@@ -66,6 +75,9 @@ public class KeyHandler implements KeyListener{
         } 
         if (code == KeyEvent.VK_I){
             interactPressed = false;
+        }
+        if (code == KeyEvent.VK_P) {
+            sprintPressed = false;
         }
     }
 

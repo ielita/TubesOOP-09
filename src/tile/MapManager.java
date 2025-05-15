@@ -69,9 +69,9 @@ public class MapManager {
     
     public void changeMap(String newMap, int playerX, int playerY) {
         currentMap = newMap;
-        previousMap = currentMap;
         loadMapConfig(newMap);
-        gp.player.worldX = playerX * gp.tileSize;
-        gp.player.worldY = playerY * gp.tileSize;
+        gp.aSetter.setObject(newMap);
+        gp.player.setPosition(playerX, playerY);  // Use the new method
+        System.out.println("Player spawned at: " + playerX + "," + playerY); // Debug print
     }
 }

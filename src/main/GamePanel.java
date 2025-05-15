@@ -8,6 +8,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import javax.swing.JPanel;
 import object.SuperObject;
+import tile.MapManager;
 import tile.TileManager;
 
 public class GamePanel extends JPanel implements Runnable{
@@ -32,9 +33,10 @@ public class GamePanel extends JPanel implements Runnable{
     //FPS
     int FPS = 60;
 
-    TileManager tileM = new TileManager(this);
+    public TileManager tileM = new TileManager(this);
+    public MapManager mapM = new MapManager(this);
 
-    KeyHandler keyH = new KeyHandler(this);
+    public KeyHandler keyH = new KeyHandler(this);
 
     public UI ui = new UI(this);
     Thread gameThread;
@@ -71,7 +73,7 @@ public class GamePanel extends JPanel implements Runnable{
     public void setupGame(){
         
         aSetter.setNPC();
-        aSetter.setObject();
+        aSetter.setObject(mapM.currentMap);
 
 
         playMusic(0);

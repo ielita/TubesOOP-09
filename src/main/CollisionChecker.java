@@ -136,6 +136,8 @@ public class CollisionChecker {
         return index;
     }
 
+    // Check if the player is colliding with a specific object
+    
     // NPC collision
     // public int checkEntity(Entity entity, Entity[] target){
 

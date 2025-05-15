@@ -1,11 +1,11 @@
 package main;
 
-import java.awt.Graphics;
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.awt.Font;
-import java.awt.Color;
 import object.OBJ_Chest;
+import object.OBJ_Door;
 
 
 public class UI{
@@ -42,6 +42,25 @@ public class UI{
         }
         if (gp.gameState == gp.pauseState){
             drawPauseScreen();
+        }
+
+        if(gp.keyH.showDebug) {
+            g2.setFont(new Font("Arial", Font.PLAIN, 20));
+            g2.setColor(Color.WHITE);
+            g2.drawString("Player World X: " + gp.player.worldX, 10, 400);
+            g2.drawString("Player World Y: " + gp.player.worldY, 10, 420);
+            g2.drawString("Col: " + gp.player.worldX/gp.tileSize, 10, 440);
+            g2.drawString("Row: " + gp.player.worldY/gp.tileSize, 10, 460);
+            String interactState = gp.keyH.interactPressed ? "true" : "false";
+            g2.drawString("Interact Pressed: " + interactState, 10, 480);
+
+            // Draw door messages
+            for(int i = 0; i < gp.obj.length; i++) {
+                if(gp.obj[i] != null && gp.obj[i] instanceof OBJ_Door) {
+                    OBJ_Door door = (OBJ_Door)gp.obj[i];
+                    g2.drawString(door.getMessage(), 10, gp.screenHeight - 50);
+                }
+            }
         }
     }
 
