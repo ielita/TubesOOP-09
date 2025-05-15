@@ -1,39 +1,31 @@
 package tile;
 
-
-import main.GamePanel;
-import java.io.IOException;
-import java.io.FileNotFoundException;
 import java.awt.Graphics2D;
-import javax.imageio.ImageIO;
 import java.io.File;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.InputStream;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
+import java.io.IOException;
+import javax.imageio.ImageIO;
+import main.GamePanel;
 import main.UtilityTool;
 
-
-public class TileManager{
-    
+public class TileManager {
     GamePanel gp;
-    public Tile [] tile;
-    public int mapTileNum[][];
+    public Tile[] tile;
+    public MapManager mapManager;
 
-    public TileManager(GamePanel gp){
-
+    public TileManager(GamePanel gp) {
         this.gp = gp;
-
         tile = new Tile[20];
-        mapTileNum = new int[gp.maxWorldCol][gp.maxWorldRow]; 
-
+        mapManager = new MapManager(gp);
         getTileImage();
-        loadMap();
     }
 
-    public void getTileImage(){
-        
+    public void getTileImage() {
+        // Initialize all array elements first
+        for (int i = 0; i < tile.length; i++) {
+            tile[i] = new Tile();
+        }
+
+        // Then setup the tiles we need
         setup(0, "grass", false);
         setup(1, "land", false);
         setup(2, "tree", true);
@@ -43,95 +35,43 @@ public class TileManager{
         setup(6, "water", true);
     }
 
-
-    public void setup(int index, String imagePath, boolean collision){
+    public void setup(int index, String imagePath, boolean collision) {
         UtilityTool uTool = new UtilityTool();
 
-        try{
-            tile[index]  = new Tile();
-            tile[index].image = ImageIO.read(new File("res/tiles/"+ imagePath + ".png"));
+        try {
+            tile[index] = new Tile();
+            tile[index].image = ImageIO.read(new File("res/tiles/" + imagePath + ".png"));
             tile[index].image = uTool.scaleImage(tile[index].image, gp.tileSize, gp.tileSize);
             tile[index].collision = collision;
-
-        }
-        catch(IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
-
-    }
-    public void loadMap(){
-        try{
-
-            FileInputStream fis = new FileInputStream("res/maps/world.txt");
-            InputStreamReader isr = new InputStreamReader(fis);
-            BufferedReader br = new BufferedReader(isr);
-
-            int col = 0;
-            int row = 0;
-
-            while(col < gp.maxWorldCol && row < gp.maxWorldRow){
-
-                String line = br.readLine();
-
-                while( col < gp.maxWorldCol){
-                    String number[] = line.split(" ");
-
-                    int num = Integer.parseInt(number[col]);
-
-                    mapTileNum[col][row] = num;
-                    col ++;
-
-                }
-                if (col == gp.maxWorldCol){
-                    col = 0;
-                    row++;
-                }
-            }
-            br.close();
-        }
-        catch(Exception e){
-
-        }
     }
 
-    public void draw(Graphics2D g2){
-
-
+    public void draw(Graphics2D g2) {
         int worldCol = 0;
         int worldRow = 0;
 
-
-        while (worldCol < gp.maxWorldCol && worldRow < gp.maxWorldRow){
-
-            int tileNum = mapTileNum[worldCol][worldRow];
+        while (worldCol < mapManager.maxWorldCol && worldRow < mapManager.maxWorldRow) {
+            int tileNum = mapManager.mapTileNum[worldCol][worldRow];
 
             int worldX = worldCol * gp.tileSize;
             int worldY = worldRow * gp.tileSize;
-            
             int screenX = worldX - gp.player.worldX + gp.player.screenX;
             int screenY = worldY - gp.player.worldY + gp.player.screenY;
 
-            if (worldX + gp.tileSize > gp.player.worldX - gp.player.screenX 
-                && worldX - gp.tileSize < gp.player.worldX + gp.player.screenX
-                && worldY + gp.tileSize > gp.player.worldY - gp.player.screenY 
-                && worldY - gp.tileSize < gp.player.worldY + gp.player.screenY){
-                    g2.drawImage(tile[tileNum].image, screenX, screenY, null);
+            if (worldX + gp.tileSize > gp.player.worldX - gp.player.screenX
+                    && worldX - gp.tileSize < gp.player.worldX + gp.player.screenX
+                    && worldY + gp.tileSize > gp.player.worldY - gp.player.screenY
+                    && worldY - gp.tileSize < gp.player.worldY + gp.player.screenY) {
+                g2.drawImage(tile[tileNum].image, screenX, screenY, null);
+            }
+            worldCol++;
 
-                }
-            worldCol ++;
-
-            
-            if(worldCol == gp.maxWorldCol){
+            if (worldCol == mapManager.maxWorldCol) {
                 worldCol = 0;
-
-                worldRow ++;
-             
+                worldRow++;
             }
         }
-
-
-        // MAP etc
-        // g2.drawImage(tile[0].image, 50, 50, gp.tileSize, gp.tileSize, null);
-
     }
 }

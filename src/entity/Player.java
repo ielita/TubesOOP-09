@@ -1,15 +1,10 @@
 package entity;
 
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
 import main.GamePanel;
 import main.KeyHandler;
-import java.awt.Graphics2D;
-import java.awt.Color;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import javax.imageio.ImageIO;
-import java.io.File;
-import java.awt.Rectangle;
-import main.UtilityTool;
 
 public class Player extends Entity{
 
@@ -41,9 +36,9 @@ public class Player extends Entity{
 
     public void setDefaultValues(){
 
-        worldX = gp.tileSize * 41;
-        worldY = gp.tileSize * 40;
-        speed = 5;
+        worldX = gp.tileSize * 2;
+        worldY = gp.tileSize * 2;
+        speed = 10;
         direction = "down";
     }
 
@@ -118,6 +113,8 @@ public class Player extends Entity{
                 spriteCounter = 0;
             }
         }
+
+        
 
     }
 

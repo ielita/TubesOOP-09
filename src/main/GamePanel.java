@@ -1,15 +1,14 @@
 
 package main;
+import entity.Entity;
+import entity.Player;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import entity.Player;
-import entity.Entity;
-import tile.TileManager;
-import object.SuperObject;
-
 import javax.swing.JPanel;
+import object.SuperObject;
+import tile.TileManager;
 
 public class GamePanel extends JPanel implements Runnable{
 
@@ -54,7 +53,6 @@ public class GamePanel extends JPanel implements Runnable{
 
     public SuperObject obj[] = new SuperObject[10];
     public Entity npc[] = new Entity[10];
-
 
     // GAME STATE
     public int gameState;
