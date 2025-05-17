@@ -48,31 +48,12 @@ public class OBJ_DoorOpen extends SuperObject {
     
     public void update() {
         // Check if player is in trigger area
-        if (!hasTriggered && isPlayerNearby(gp)) {
+        if (!hasTriggered && isPlayerInRange(gp,64)) {
             // Instantly change map when player touches trigger area
             message = "Going to " + destinationMap + "...";
             gp.tileM.mapManager.changeMap(destinationMap, destinationX, destinationY);
             hasTriggered = true;
     }
     }
-
-    private boolean isPlayerNearby(GamePanel gp) {
-        Rectangle playerBounds = new Rectangle(
-            gp.player.worldX + gp.player.solidArea.x,
-            gp.player.worldY + gp.player.solidArea.y,
-            gp.player.solidArea.width,
-            gp.player.solidArea.height
-        );
-
-        Rectangle doorTrigger = new Rectangle(
-            worldX + triggerArea.x,
-            worldY + triggerArea.y,
-            triggerArea.width,
-            triggerArea.height
-        );
-
-        return playerBounds.intersects(doorTrigger);
-    }
-
 
 }

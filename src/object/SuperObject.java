@@ -71,7 +71,6 @@ public class SuperObject{
     // Override this in subclasses
     protected void onInteract() {}
 
-    public void update() {
-        // Default empty implementation
-    }
+    public void update() {}
+    
 }

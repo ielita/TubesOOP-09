@@ -37,10 +37,10 @@ public class AssetSetter {
             gp.obj[0].worldY = 6 * gp.tileSize;
 
             // Auto-transition door
-            gp.obj[1] = new OBJ_DoorOpen(gp, "town", 3, 3);
+            gp.obj[1] = new OBJ_DoorOpen(gp, "town", 3, 21);
             gp.obj[1].worldX = 30 * gp.tileSize;
             gp.obj[1].worldY = 15 * gp.tileSize;
-            gp.obj[2] = new OBJ_DoorOpen(gp, "town", 3, 4);
+            gp.obj[2] = new OBJ_DoorOpen(gp, "town", 3, 22);
             gp.obj[2].worldX = 30 * gp.tileSize;
             gp.obj[2].worldY = 16 * gp.tileSize;
         }
@@ -50,14 +50,60 @@ public class AssetSetter {
 
             gp.obj[0] = new OBJ_DoorOpen(gp, "farm", 27, 15);
             gp.obj[0].worldX = 1 * gp.tileSize;
-            gp.obj[0].worldY = 3 * gp.tileSize;
+            gp.obj[0].worldY = 21 * gp.tileSize;
 
             gp.obj[1] = new OBJ_DoorOpen(gp, "farm", 27, 16);
             gp.obj[1].worldX = 1 * gp.tileSize;
-            gp.obj[1].worldY = 4 * gp.tileSize;
+            gp.obj[1].worldY = 22 * gp.tileSize;
+            
+        // Top middle door (around lake area)
+            gp.obj[2] = new OBJ_DoorOpen(gp, "mountainlake", 7, 13);
+            gp.obj[2].worldX = 24 * gp.tileSize;  // Center of map width
+            gp.obj[2].worldY = 1 * gp.tileSize;   
+
+            gp.obj[3] = new OBJ_DoorOpen(gp, "forestriver", 2, 5);
+            gp.obj[3].worldX = 46 * gp.tileSize;  // Right wall
+            gp.obj[3].worldY = 21 * gp.tileSize;  // Middle of right wall
+
+            gp.obj[4] = new OBJ_DoorOpen(gp, "forestriver", 2, 6);
+            gp.obj[4].worldX = 46 * gp.tileSize;  // Right wall
+            gp.obj[4].worldY = 22 * gp.tileSize;  // Middle of right wall
+
+            gp.obj[4] = new OBJ_DoorOpen(gp, "ocean", 7, 3);
+            gp.obj[4].worldX = 24 * gp.tileSize;  // Center of map width
+            gp.obj[4].worldY = 49 * gp.tileSize;  // Bottom wall
+    }
+        else if (mapName.equals("mountainlake")) {
+            // Regular door
+            gp.obj[0] = new OBJ_Door(gp, "town", 24, 3);
+            gp.obj[0].worldX = 7* gp.tileSize;  // Center of map width
+            gp.obj[0].worldY = 15* gp.tileSize;  // Bottom wall
         }
 
-    }
+        else if (mapName.equals("forestriver")) {
+            // Regular door
+            gp.obj[0] = new OBJ_Door(gp, "town", 44, 21);
+            gp.obj[0].worldX = 1 * gp.tileSize;  
+            gp.obj[0].worldY = 5* gp.tileSize;  
+
+            gp.obj[1] = new OBJ_Door(gp, "town", 44, 22);
+            gp.obj[1].worldX = 1 * gp.tileSize;  
+            gp.obj[1].worldY = 6* gp.tileSize; 
+        }
+
+        else if (mapName.equals("ocean")){
+            // Regular door
+            gp.obj[0] = new OBJ_Door(gp, "town", 24, 47);
+            gp.obj[0].worldX = 7* gp.tileSize;  // Center of map width
+            gp.obj[0].worldY = 1* gp.tileSize;  // Bottom wall
+        }
+
+
+        // Add more maps and objects as needed
+
+}
+
+    
 
     public void setNPC(){
 
