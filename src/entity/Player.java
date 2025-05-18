@@ -16,7 +16,6 @@ public class Player extends Entity{
     private int sprintSpeed = 15;
     private int energy = 100;
     private String farmName;
-    
 
     public Player(GamePanel gp,KeyHandler keyH){
 
