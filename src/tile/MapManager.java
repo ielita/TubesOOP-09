@@ -74,4 +74,8 @@ public class MapManager {
         gp.player.setPosition(playerX, playerY);  // Use the new method
         System.out.println("Player spawned at: " + playerX + "," + playerY); // Debug print
     }
+
+    public String getCurrentMap() {
+        return currentMap;
+    }
 }

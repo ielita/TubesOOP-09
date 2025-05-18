@@ -6,6 +6,7 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import object.OBJ_Chest;
 import object.OBJ_Door;
+import tile.MapManager;
 
 public class UI {
 
@@ -18,6 +19,7 @@ public class UI {
 
     GamePanel gp;
     Graphics2D g2;
+    MapManager mapM = new MapManager(gp);
 
     public UI(GamePanel gp) {
         this.gp = gp;
@@ -37,7 +39,6 @@ public class UI {
         g2.setFont(arial_40);
         g2.setColor(Color.WHITE);
 
-
         if (gp.gameState == gp.playState) {
             // Draw time in top-right corner
             g2.setFont(arial_40);
@@ -50,7 +51,13 @@ public class UI {
             int day = gp.timeM.getDay();
             String dateText = season + " - Day " + day;
             g2.drawString(dateText, 50, 50);  // Top left corner
+
+            // Draw current map name
+            String currentMap = gp.mapM.getCurrentMap();
+            String mapText = "Location: " + currentMap.substring(0, 1).toUpperCase() + currentMap.substring(1);
+            g2.drawString(mapText, 50, 100);  // Below the date
         }
+
         if (gp.gameState == gp.pauseState) {
             drawPauseScreen();
         }

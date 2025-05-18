@@ -27,7 +27,7 @@ public class GamePanel extends JPanel implements Runnable{
     public final int maxWorldCol = 50;
     public final int maxWorldRow = 50;
 
-
+// Default starting map
 
     //FPS
     int FPS = 60;
@@ -40,11 +40,6 @@ public class GamePanel extends JPanel implements Runnable{
     Thread gameThread;
     Sound music = new Sound();
     Sound soundEffect = new Sound();
-
-
-
-
-
 
     // ENTITY AND OBJECT
     public CollisionChecker cChecker = new CollisionChecker(this);
@@ -60,8 +55,9 @@ public class GamePanel extends JPanel implements Runnable{
     public final int menuState = 0;
     public final int playState = 1;
     public final int pauseState = 2;
+    public String currentMap = mapM.getCurrentMap(); 
 
-
+    
     public GamePanel(){
         this.setPreferredSize(new Dimension(screenWidth,screenHeight));
         this.setBackground(Color.black);
@@ -72,12 +68,9 @@ public class GamePanel extends JPanel implements Runnable{
 
     public void setupGame(){
 
-        
         aSetter.setNPC();
         aSetter.setObject(mapM.currentMap);
         gameState = menuState;
-        
-
     }
 
     public void startGameThread(){
@@ -95,7 +88,6 @@ public class GamePanel extends JPanel implements Runnable{
 
         while(gameThread != null){
 
-            
             currentTime = System.nanoTime();
 
             delta += (currentTime-lastTime)/drawInterval;
@@ -106,16 +98,18 @@ public class GamePanel extends JPanel implements Runnable{
                 update();
                 repaint();
                 delta --;
-                
             }
         }
-
     }
 
     public void update() {
         if(gameState == playState) {
             timeM.update(); // Update game time
             player.update();
+            
+            // Update current location from MapManager
+            currentMap = mapM.getCurrentMap();
+            
             // Update all objects
             for(int i = 0; i < obj.length; i++) {
                 if(obj[i] != null) {
@@ -134,8 +128,6 @@ public class GamePanel extends JPanel implements Runnable{
         //TILE
         tileM.draw(g2);
 
-        
-
         //OBJECT
         for(int i = 0; i < obj.length; i++){
             if (obj[i] != null){
@@ -153,10 +145,8 @@ public class GamePanel extends JPanel implements Runnable{
         //PLAYER
         player.draw(g2);
 
-
         //UI
         ui.draw(g2);
-        
         
         g2.dispose(); 
     }
@@ -178,4 +168,6 @@ public class GamePanel extends JPanel implements Runnable{
         soundEffect.setFile(i);
         soundEffect.play();
     }
+
+    // Update this whenever loading a new map
 }

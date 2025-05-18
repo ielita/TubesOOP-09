@@ -22,4 +22,9 @@ public class crop extends Item implements consumable, buysellable, cookable{
     public void setjumlahCropPanen(int jumlahCropPanen){
         this.jumlahCropPanen = jumlahCropPanen;
     }
+
+    
+    public void getinfo(){
+        System.out.println("Crop [hargabeli=" + hargabeli + ", hargajual=" + hargajual + ", jumlahCropPanen=" + jumlahCropPanen + "]");
+    }
 }
