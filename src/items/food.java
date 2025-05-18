@@ -1,4 +1,5 @@
 package items;
+import entity.Player;
 
 public class food extends Item implements consumable, buysellable {
     int hargabeli;
@@ -34,4 +35,19 @@ public class food extends Item implements consumable, buysellable {
         // Provide a suitable implementation for getinfo()
         System.out.println( "Food [hargabeli=" + hargabeli + ", hargajual=" + hargajual + ", energi=" + energi + "]");
     }
+    public void consume(Player player) {
+        // Implement the consume logic here
+        System.out.println("Consuming " + name);
+    }
+
+    public void buy(Item item) {
+        // Implement the buy logic here
+        System.out.println("Buying " + item.name);
+    }
+
+    public void sell(Item item) {
+        // Implement the sell logic here
+        System.out.println("Selling " + item.name);
+    }
+
 }
