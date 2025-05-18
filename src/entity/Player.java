@@ -14,23 +14,26 @@ public class Player extends Entity{
     public final int screenY;
     private int defaultSpeed = 10;
     private int sprintSpeed = 15;
+    private int energy = 100;
+    private String farmName;
+    
 
     public Player(GamePanel gp,KeyHandler keyH){
 
         super(gp);
         this.keyH = keyH;
-
         screenX = gp.screenWidth/2 - (gp.tileSize/2);
         screenY = gp.screenHeight/2 - (gp.tileSize/2);
-
         solidArea = new Rectangle();
         solidArea.x = 19;   
         solidArea.y = 25;
         solidAreaDefaultX = solidArea.x;
         solidAreaDefaultY = solidArea.y;
-
         solidArea.width = 25;
         solidArea.height = 25;
+
+        
+
 
         setDefaultValues();
         getImage();

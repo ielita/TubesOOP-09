@@ -32,16 +32,16 @@ public class AssetSetter {
 
         else if (mapName.equals("farm")) {
             // Regular door
-            gp.obj[0] = new OBJ_Door(gp, "insideHouse", 2, 3);
+            gp.obj[0] = new OBJ_DoorOpen(gp, "insideHouse", 2, 3);
             gp.obj[0].worldX = 3 * gp.tileSize;
             gp.obj[0].worldY = 6 * gp.tileSize;
 
             // Auto-transition door
             gp.obj[1] = new OBJ_DoorOpen(gp, "town", 3, 21);
-            gp.obj[1].worldX = 30 * gp.tileSize;
+            gp.obj[1].worldX = 31 * gp.tileSize;
             gp.obj[1].worldY = 15 * gp.tileSize;
             gp.obj[2] = new OBJ_DoorOpen(gp, "town", 3, 22);
-            gp.obj[2].worldX = 30 * gp.tileSize;
+            gp.obj[2].worldX = 31 * gp.tileSize;
             gp.obj[2].worldY = 16 * gp.tileSize;
         }
 
@@ -49,11 +49,11 @@ public class AssetSetter {
             // Regular door
 
             gp.obj[0] = new OBJ_DoorOpen(gp, "farm", 27, 15);
-            gp.obj[0].worldX = 1 * gp.tileSize;
+            gp.obj[0].worldX = 0 * gp.tileSize;
             gp.obj[0].worldY = 21 * gp.tileSize;
 
             gp.obj[1] = new OBJ_DoorOpen(gp, "farm", 27, 16);
-            gp.obj[1].worldX = 1 * gp.tileSize;
+            gp.obj[1].worldX = 0 * gp.tileSize;
             gp.obj[1].worldY = 22 * gp.tileSize;
             
         // Top middle door (around lake area)
@@ -75,25 +75,25 @@ public class AssetSetter {
     }
         else if (mapName.equals("mountainlake")) {
             // Regular door
-            gp.obj[0] = new OBJ_Door(gp, "town", 24, 3);
+            gp.obj[0] = new OBJ_DoorOpen(gp, "town", 24, 3);
             gp.obj[0].worldX = 7* gp.tileSize;  // Center of map width
             gp.obj[0].worldY = 15* gp.tileSize;  // Bottom wall
         }
 
         else if (mapName.equals("forestriver")) {
             // Regular door
-            gp.obj[0] = new OBJ_Door(gp, "town", 44, 21);
+            gp.obj[0] = new OBJ_DoorOpen(gp, "town", 44, 21);
             gp.obj[0].worldX = 1 * gp.tileSize;  
             gp.obj[0].worldY = 5* gp.tileSize;  
 
-            gp.obj[1] = new OBJ_Door(gp, "town", 44, 22);
+            gp.obj[1] = new OBJ_DoorOpen(gp, "town", 44, 22);
             gp.obj[1].worldX = 1 * gp.tileSize;  
             gp.obj[1].worldY = 6* gp.tileSize; 
         }
 
         else if (mapName.equals("ocean")){
             // Regular door
-            gp.obj[0] = new OBJ_Door(gp, "town", 24, 47);
+            gp.obj[0] = new OBJ_DoorOpen(gp, "town", 24, 47);
             gp.obj[0].worldX = 7* gp.tileSize;  // Center of map width
             gp.obj[0].worldY = 1* gp.tileSize;  // Bottom wall
         }

@@ -1,6 +1,6 @@
 package items;
 
-public class equipment extends item{
+public class equipment extends Item{
     public void equip(){
 
     }

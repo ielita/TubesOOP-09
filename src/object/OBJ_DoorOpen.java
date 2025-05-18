@@ -37,8 +37,8 @@ public class OBJ_DoorOpen extends SuperObject {
         triggerArea = new Rectangle(
             0,    
             0,    
-            gp.tileSize, 
-            gp.tileSize 
+            gp.tileSize/2, 
+            gp.tileSize/2 
         );
         
         // Set solidArea to zero size to prevent any collision

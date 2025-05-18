@@ -1,6 +1,6 @@
 package items;
 
-public class crop extends item implements consumable, buysellable, cookable{
+public class crop extends Item implements consumable, buysellable, cookable{
     int hargabeli;
     int hargajual;
     int jumlahCropPanen;

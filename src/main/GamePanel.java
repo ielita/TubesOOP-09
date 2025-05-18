@@ -34,7 +34,6 @@ public class GamePanel extends JPanel implements Runnable{
 
     public TileManager tileM = new TileManager(this);
     public MapManager mapM = new MapManager(this);
-
     public KeyHandler keyH = new KeyHandler(this);
 
     public UI ui = new UI(this);
@@ -57,6 +56,7 @@ public class GamePanel extends JPanel implements Runnable{
 
     // GAME STATE
     public int gameState;
+    public final int menuState = 0;
     public final int playState = 1;
     public final int pauseState = 2;
 
@@ -70,13 +70,12 @@ public class GamePanel extends JPanel implements Runnable{
     }
 
     public void setupGame(){
+
         
         aSetter.setNPC();
         aSetter.setObject(mapM.currentMap);
-
-
-        playMusic(0);
-        gameState = playState;
+        gameState = menuState;
+        
 
     }
 
