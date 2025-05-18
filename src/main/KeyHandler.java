@@ -9,6 +9,7 @@ public class KeyHandler implements KeyListener{
     public boolean upPressed, downPressed, leftPressed, rightPressed, interactPressed;
     public boolean showDebug = false;
     public boolean sprintPressed = false;
+    public boolean ePressed = false;
     public int menuOption = 0;
     private final int NUM_OPTIONS = 3;
     // Add pause menu option

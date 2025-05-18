@@ -101,7 +101,7 @@ public class AssetSetter {
 
         // Add more maps and objects as needed
 
-}
+    }
 
     
 
