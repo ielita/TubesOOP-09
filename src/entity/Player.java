@@ -1,15 +1,10 @@
 package entity;
 
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
 import main.GamePanel;
 import main.KeyHandler;
-import java.awt.Graphics2D;
-import java.awt.Color;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import javax.imageio.ImageIO;
-import java.io.File;
-import java.awt.Rectangle;
-import main.UtilityTool;
 
 public class Player extends Entity{
 
@@ -17,34 +12,46 @@ public class Player extends Entity{
 
     public final int screenX;
     public final int screenY;
+    private int defaultSpeed = 10;
+    private int sprintSpeed = 15;
+    private int energy = 100;
+    private String farmName;
+    
 
     public Player(GamePanel gp,KeyHandler keyH){
 
         super(gp);
         this.keyH = keyH;
-
         screenX = gp.screenWidth/2 - (gp.tileSize/2);
         screenY = gp.screenHeight/2 - (gp.tileSize/2);
-
         solidArea = new Rectangle();
         solidArea.x = 19;   
         solidArea.y = 25;
         solidAreaDefaultX = solidArea.x;
         solidAreaDefaultY = solidArea.y;
-
         solidArea.width = 25;
         solidArea.height = 25;
+
+        
+
 
         setDefaultValues();
         getImage();
     }
 
     public void setDefaultValues(){
-
-        worldX = gp.tileSize * 41;
-        worldY = gp.tileSize * 40;
-        speed = 5;
+        // Default spawn position can be overridden by map changes
+        worldX = gp.tileSize * 2;
+        worldY = gp.tileSize * 2;
+        speed = defaultSpeed;  // Use default speed initially
         direction = "down";
+        spriteNum = 1;
+    }
+
+    // Add a new method to set position explicitly
+    public void setPosition(int x, int y) {
+        worldX = gp.tileSize * x;
+        worldY = gp.tileSize * y;
     }
 
     public void getImage() {
@@ -59,24 +66,34 @@ public class Player extends Entity{
         right2 = setup("player/player_right_2");
     }
 
-    public void update(){
+    public void update() {
+        // Update speed based on sprint key
+        speed = keyH.sprintPressed ? sprintSpeed : defaultSpeed;
 
-        if (keyH.upPressed == true || keyH.downPressed == true || keyH.leftPressed == true || keyH.rightPressed == true ){
+        // Separate interaction check from movement
+        if (keyH.interactPressed == true) {
+            // Check all objects for possible interactions
+            for(int i = 0; i < gp.obj.length; i++) {
+                if(gp.obj[i] != null) {
+                    gp.obj[i].interact(gp, keyH);
+                }
+            }
+        }
 
-            if (keyH.upPressed == true){
-                
+        // Movement checks
+        if (keyH.upPressed == true || keyH.downPressed == true || 
+            keyH.leftPressed == true || keyH.rightPressed == true) {
+
+            if (keyH.upPressed == true) {
                 direction = "up";
             }
-            else if (keyH.downPressed == true){
-                
+            else if (keyH.downPressed == true) {
                 direction = "down";
             }
-            else if (keyH.leftPressed == true){
-                
+            else if (keyH.leftPressed == true) {
                 direction = "left";
             }
-            else if (keyH.rightPressed == true){
-                
+            else if (keyH.rightPressed == true) {
                 direction = "right";
             }
 
@@ -87,9 +104,8 @@ public class Player extends Entity{
             // CHECK OBJECT COLLISION
             int objIndex = gp.cChecker.checkObject(this, true);
 
-
             // IF COLLISION IS FALSE, PLAYER CAN MOVE
-            if(collisionOn == false){
+            if(collisionOn == false) {
                 switch(direction){
                     case "up":
                         worldY-=speed;
@@ -106,19 +122,19 @@ public class Player extends Entity{
                 }
             }
 
-
+            // Faster animation when sprinting
+            int animationSpeed = keyH.sprintPressed ? 8 : 12;
             spriteCounter++;
-            if (spriteCounter > 11){
-                if (spriteNum == 1){
+            if (spriteCounter > animationSpeed) {
+                if (spriteNum == 1) {
                     spriteNum = 2;
                 }
-                else if(spriteNum == 2){
+                else if(spriteNum == 2) {
                     spriteNum = 1;
                 }
                 spriteCounter = 0;
             }
         }
-
     }
 
     public void draw(Graphics2D g2){

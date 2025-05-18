@@ -1,15 +1,14 @@
-
 package main;
+import entity.Entity;
+import entity.Player;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import entity.Player;
-import entity.Entity;
-import tile.TileManager;
-import object.SuperObject;
-
 import javax.swing.JPanel;
+import object.SuperObject;
+import tile.MapManager;
+import tile.TileManager;
 
 public class GamePanel extends JPanel implements Runnable{
 
@@ -33,9 +32,9 @@ public class GamePanel extends JPanel implements Runnable{
     //FPS
     int FPS = 60;
 
-    TileManager tileM = new TileManager(this);
-
-    KeyHandler keyH = new KeyHandler(this);
+    public TileManager tileM = new TileManager(this);
+    public MapManager mapM = new MapManager(this);
+    public KeyHandler keyH = new KeyHandler(this);
 
     public UI ui = new UI(this);
     Thread gameThread;
@@ -55,9 +54,9 @@ public class GamePanel extends JPanel implements Runnable{
     public SuperObject obj[] = new SuperObject[10];
     public Entity npc[] = new Entity[10];
 
-
     // GAME STATE
     public int gameState;
+    public final int menuState = 0;
     public final int playState = 1;
     public final int pauseState = 2;
 
@@ -71,13 +70,12 @@ public class GamePanel extends JPanel implements Runnable{
     }
 
     public void setupGame(){
+
         
         aSetter.setNPC();
-        aSetter.setObject();
-
-
-        playMusic(0);
-        gameState = playState;
+        aSetter.setObject(mapM.currentMap);
+        gameState = menuState;
+        
 
     }
 
@@ -113,15 +111,16 @@ public class GamePanel extends JPanel implements Runnable{
 
     }
 
-    public void update(){
-        
-        if (gameState == playState){
+    public void update() {
+        if(gameState == playState) {
             player.update();
+            // Update all objects
+            for(int i = 0; i < obj.length; i++) {
+                if(obj[i] != null) {
+                    obj[i].update();
+                }
+            }
         }
-        if (gameState == pauseState){
-            // add this one later
-        }
-
     }
 
     public void paintComponent(Graphics g){
