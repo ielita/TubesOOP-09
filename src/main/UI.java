@@ -37,11 +37,19 @@ public class UI {
         g2.setFont(arial_40);
         g2.setColor(Color.WHITE);
 
-        g2.drawImage(chestImage, gp.tileSize / 2, gp.tileSize / 2, gp.tileSize, gp.tileSize, null);
-        g2.drawString(" SPAKBOR SI PETANI", 90, 80);
 
         if (gp.gameState == gp.playState) {
+            // Draw time in top-right corner
+            g2.setFont(arial_40);
+            g2.setColor(Color.WHITE);
+            String time = gp.timeM.getTimeString();
+            g2.drawString(time, gp.screenWidth - 150, 50);
 
+            // Draw season and day
+            String season = gp.timeM.getSeason();
+            int day = gp.timeM.getDay();
+            String dateText = season + " - Day " + day;
+            g2.drawString(dateText, 50, 50);  // Top left corner
         }
         if (gp.gameState == gp.pauseState) {
             drawPauseScreen();

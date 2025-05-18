@@ -50,6 +50,7 @@ public class GamePanel extends JPanel implements Runnable{
     public CollisionChecker cChecker = new CollisionChecker(this);
     public AssetSetter aSetter = new AssetSetter(this);
     public Player player = new Player(this,keyH);
+    public TimeManager timeM = new TimeManager(this);
 
     public SuperObject obj[] = new SuperObject[10];
     public Entity npc[] = new Entity[10];
@@ -113,6 +114,7 @@ public class GamePanel extends JPanel implements Runnable{
 
     public void update() {
         if(gameState == playState) {
+            timeM.update(); // Update game time
             player.update();
             // Update all objects
             for(int i = 0; i < obj.length; i++) {
