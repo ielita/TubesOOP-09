@@ -85,6 +85,8 @@ public class KeyHandler implements KeyListener{
             }
         }
 
+        
+
         if (code == KeyEvent.VK_W ){//|| code == KeyEvent.VK_UP
             upPressed = true;
         }
