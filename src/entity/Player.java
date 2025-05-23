@@ -38,6 +38,8 @@ public class Player extends Entity{
         solidArea.width = 25;
         solidArea.height = 25;
         inventory = new HashMap<>();
+
+        // test items
         Item testItem1 = new food("apel", "Buah segar",1);
         Item testItem2 = new food("ikan", "Ikan segar",1);
         Item testItem3 = new food("kntl", "Ikan segar",1);
