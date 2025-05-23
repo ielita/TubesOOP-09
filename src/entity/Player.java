@@ -23,6 +23,7 @@ public class Player extends Entity{
     private int energy = 100;
     private String farmName;
     private Map<Item, Integer> inventory;
+    private Item onhandItem;
 
     public Player(GamePanel gp,KeyHandler keyH){
 
@@ -38,6 +39,7 @@ public class Player extends Entity{
         solidArea.width = 25;
         solidArea.height = 25;
         inventory = new HashMap<>();
+        onhandItem = null;
 
         // test items
         Item testItem1 = new food("apel", "Buah segar",1);
@@ -63,6 +65,14 @@ public class Player extends Entity{
         getImage();
     }
 
+    public int getEnergy() {
+        return energy;
+    }
+
+    public void setEnergy(int energy) {
+        this.energy = energy;
+    }
+
     public void setDefaultValues(){
         // Default spawn position can be overridden by map changes
         worldX = gp.tileSize * 2;
@@ -82,14 +92,6 @@ public class Player extends Entity{
         return inventory;
     }
 
-    public void addItemToInventory(Item item) {
-        if (inventory.containsKey(item)) {
-            inventory.put(item, inventory.get(item) + 1);
-        } else {
-            inventory.put(item, 1);
-        }
-    }
-
     public void addItemToInventory(Item item, int quantity) {
         if (inventory.containsKey(item)) {
             inventory.put(item, inventory.get(item) + quantity);
@@ -107,6 +109,14 @@ public class Player extends Entity{
                 inventory.remove(item);
             }
         }
+    }
+
+    public Item getOnhandItem() {
+        return onhandItem;
+    }
+
+    public void setOnhandItem(Item item) {
+        this.onhandItem = item;
     }
 
     public void getImage() {

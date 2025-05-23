@@ -195,6 +195,13 @@ public class UI {
             int x = startX + col * (slotSize + slotGap);
             int y = startY + row * (slotSize + 40);
 
+            // Highlight slot jika dipilih cursor
+            if (i == gp.keyH.inventoryCursorIndex) {
+                g2.setColor(Color.WHITE);
+                g2.setStroke(new java.awt.BasicStroke(3));
+                g2.drawRoundRect(x-2, y-2, slotSize+4, slotSize+4, 12, 12);
+            }
+
             g2.setColor(new Color(80, 80, 80, 200));
             g2.fillRoundRect(x, y, slotSize, slotSize, 10, 10);
 
@@ -208,7 +215,6 @@ public class UI {
             int nameWidth = g2.getFontMetrics().stringWidth(itemName);
             g2.drawString(itemName, x + (slotSize - nameWidth) / 2, y + slotSize + 15);
 
-            // Tampilkan jumlah item di pojok kanan bawah slot
             String qtyText = "x" + quantity;
             g2.setFont(new Font("Arial", Font.BOLD, 14));
             int qtyWidth = g2.getFontMetrics().stringWidth(qtyText);

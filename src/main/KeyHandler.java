@@ -11,6 +11,7 @@ public class KeyHandler implements KeyListener{
     public boolean sprintPressed = false;
     public boolean ePressed = false;
     public int menuOption = 0;
+    public int inventoryCursorIndex = 0;
     private final int NUM_OPTIONS = 3;
     // Add pause menu option
     public int pauseOption = 0;
@@ -87,18 +88,48 @@ public class KeyHandler implements KeyListener{
 
         if (gp.gameState == gp.playState && code == KeyEvent.VK_J) {
             gp.gameState = gp.inventoryState;
+            inventoryCursorIndex = 0; 
             return;
+
         } else if (gp.gameState == gp.inventoryState && code == KeyEvent.VK_J) {
             gp.gameState = gp.playState;
             return;
         }
 
-        // Hanya proses movement jika di playState
+        if (gp.gameState == gp.inventoryState) {
+            int invSize = gp.player.getInventory().size();
+            int cols = 5;
+
+            if (code == KeyEvent.VK_D && inventoryCursorIndex + 1 < invSize && (inventoryCursorIndex + 1) % cols != 0) {
+                inventoryCursorIndex++;
+            }
+
+            if (code == KeyEvent.VK_A && inventoryCursorIndex % cols != 0) {
+                inventoryCursorIndex--;
+            }
+            
+            if (code == KeyEvent.VK_W && inventoryCursorIndex - cols >= 0) {
+                inventoryCursorIndex -= cols;
+            }
+            
+            if (code == KeyEvent.VK_S && inventoryCursorIndex + cols < invSize) {
+                inventoryCursorIndex += cols;
+            }
+            
+            if (code == KeyEvent.VK_ENTER) {
+                java.util.List<items.Item> items = new java.util.ArrayList<>(gp.player.getInventory().keySet());
+                if (!items.isEmpty() && inventoryCursorIndex < items.size()) {
+                    gp.player.setOnhandItem(items.get(inventoryCursorIndex));
+                    System.out.println("Selected item: " + items.get(inventoryCursorIndex).getName());
+                }
+            }
+            return; 
+        }
+        
         if (gp.gameState != gp.playState) {
             return;
         }
 
-        
         if (code == KeyEvent.VK_W ){//|| code == KeyEvent.VK_UP
             upPressed = true;
         }

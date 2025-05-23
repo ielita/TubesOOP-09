@@ -57,9 +57,6 @@ public class GamePanel extends JPanel implements Runnable{
     public final int pauseState = 2;
     public final int inventoryState = 3;
     public String currentMap = mapM.getCurrentMap(); 
-        
-    public boolean inventoryOpen = false;
-
     
     public GamePanel(){
         this.setPreferredSize(new Dimension(screenWidth,screenHeight));
@@ -147,10 +144,7 @@ public class GamePanel extends JPanel implements Runnable{
 
         //PLAYER
         player.draw(g2);
-        if (inventoryOpen) {
-            ui.drawInventory();
-        }
-        //UI
+        
         ui.draw(g2);
         
         g2.dispose(); 
