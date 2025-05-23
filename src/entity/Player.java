@@ -3,6 +3,13 @@ package entity;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
+
+import items.Item;
+import items.food;
 import main.GamePanel;
 import main.KeyHandler;
 public class Player extends Entity{
@@ -15,6 +22,7 @@ public class Player extends Entity{
     private int sprintSpeed = 15;
     private int energy = 100;
     private String farmName;
+    private Map<Item, Integer> inventory;
 
     public Player(GamePanel gp,KeyHandler keyH){
 
@@ -29,6 +37,22 @@ public class Player extends Entity{
         solidAreaDefaultY = solidArea.y;
         solidArea.width = 25;
         solidArea.height = 25;
+        inventory = new HashMap<>();
+        Item testItem1 = new food("apel", "Buah segar",1);
+        Item testItem2 = new food("ikan", "Ikan segar",1);
+        Item testItem3 = new food("kntl", "Ikan segar",1);
+        Item testItem4 = new food("carlen", "Ikan segar",1);
+        Item testItem5 = new food("ultah", "Ikan segar",1);
+        Item testItem6 = new food("anjai", "Ikan segar",1);
+        addItemToInventory(testItem1, 2);
+        addItemToInventory(testItem2, 3);
+        addItemToInventory(testItem2, 3);
+        addItemToInventory(testItem3, 3);
+        addItemToInventory(testItem4, 3);
+        addItemToInventory(testItem5, 3);
+        addItemToInventory(testItem6, 3);
+
+        
 
         
 
@@ -50,6 +74,26 @@ public class Player extends Entity{
     public void setPosition(int x, int y) {
         worldX = gp.tileSize * x;
         worldY = gp.tileSize * y;
+    }
+
+    public Map<Item, Integer> getInventory() {
+        return inventory;
+    }
+
+    public void addItemToInventory(Item item) {
+        if (inventory.containsKey(item)) {
+            inventory.put(item, inventory.get(item) + 1);
+        } else {
+            inventory.put(item, 1);
+        }
+    }
+
+    public void addItemToInventory(Item item, int quantity) {
+        if (inventory.containsKey(item)) {
+            inventory.put(item, inventory.get(item) + quantity);
+        } else {
+            inventory.put(item, quantity);
+        }
     }
 
     public void getImage() {
@@ -179,6 +223,8 @@ public class Player extends Entity{
         }
 
         g2.drawImage(image, screenX, screenY, null);
+
+    
 
 
         //COLLISION AREA (player)

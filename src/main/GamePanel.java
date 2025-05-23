@@ -56,6 +56,8 @@ public class GamePanel extends JPanel implements Runnable{
     public final int playState = 1;
     public final int pauseState = 2;
     public String currentMap = mapM.getCurrentMap(); 
+        
+    public boolean inventoryOpen = false;
 
     
     public GamePanel(){
@@ -144,7 +146,9 @@ public class GamePanel extends JPanel implements Runnable{
 
         //PLAYER
         player.draw(g2);
-
+        if (inventoryOpen) {
+            ui.drawInventory((Graphics2D) g, player.getInventory());
+        }
         //UI
         ui.draw(g2);
         

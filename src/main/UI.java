@@ -8,6 +8,11 @@ import object.OBJ_Chest;
 import object.OBJ_Door;
 import tile.MapManager;
 
+import java.util.List;
+import java.util.Map;
+
+import items.Item;
+
 public class UI {
 
     private Font arial_80;
@@ -155,6 +160,56 @@ public class UI {
 
         // Draw chest icon
         g2.drawImage(chestImage, gp.tileSize / 2, gp.tileSize / 2, gp.tileSize, gp.tileSize, null);
+    }
+
+    public void drawInventory(Graphics2D g2, Map<items.Item, Integer> inventory) {
+        int invWidth = 500;
+        int invHeight = 300;
+        int invX = gp.screenWidth / 2 - invWidth / 2;
+        int invY = gp.screenHeight / 2 - invHeight / 2;
+        g2.setColor(new Color(30, 30, 30, 220));
+        g2.fillRoundRect(invX, invY, invWidth, invHeight, 30, 30);
+
+        g2.setColor(Color.WHITE);
+        g2.setFont(arial_40);
+        String title = "Inventory";
+        int titleX = invX + (invWidth - g2.getFontMetrics().stringWidth(title)) / 2;
+        g2.drawString(title, titleX, invY + 40);
+
+        int cols = 5;
+        int slotSize = 64;
+        int slotGap = 20;
+        int startX = invX + 40;
+        int startY = invY + 60;
+
+        java.util.List<Map.Entry<items.Item, Integer>> entries = new java.util.ArrayList<>(inventory.entrySet());
+        for (int i = 0; i < entries.size(); i++) {
+            items.Item item = entries.get(i).getKey();
+            int quantity = entries.get(i).getValue();
+            int col = i % cols;
+            int row = i / cols;
+            int x = startX + col * (slotSize + slotGap);
+            int y = startY + row * (slotSize + 40);
+
+            g2.setColor(new Color(80, 80, 80, 200));
+            g2.fillRoundRect(x, y, slotSize, slotSize, 10, 10);
+
+            if (item.getImage() != null) {
+                g2.drawImage(item.getImage(), x + 8, y + 8, slotSize - 16, slotSize - 16, null);
+            }
+
+            g2.setColor(Color.WHITE);
+            g2.setFont(new Font("Arial", Font.PLAIN, 14));
+            String itemName = item.getName();
+            int nameWidth = g2.getFontMetrics().stringWidth(itemName);
+            g2.drawString(itemName, x + (slotSize - nameWidth) / 2, y + slotSize + 15);
+
+            // Tampilkan jumlah item di pojok kanan bawah slot
+            String qtyText = "x" + quantity;
+            g2.setFont(new Font("Arial", Font.BOLD, 14));
+            int qtyWidth = g2.getFontMetrics().stringWidth(qtyText);
+            g2.drawString(qtyText, x + slotSize - qtyWidth - 6, y + slotSize - 6);
+        }
     }
 
     public int getXforCenteredText(String text) {

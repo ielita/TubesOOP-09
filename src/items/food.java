@@ -6,6 +6,14 @@ public class food extends Item implements consumable, buysellable {
     int hargajual;
     int energi;
 
+    public food(String name, String description, int energi) {
+        this.name = name;
+        this.description = description;
+        this.energi = energi;
+        this.hargabeli = 0; // Default value
+        this.hargajual = 0; // Default value
+    }
+
     public int gethargabeli() {
         return hargabeli;
     }

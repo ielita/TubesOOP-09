@@ -119,6 +119,15 @@ public class KeyHandler implements KeyListener{
         if (code == KeyEvent.VK_I){
             interactPressed = true;
         }
+
+        if (gp.gameState == gp.playState && code == KeyEvent.VK_J) {
+            gp.inventoryOpen = !gp.inventoryOpen;
+        }
+
+        // Jika inventory terbuka, abaikan input movement
+        if (gp.inventoryOpen) {
+            return;
+        }
         
     }
 

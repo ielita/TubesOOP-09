@@ -1,5 +1,7 @@
 package items;
 
+import entity.Player; // Replace 'your.package' with the actual package name where Player is defined
+
 public class crop extends Item implements consumable, buysellable, cookable{
     int hargabeli;
     int hargajual;
@@ -23,6 +25,30 @@ public class crop extends Item implements consumable, buysellable, cookable{
         this.jumlahCropPanen = jumlahCropPanen;
     }
 
+    // Implement abstract methods
+    @Override
+    public void consume(Player player) {
+        // TODO: Implement consume logic
+        System.out.println("Crop consumed by player.");
+    }
+
+    @Override
+    public void cook(Item item) {
+        // TODO: Implement cook logic
+        System.out.println("Crop cooked.");
+    }
+
+    @Override
+    public void sell(Item item) {
+        // TODO: Implement sell logic
+        System.out.println("Crop sold.");
+    }
+
+    @Override
+    public void buy(Item item) {
+        // TODO: Implement buy logic
+        System.out.println("Crop bought.");
+    }
     
     public void getinfo(){
         System.out.println("Crop [hargabeli=" + hargabeli + ", hargajual=" + hargajual + ", jumlahCropPanen=" + jumlahCropPanen + "]");
