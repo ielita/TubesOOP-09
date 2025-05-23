@@ -98,6 +98,17 @@ public class Player extends Entity{
         }
     }
 
+    public void removeItemFromInventory(Item item, int quantity) {
+        if (inventory.containsKey(item)) {
+            int currentQuantity = inventory.get(item);
+            if (currentQuantity > quantity) {
+                inventory.put(item, currentQuantity - quantity);
+            } else {
+                inventory.remove(item);
+            }
+        }
+    }
+
     public void getImage() {
 
         up1 = setup("player/player_up_1");

@@ -67,6 +67,10 @@ public class UI {
             drawPauseScreen();
         }
 
+        if (gp.gameState == gp.inventoryState) {
+            drawInventory();
+        }
+
         if (gp.keyH.showDebug) {
             g2.setFont(new Font("Arial", Font.PLAIN, 20));
             g2.setColor(Color.WHITE);
@@ -162,7 +166,7 @@ public class UI {
         g2.drawImage(chestImage, gp.tileSize / 2, gp.tileSize / 2, gp.tileSize, gp.tileSize, null);
     }
 
-    public void drawInventory(Graphics2D g2, Map<items.Item, Integer> inventory) {
+    public void drawInventory() {
         int invWidth = 500;
         int invHeight = 300;
         int invX = gp.screenWidth / 2 - invWidth / 2;
@@ -182,7 +186,7 @@ public class UI {
         int startX = invX + 40;
         int startY = invY + 60;
 
-        java.util.List<Map.Entry<items.Item, Integer>> entries = new java.util.ArrayList<>(inventory.entrySet());
+        java.util.List<Map.Entry<items.Item, Integer>> entries = new java.util.ArrayList<>(gp.player.getInventory().entrySet());
         for (int i = 0; i < entries.size(); i++) {
             items.Item item = entries.get(i).getKey();
             int quantity = entries.get(i).getValue();

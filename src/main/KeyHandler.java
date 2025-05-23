@@ -85,8 +85,20 @@ public class KeyHandler implements KeyListener{
             }
         }
 
-        
+        if (gp.gameState == gp.playState && code == KeyEvent.VK_J) {
+            gp.gameState = gp.inventoryState;
+            return;
+        } else if (gp.gameState == gp.inventoryState && code == KeyEvent.VK_J) {
+            gp.gameState = gp.playState;
+            return;
+        }
 
+        // Hanya proses movement jika di playState
+        if (gp.gameState != gp.playState) {
+            return;
+        }
+
+        
         if (code == KeyEvent.VK_W ){//|| code == KeyEvent.VK_UP
             upPressed = true;
         }
@@ -119,16 +131,6 @@ public class KeyHandler implements KeyListener{
         if (code == KeyEvent.VK_I){
             interactPressed = true;
         }
-
-        if (gp.gameState == gp.playState && code == KeyEvent.VK_J) {
-            gp.inventoryOpen = !gp.inventoryOpen;
-        }
-
-        // Jika inventory terbuka, abaikan input movement
-        if (gp.inventoryOpen) {
-            return;
-        }
-        
     }
 
     @Override
