@@ -1,4 +1,7 @@
 package tile;
+import java.awt.AlphaComposite;
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
@@ -11,11 +14,12 @@ public class MapManager {
     public int[][] mapTileNum;
     public int maxWorldCol;
     public int maxWorldRow;
+    private float brightness = 1.0f; // 0.0f = dark, 1.0f = normal brightness
     
     public MapManager(GamePanel gp) {
         this.gp = gp;
         previousMap = null;    
-        currentMap = "insideHouse";
+        currentMap = "empty";
         loadMapConfig(currentMap);
     }
     
@@ -77,5 +81,30 @@ public class MapManager {
 
     public String getCurrentMap() {
         return currentMap;
+    }
+
+    public void setBrightness(float brightness) {
+        this.brightness = Math.max(0.0f, Math.min(1.0f, brightness));
+    }
+
+    public float getBrightness() {
+        return brightness;
+    }
+
+    public void drawBrightnessOverlay(Graphics2D g2) {
+        if (brightness < 1.0f) {
+            // Store original composite
+            AlphaComposite originalComposite = (AlphaComposite) g2.getComposite();
+            Color originalColor = g2.getColor();
+
+            // Set dark overlay
+            g2.setColor(new Color(0, 0, 0, 1.0f - brightness));
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f - brightness));
+            g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
+
+            // Restore original settings
+            g2.setComposite(originalComposite);
+            g2.setColor(originalColor);
+        }
     }
 }

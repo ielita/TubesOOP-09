@@ -13,6 +13,15 @@ public class TimeManager {
     private final String[] SEASONS = {"Spring", "Summer", "Fall", "Winter"};
     private int currentSeasonIndex;
     
+
+    
+    // Add this after other fields
+    private final float DAY_BRIGHTNESS = 1.0f;
+    private final float NIGHT_BRIGHTNESS = 0.3f;
+    private final int DAWN_HOUR = 6;  // 6:00 AM
+    private final int DUSK_HOUR = 18; // 6:00 PM
+    private final int TRANSITION_DURATION = 2; // Hours for sunrise/sunset
+
     public TimeManager(GamePanel gp) {
         this.gp = gp;
         hour = 6;      // Start at 6:00
@@ -31,6 +40,10 @@ public class TimeManager {
                 if (minute >= 60) {
                     hour += minute / 60;
                     minute %= 60;
+                    
+                    // Update brightness based on time
+                    updateBrightness();
+                    
                     if (hour >= 24) {
                         hour = 0;
                         day++;
@@ -46,6 +59,31 @@ public class TimeManager {
                 lastUpdateTime = currentTime;
             }
         }
+    }
+
+    private void updateBrightness() {
+        float brightness;
+        
+        if (hour >= DAWN_HOUR && hour < DUSK_HOUR) {
+            // Daytime
+            if (hour < DAWN_HOUR + TRANSITION_DURATION) {
+                // Sunrise transition
+                float progress = (hour + (minute / 60.0f) - DAWN_HOUR) / TRANSITION_DURATION;
+                brightness = NIGHT_BRIGHTNESS + (DAY_BRIGHTNESS - NIGHT_BRIGHTNESS) * progress;
+            } else if (hour >= DUSK_HOUR - TRANSITION_DURATION) {
+                // Sunset transition
+                float progress = (DUSK_HOUR - (hour + (minute / 60.0f))) / TRANSITION_DURATION;
+                brightness = NIGHT_BRIGHTNESS + (DAY_BRIGHTNESS - NIGHT_BRIGHTNESS) * progress;
+            } else {
+                // Full daylight
+                brightness = DAY_BRIGHTNESS;
+            }
+        } else {
+            // Nighttime
+            brightness = NIGHT_BRIGHTNESS;
+        }
+        
+        gp.mapM.setBrightness(brightness);
     }
     
     public void setHour(int hour) {
@@ -95,8 +133,10 @@ public class TimeManager {
     public void setNight(boolean isNight) {
         if (isNight) {
             setHour(18); // Set to 18:00 for night
+            gp.mapM.setBrightness(0.3f);
         } else {
             setHour(6);  // Set to 06:00 for day
+            gp.mapM.setBrightness(1.0f); // Also add brightness for day
         }
     }
     

@@ -1,17 +1,15 @@
 package entity;
 
+import items.Item;
+import items.food;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.Map;
-import java.util.HashMap;
-
-import items.Item;
-import items.food;
 import main.GamePanel;
+import main.InventoryManager;
 import main.KeyHandler;
+
 public class Player extends Entity{
 
     KeyHandler keyH;
@@ -22,8 +20,7 @@ public class Player extends Entity{
     private int sprintSpeed = 15;
     private int energy = 100;
     private String farmName;
-    private Map<Item, Integer> inventory;
-    private Item onhandItem;
+    private InventoryManager inventoryManager;
 
     public Player(GamePanel gp,KeyHandler keyH){
 
@@ -38,8 +35,7 @@ public class Player extends Entity{
         solidAreaDefaultY = solidArea.y;
         solidArea.width = 25;
         solidArea.height = 25;
-        inventory = new HashMap<>();
-        onhandItem = null;
+        inventoryManager = new InventoryManager();
 
         // test items
         Item testItem1 = new food("apel", "Buah segar",1);
@@ -48,18 +44,13 @@ public class Player extends Entity{
         Item testItem4 = new food("carlen", "Ikan segar",1);
         Item testItem5 = new food("ultah", "Ikan segar",1);
         Item testItem6 = new food("anjai", "Ikan segar",1);
-        addItemToInventory(testItem1, 2);
-        addItemToInventory(testItem2, 3);
-        addItemToInventory(testItem2, 3);
-        addItemToInventory(testItem3, 3);
-        addItemToInventory(testItem4, 3);
-        addItemToInventory(testItem5, 3);
-        addItemToInventory(testItem6, 3);
-
-        
-
-        
-
+        inventoryManager.addItem(testItem1, 2);
+        inventoryManager.addItem(testItem2, 3);
+        inventoryManager.addItem(testItem2, 3);
+        inventoryManager.addItem(testItem3, 3);
+        inventoryManager.addItem(testItem4, 3);
+        inventoryManager.addItem(testItem5, 3);
+        inventoryManager.addItem(testItem6, 3);
 
         setDefaultValues();
         getImage();
@@ -88,35 +79,25 @@ public class Player extends Entity{
         worldY = gp.tileSize * y;
     }
 
+    // Replace existing inventory methods with these delegate methods
     public Map<Item, Integer> getInventory() {
-        return inventory;
+        return inventoryManager.getInventory();
     }
 
     public void addItemToInventory(Item item, int quantity) {
-        if (inventory.containsKey(item)) {
-            inventory.put(item, inventory.get(item) + quantity);
-        } else {
-            inventory.put(item, quantity);
-        }
+        inventoryManager.addItem(item, quantity);
     }
 
     public void removeItemFromInventory(Item item, int quantity) {
-        if (inventory.containsKey(item)) {
-            int currentQuantity = inventory.get(item);
-            if (currentQuantity > quantity) {
-                inventory.put(item, currentQuantity - quantity);
-            } else {
-                inventory.remove(item);
-            }
-        }
+        inventoryManager.removeItem(item, quantity);
     }
 
     public Item getOnhandItem() {
-        return onhandItem;
+        return inventoryManager.getOnhandItem();
     }
 
     public void setOnhandItem(Item item) {
-        this.onhandItem = item;
+        inventoryManager.setOnhandItem(item);
     }
 
     public void getImage() {

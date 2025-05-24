@@ -4,14 +4,10 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.util.Map;
 import object.OBJ_Chest;
 import object.OBJ_Door;
 import tile.MapManager;
-
-import java.util.List;
-import java.util.Map;
-
-import items.Item;
 
 public class UI {
 
@@ -80,6 +76,13 @@ public class UI {
             g2.drawString("Row: " + gp.player.worldY / gp.tileSize, 10, 460);
             String interactState = gp.keyH.interactPressed ? "true" : "false";
             g2.drawString("Interact Pressed: " + interactState, 10, 480);
+
+            // Add selected item display
+            String selectedItem = "Selected Item: None";
+            if (gp.player.getOnhandItem() != null) {
+                selectedItem = "Selected Item: " + gp.player.getOnhandItem().getName();
+            }
+            g2.drawString(selectedItem, 10, 500);
 
             // Draw door messages
             for (int i = 0; i < gp.obj.length; i++) {

@@ -147,6 +147,9 @@ public class GamePanel extends JPanel implements Runnable{
         
         ui.draw(g2);
         
+        // Draw brightness overlay at the end
+        mapM.drawBrightnessOverlay(g2);
+        
         g2.dispose(); 
     }
 
