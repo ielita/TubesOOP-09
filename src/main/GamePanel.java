@@ -50,7 +50,7 @@ public class GamePanel extends JPanel implements Runnable{
     public CollisionChecker cChecker = new CollisionChecker(this);
     public AssetSetter aSetter = new AssetSetter(this);
     public Player player = new Player(this,keyH);
-    public TimeManager timeM = new TimeManager(this);
+    public TimeManager timeManager = new TimeManager(this); // Changed variable name for clarity
 
     public SuperObject obj[] = new SuperObject[10];
     public Entity npc[] = new Entity[10];
@@ -70,6 +70,7 @@ public class GamePanel extends JPanel implements Runnable{
         this.setFocusable(true);
     }
 
+<<<<<<< Updated upstream
     public void setupGame(){
 
         
@@ -78,6 +79,14 @@ public class GamePanel extends JPanel implements Runnable{
         gameState = menuState;
         
 
+=======
+    public void setupGame() {
+        aSetter.setNPC();
+        aSetter.setObject(mapM.currentMap);
+        gameState = menuState;
+        // Initialize time system
+        timeManager.setTime(6, 0); // Start at 6:00 AM
+>>>>>>> Stashed changes
     }
 
     public void startGameThread(){
@@ -114,8 +123,18 @@ public class GamePanel extends JPanel implements Runnable{
 
     public void update() {
         if(gameState == playState) {
+<<<<<<< Updated upstream
             timeM.update(); // Update game time
             player.update();
+=======
+            // Update time first
+            timeManager.update();
+            
+            // Then update everything that depends on time
+            player.update();
+            currentMap = mapM.getCurrentMap();
+            
+>>>>>>> Stashed changes
             // Update all objects
             for(int i = 0; i < obj.length; i++) {
                 if(obj[i] != null) {
@@ -125,40 +144,53 @@ public class GamePanel extends JPanel implements Runnable{
         }
     }
 
-    public void paintComponent(Graphics g){
-        
+    public void paintComponent(Graphics g) {
         super.paintComponent(g);
-
         Graphics2D g2 = (Graphics2D)g;
         
-        //TILE
+        // TILE
         tileM.draw(g2);
 
+<<<<<<< Updated upstream
         
 
         //OBJECT
         for(int i = 0; i < obj.length; i++){
             if (obj[i] != null){
+=======
+        // OBJECT
+        for(int i = 0; i < obj.length; i++) {
+            if (obj[i] != null) {
+>>>>>>> Stashed changes
                 obj[i].draw(g2,this);
             }
         }
 
-        //NPC
-        for(int i = 0; i < npc.length; i++){
-            if (npc[i] != null){
+        // NPC
+        for(int i = 0; i < npc.length; i++) {
+            if (npc[i] != null) {
                 npc[i].draw(g2);
             }
         }
 
-        //PLAYER
+        // PLAYER
         player.draw(g2);
+<<<<<<< Updated upstream
 
 
         //UI
         ui.draw(g2);
         
+=======
         
-        g2.dispose(); 
+        // UI (includes time display)
+        ui.draw(g2);
+        
+        // Draw brightness overlay based on time
+        mapM.drawBrightnessOverlay(g2);
+>>>>>>> Stashed changes
+        
+        g2.dispose();
     }
 
     public void playMusic(int i){

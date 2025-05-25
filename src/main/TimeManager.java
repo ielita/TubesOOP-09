@@ -13,6 +13,18 @@ public class TimeManager {
     private final String[] SEASONS = {"Spring", "Summer", "Fall", "Winter"};
     private int currentSeasonIndex;
     
+<<<<<<< Updated upstream
+=======
+    // Add this after other fields
+    private final float DAY_BRIGHTNESS = 1.0f;
+    private final float NIGHT_BRIGHTNESS = 0.3f;
+    private final int DAWN_HOUR = 6;  // 6:00 AM
+    private final int DUSK_HOUR = 18; // 6:00 PM
+    private final int TRANSITION_DURATION = 2; // Hours for sunrise/sunset
+
+    private static boolean newDay = false;  // Changed to static
+
+>>>>>>> Stashed changes
     public TimeManager(GamePanel gp) {
         this.gp = gp;
         hour = 6;      // Start at 6:00
@@ -31,11 +43,17 @@ public class TimeManager {
                 if (minute >= 60) {
                     hour += minute / 60;
                     minute %= 60;
+<<<<<<< Updated upstream
+=======
+                    
+                    updateBrightness();
+                    
+>>>>>>> Stashed changes
                     if (hour >= 24) {
                         hour = 0;
                         day++;
+                        newDay = true;  // Setting static field
                         
-                        // Check for season change
                         if (day > DAYS_PER_SEASON) {
                             day = 1;
                             currentSeasonIndex = (currentSeasonIndex + 1) % 4;
@@ -114,5 +132,13 @@ public class TimeManager {
 
     public String getSeason() {
         return season;
+    }
+
+    public static boolean isNewDay() {
+        if (newDay) {
+            newDay = false;  // Reset the static flag after checking
+            return true;
+        }
+        return false;
     }
 }
