@@ -122,6 +122,7 @@ public class KeyHandler implements KeyListener{
                     gp.player.setOnhandItem(items.get(inventoryCursorIndex));
                     System.out.println("Selected item: " + items.get(inventoryCursorIndex).getName());
                 }
+                gp.gameState = gp.playState;
             }
             return; 
         }

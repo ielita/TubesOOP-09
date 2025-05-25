@@ -74,15 +74,17 @@ public class UI {
             g2.drawString("Player World Y: " + gp.player.worldY, 10, 420);
             g2.drawString("Col: " + gp.player.worldX / gp.tileSize, 10, 440);
             g2.drawString("Row: " + gp.player.worldY / gp.tileSize, 10, 460);
+            g2.drawString("Energy: " + gp.player.getEnergy(), 10, 480);  // Add energy display
+            g2.drawString("Gold: " + gp.player.getGold(), 10, 500);      // Add gold display
             String interactState = gp.keyH.interactPressed ? "true" : "false";
-            g2.drawString("Interact Pressed: " + interactState, 10, 480);
+            g2.drawString("Interact Pressed: " + interactState, 10, 520); // Move down
 
             // Add selected item display
             String selectedItem = "Selected Item: None";
             if (gp.player.getOnhandItem() != null) {
                 selectedItem = "Selected Item: " + gp.player.getOnhandItem().getName();
             }
-            g2.drawString(selectedItem, 10, 500);
+            g2.drawString(selectedItem, 10, 540); // Move down
 
             // Draw door messages
             for (int i = 0; i < gp.obj.length; i++) {

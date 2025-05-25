@@ -19,6 +19,7 @@ public class Player extends Entity{
     private int defaultSpeed = 10;
     private int sprintSpeed = 15;
     private int energy = 100;
+    private int gold = 0;  // Add this line
     private String farmName;
     private InventoryManager inventoryManager;
 
@@ -62,6 +63,25 @@ public class Player extends Entity{
 
     public void setEnergy(int energy) {
         this.energy = energy;
+    }
+
+    // Add getter and setter for gold
+    public int getGold() {
+        return gold;
+    }
+
+    public void setGold(int gold) {
+        this.gold = gold;
+    }
+
+    public void addGold(int amount) {
+        this.gold += amount;
+    }
+
+    public void spendGold(int amount) {
+        if (this.gold >= amount) {
+            this.gold -= amount;
+        }
     }
 
     public void setDefaultValues(){
