@@ -72,6 +72,7 @@ public class GamePanel extends JPanel implements Runnable{
 
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     public void setupGame(){
 
         
@@ -80,6 +81,14 @@ public class GamePanel extends JPanel implements Runnable{
         gameState = menuState;
         
 
+=======
+    public void setupGame() {
+        aSetter.setNPC();
+        aSetter.setObject(mapM.currentMap);
+        gameState = menuState;
+        // Initialize time system
+        timeManager.setTime(6, 0); // Start at 6:00 AM
+>>>>>>> Stashed changes
 =======
     public void setupGame() {
         aSetter.setNPC();
@@ -134,9 +143,12 @@ public class GamePanel extends JPanel implements Runnable{
         if(gameState == playState) {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             timeM.update(); // Update game time
             player.update();
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
             // Update time first
@@ -165,11 +177,17 @@ public class GamePanel extends JPanel implements Runnable{
 
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         
 
         //OBJECT
         for(int i = 0; i < obj.length; i++){
             if (obj[i] != null){
+=======
+        // OBJECT
+        for(int i = 0; i < obj.length; i++) {
+            if (obj[i] != null) {
+>>>>>>> Stashed changes
 =======
         // OBJECT
         for(int i = 0; i < obj.length; i++) {
@@ -195,6 +213,7 @@ public class GamePanel extends JPanel implements Runnable{
         player.draw(g2);
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
 
         //UI
@@ -209,6 +228,15 @@ public class GamePanel extends JPanel implements Runnable{
         mapM.drawBrightnessOverlay(g2);
 >>>>>>> Stashed changes
         
+=======
+        
+        // UI (includes time display)
+        ui.draw(g2);
+        
+        // Draw brightness overlay based on time
+        mapM.drawBrightnessOverlay(g2);
+        
+>>>>>>> Stashed changes
 =======
         
         // UI (includes time display)
