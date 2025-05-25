@@ -14,7 +14,10 @@ public class TimeManager {
     private int currentSeasonIndex;
     
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
     // Add this after other fields
     private final float DAY_BRIGHTNESS = 1.0f;
     private final float NIGHT_BRIGHTNESS = 0.3f;
@@ -24,6 +27,9 @@ public class TimeManager {
 
     private static boolean newDay = false;  // Changed to static
 
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     public TimeManager(GamePanel gp) {
         this.gp = gp;
