@@ -27,8 +27,6 @@ public class GamePanel extends JPanel implements Runnable{
     public final int maxWorldCol = 50;
     public final int maxWorldRow = 50;
 
-
-
     //FPS
     int FPS = 60;
 
@@ -40,11 +38,6 @@ public class GamePanel extends JPanel implements Runnable{
     Thread gameThread;
     Sound music = new Sound();
     Sound soundEffect = new Sound();
-
-
-
-
-
 
     // ENTITY AND OBJECT
     public CollisionChecker cChecker = new CollisionChecker(this);
@@ -61,7 +54,6 @@ public class GamePanel extends JPanel implements Runnable{
     public final int playState = 1;
     public final int pauseState = 2;
 
-
     public GamePanel(){
         this.setPreferredSize(new Dimension(screenWidth,screenHeight));
         this.setBackground(Color.black);
@@ -70,50 +62,12 @@ public class GamePanel extends JPanel implements Runnable{
         this.setFocusable(true);
     }
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-    public void setupGame(){
-
-        
-        aSetter.setNPC();
-        aSetter.setObject(mapM.currentMap);
-        gameState = menuState;
-        
-
-=======
     public void setupGame() {
         aSetter.setNPC();
         aSetter.setObject(mapM.currentMap);
         gameState = menuState;
         // Initialize time system
         timeManager.setTime(6, 0); // Start at 6:00 AM
->>>>>>> Stashed changes
-=======
-    public void setupGame() {
-        aSetter.setNPC();
-        aSetter.setObject(mapM.currentMap);
-        gameState = menuState;
-        // Initialize time system
-        timeManager.setTime(6, 0); // Start at 6:00 AM
->>>>>>> Stashed changes
-=======
-    public void setupGame() {
-        aSetter.setNPC();
-        aSetter.setObject(mapM.currentMap);
-        gameState = menuState;
-        // Initialize time system
-        timeManager.setTime(6, 0); // Start at 6:00 AM
->>>>>>> Stashed changes
-=======
-    public void setupGame() {
-        aSetter.setNPC();
-        aSetter.setObject(mapM.currentMap);
-        gameState = menuState;
-        // Initialize time system
-        timeManager.setTime(6, 0); // Start at 6:00 AM
->>>>>>> Stashed changes
     }
 
     public void startGameThread(){
@@ -150,19 +104,6 @@ public class GamePanel extends JPanel implements Runnable{
 
     public void update() {
         if(gameState == playState) {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-            timeM.update(); // Update game time
-            player.update();
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
             // Update time first
             timeManager.update();
             
@@ -170,7 +111,6 @@ public class GamePanel extends JPanel implements Runnable{
             player.update();
             currentMap = mapM.getCurrentMap();
             
->>>>>>> Stashed changes
             // Update all objects
             for(int i = 0; i < obj.length; i++) {
                 if(obj[i] != null) {
@@ -187,35 +127,9 @@ public class GamePanel extends JPanel implements Runnable{
         // TILE
         tileM.draw(g2);
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-        
-
-        //OBJECT
-        for(int i = 0; i < obj.length; i++){
-            if (obj[i] != null){
-=======
         // OBJECT
         for(int i = 0; i < obj.length; i++) {
             if (obj[i] != null) {
->>>>>>> Stashed changes
-=======
-        // OBJECT
-        for(int i = 0; i < obj.length; i++) {
-            if (obj[i] != null) {
->>>>>>> Stashed changes
-=======
-        // OBJECT
-        for(int i = 0; i < obj.length; i++) {
-            if (obj[i] != null) {
->>>>>>> Stashed changes
-=======
-        // OBJECT
-        for(int i = 0; i < obj.length; i++) {
-            if (obj[i] != null) {
->>>>>>> Stashed changes
                 obj[i].draw(g2,this);
             }
         }
@@ -229,25 +143,6 @@ public class GamePanel extends JPanel implements Runnable{
 
         // PLAYER
         player.draw(g2);
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-
-
-        //UI
-        ui.draw(g2);
-        
-=======
-        
-        // UI (includes time display)
-        ui.draw(g2);
-        
-        // Draw brightness overlay based on time
-        mapM.drawBrightnessOverlay(g2);
->>>>>>> Stashed changes
-        
-=======
         
         // UI (includes time display)
         ui.draw(g2);
@@ -255,25 +150,6 @@ public class GamePanel extends JPanel implements Runnable{
         // Draw brightness overlay based on time
         mapM.drawBrightnessOverlay(g2);
         
->>>>>>> Stashed changes
-=======
-        
-        // UI (includes time display)
-        ui.draw(g2);
-        
-        // Draw brightness overlay based on time
-        mapM.drawBrightnessOverlay(g2);
-        
->>>>>>> Stashed changes
-=======
-        
-        // UI (includes time display)
-        ui.draw(g2);
-        
-        // Draw brightness overlay based on time
-        mapM.drawBrightnessOverlay(g2);
-        
->>>>>>> Stashed changes
         g2.dispose();
     }
 

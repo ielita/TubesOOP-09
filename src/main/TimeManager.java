@@ -12,18 +12,7 @@ public class TimeManager {
     private final int DAYS_PER_SEASON = 10;    // 10 days per season
     private final String[] SEASONS = {"Spring", "Summer", "Fall", "Winter"};
     private int currentSeasonIndex;
-    
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
+
     // Add this after other fields
     private final float DAY_BRIGHTNESS = 1.0f;
     private final float NIGHT_BRIGHTNESS = 0.3f;
@@ -33,16 +22,7 @@ public class TimeManager {
 
     private static boolean newDay = false;  // Changed to static
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
+
     public TimeManager(GamePanel gp) {
         this.gp = gp;
         hour = 6;      // Start at 6:00
@@ -61,12 +41,11 @@ public class TimeManager {
                 if (minute >= 60) {
                     hour += minute / 60;
                     minute %= 60;
-<<<<<<< Updated upstream
-=======
+
                     
                     updateBrightness();
                     
->>>>>>> Stashed changes
+
                     if (hour >= 24) {
                         hour = 0;
                         day++;
