@@ -1,11 +1,20 @@
 package items;
 
 import entity.Player; // Replace 'your.package' with the actual package name where Player is defined
+import main.GamePanel;
 
 public class crop extends Item implements consumable, buysellable, cookable{
     int hargabeli;
     int hargajual;
     int jumlahCropPanen;
+
+    public crop(String name,GamePanel gp, int hargabeli, int hargajual, int jumlahCropPanen) {
+        super(name, gp);
+        this.hargabeli = hargabeli;
+        this.hargajual = hargajual;
+        this.jumlahCropPanen = jumlahCropPanen;
+    }
+
     public int gethargabeli(){
         return hargabeli;
     }

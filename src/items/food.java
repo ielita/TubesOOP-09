@@ -1,14 +1,14 @@
 package items;
 import entity.Player;
+import main.GamePanel;
 
 public class food extends Item implements consumable, buysellable {
     int hargabeli;
     int hargajual;
     int energi;
 
-    public food(String name, String description, int energi) {
-        this.name = name;
-        this.description = description;
+    public food(String name, GamePanel gp ,int energi) {
+        super(name, gp);
         this.energi = energi;
         this.hargabeli = 0; // Default value
         this.hargajual = 0; // Default value
@@ -45,17 +45,17 @@ public class food extends Item implements consumable, buysellable {
     }
     public void consume(Player player) {
         // Implement the consume logic here
-        System.out.println("Consuming " + name);
+        System.out.println("Consuming " + getName());
     }
 
     public void buy(Item item) {
         // Implement the buy logic here
-        System.out.println("Buying " + item.name);
+        System.out.println("Buying " + getName());
     }
 
     public void sell(Item item) {
         // Implement the sell logic here
-        System.out.println("Selling " + item.name);
+        System.out.println("Selling " + getName());
     }
 
 }

@@ -7,10 +7,15 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.List;
 
+import items.FishData;
 import items.Item;
+import items.equipment;
+import items.fish;
 import items.food;
 import main.GamePanel;
+import main.InventoryManager;
 import main.KeyHandler;
 public class Player extends Entity{
 
@@ -22,12 +27,12 @@ public class Player extends Entity{
     private int sprintSpeed = 15;
     private int energy = 100;
     private String farmName;
-    private Map<Item, Integer> inventory;
-    private Item onhandItem;
-
+    InventoryManager inventoryManager = new InventoryManager();
+    public List<fish> listFish = FishData.getAllFish(gp);
+    
     public Player(GamePanel gp,KeyHandler keyH){
 
-        super(gp);
+        super(gp); 
         this.keyH = keyH;
         screenX = gp.screenWidth/2 - (gp.tileSize/2);
         screenY = gp.screenHeight/2 - (gp.tileSize/2);
@@ -38,28 +43,10 @@ public class Player extends Entity{
         solidAreaDefaultY = solidArea.y;
         solidArea.width = 25;
         solidArea.height = 25;
-        inventory = new HashMap<>();
-        onhandItem = null;
+  
+        equipment test = new equipment("Fishing Rod", gp);
 
-        // test items
-        Item testItem1 = new food("apel", "Buah segar",1);
-        Item testItem2 = new food("ikan", "Ikan segar",1);
-        Item testItem3 = new food("kntl", "Ikan segar",1);
-        Item testItem4 = new food("carlen", "Ikan segar",1);
-        Item testItem5 = new food("ultah", "Ikan segar",1);
-        Item testItem6 = new food("anjai", "Ikan segar",1);
-        addItemToInventory(testItem1, 2);
-        addItemToInventory(testItem2, 3);
-        addItemToInventory(testItem2, 3);
-        addItemToInventory(testItem3, 3);
-        addItemToInventory(testItem4, 3);
-        addItemToInventory(testItem5, 3);
-        addItemToInventory(testItem6, 3);
-
-        
-
-        
-
+        addItemToInventory(test, 1);
 
         setDefaultValues();
         getImage();
@@ -89,34 +76,23 @@ public class Player extends Entity{
     }
 
     public Map<Item, Integer> getInventory() {
-        return inventory;
+        return inventoryManager.getInventory();
     }
 
     public void addItemToInventory(Item item, int quantity) {
-        if (inventory.containsKey(item)) {
-            inventory.put(item, inventory.get(item) + quantity);
-        } else {
-            inventory.put(item, quantity);
-        }
+        inventoryManager.addItem(item, quantity);
     }
 
     public void removeItemFromInventory(Item item, int quantity) {
-        if (inventory.containsKey(item)) {
-            int currentQuantity = inventory.get(item);
-            if (currentQuantity > quantity) {
-                inventory.put(item, currentQuantity - quantity);
-            } else {
-                inventory.remove(item);
-            }
-        }
+        inventoryManager.removeItem(item, quantity);
     }
 
     public Item getOnhandItem() {
-        return onhandItem;
+        return inventoryManager.getOnhandItem();
     }
 
     public void setOnhandItem(Item item) {
-        this.onhandItem = item;
+        inventoryManager.setOnhandItem(item);
     }
 
     public void getImage() {
@@ -202,6 +178,24 @@ public class Player extends Entity{
         }
     }
 
+    public boolean isFacingWater() {
+        int facingX = worldX;
+        int facingY = worldY;
+        
+        switch (direction) {
+            case "up":    facingY -= gp.tileSize; break;
+            case "down":  facingY += gp.tileSize; break;
+            case "left":  facingX -= gp.tileSize; break;
+            case "right": facingX += gp.tileSize; break;
+        }
+        int col = facingX / gp.tileSize;
+        int row = facingY / gp.tileSize;
+        if (col < 0 || row < 0 || col >= gp.maxWorldCol || row >= gp.maxWorldRow) return false;
+        int tileNum = gp.tileM.mapManager.mapTileNum[col][row];
+
+        return tileNum == 6;
+    }
+
     public void draw(Graphics2D g2){
         // g2.setColor(Color.white);
 
@@ -247,11 +241,5 @@ public class Player extends Entity{
 
         g2.drawImage(image, screenX, screenY, null);
 
-    
-
-
-        //COLLISION AREA (player)
-        // g2.setColor(Color.YELLOW);
-        // g2.drawRect(screenX + solidArea.x, screenY + solidArea.y, solidArea.width, solidArea.height);
     }
 }

@@ -9,18 +9,15 @@ import main.GamePanel;
 
 public abstract class Item {
     // Common properties for all items
-    public String name;
-    public BufferedImage image;
-    public String description;
+    private String name;
+    private BufferedImage image;
     public GamePanel gp;
     
-    // World coordinates for when item is in the world
-    public int worldX;
-    public int worldY;
-    
     // Constructor
-    public Item() {
-        this.gp = gp;// Default quantity
+    public Item(String name, GamePanel gp) {
+        this.gp = gp;
+        this.name = name;
+        this.image = loadImageFromResource();
     }
     
     // Getters and setters
