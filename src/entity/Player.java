@@ -1,6 +1,18 @@
 package entity;
 
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.List;
+
+import items.FishData;
 import items.Item;
+import items.equipment;
+import items.fish;
 import items.food;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -21,11 +33,12 @@ public class Player extends Entity{
     private int energy = 100;
     private int gold = 0;  // Add this line
     private String farmName;
-    private InventoryManager inventoryManager;
-
+    InventoryManager inventoryManager = new InventoryManager();
+    public List<fish> listFish = FishData.getAllFish(gp);
+    
     public Player(GamePanel gp,KeyHandler keyH){
 
-        super(gp);
+        super(gp); 
         this.keyH = keyH;
         screenX = gp.screenWidth/2 - (gp.tileSize/2);
         screenY = gp.screenHeight/2 - (gp.tileSize/2);
@@ -39,24 +52,11 @@ public class Player extends Entity{
         inventoryManager = new InventoryManager();
 
         // test items
-        Item testItem1 = new food("apel", "Buah segar",1);
-        Item testItem2 = new food("ikan", "Ikan segar",1);
-        Item testItem3 = new food("kntl", "Ikan segar",1);
-        Item testItem4 = new food("carlen", "Ikan segar",1);
-        Item testItem5 = new food("ultah", "Ikan segar",1);
-        Item testItem6 = new food("anjai", "Ikan segar",1);
-        inventoryManager.addItem(testItem1, 2);
-        inventoryManager.addItem(testItem2, 3);
-        inventoryManager.addItem(testItem2, 3);
-        inventoryManager.addItem(testItem3, 3);
-        inventoryManager.addItem(testItem4, 3);
-        inventoryManager.addItem(testItem5, 3);
-        inventoryManager.addItem(testItem6, 3);
+        Item testItem1 = new food("apel", "Buah segar", 1);
 
         setDefaultValues();
         getImage();
     }
-
     public int getEnergy() {
         return energy;
     }
@@ -203,6 +203,24 @@ public class Player extends Entity{
         }
     }
 
+    public boolean isFacingWater() {
+        int facingX = worldX;
+        int facingY = worldY;
+        
+        switch (direction) {
+            case "up":    facingY -= gp.tileSize; break;
+            case "down":  facingY += gp.tileSize; break;
+            case "left":  facingX -= gp.tileSize; break;
+            case "right": facingX += gp.tileSize; break;
+        }
+        int col = facingX / gp.tileSize;
+        int row = facingY / gp.tileSize;
+        if (col < 0 || row < 0 || col >= gp.maxWorldCol || row >= gp.maxWorldRow) return false;
+        int tileNum = gp.tileM.mapManager.mapTileNum[col][row];
+
+        return tileNum == 6;
+    }
+
     public void draw(Graphics2D g2){
         // g2.setColor(Color.white);
 
@@ -248,11 +266,5 @@ public class Player extends Entity{
 
         g2.drawImage(image, screenX, screenY, null);
 
-    
-
-
-        //COLLISION AREA (player)
-        // g2.setColor(Color.YELLOW);
-        // g2.drawRect(screenX + solidArea.x, screenY + solidArea.y, solidArea.width, solidArea.height);
     }
 }

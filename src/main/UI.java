@@ -9,6 +9,12 @@ import object.OBJ_Chest;
 import object.OBJ_Door;
 import tile.MapManager;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import items.*;
+
 public class UI {
 
     private Font arial_80;
@@ -191,16 +197,23 @@ public class UI {
         int startX = invX + 40;
         int startY = invY + 60;
 
-        java.util.List<Map.Entry<items.Item, Integer>> entries = new java.util.ArrayList<>(gp.player.getInventory().entrySet());
+        List<Map.Entry<Item, Integer>> entries = new ArrayList<>(gp.player.getInventory().entrySet());
+        entries.sort((a, b) -> {
+            boolean aEquip = a.getKey() instanceof equipment;
+            boolean bEquip = b.getKey() instanceof equipment;
+            if (aEquip && !bEquip) return -1;
+            if (!aEquip && bEquip) return 1;
+            return 0;
+        });
+
         for (int i = 0; i < entries.size(); i++) {
-            items.Item item = entries.get(i).getKey();
+            Item item = entries.get(i).getKey();
             int quantity = entries.get(i).getValue();
             int col = i % cols;
             int row = i / cols;
             int x = startX + col * (slotSize + slotGap);
             int y = startY + row * (slotSize + 40);
 
-            // Highlight slot jika dipilih cursor
             if (i == gp.keyH.inventoryCursorIndex) {
                 g2.setColor(Color.WHITE);
                 g2.setStroke(new java.awt.BasicStroke(3));
@@ -225,7 +238,7 @@ public class UI {
             int qtyWidth = g2.getFontMetrics().stringWidth(qtyText);
             g2.drawString(qtyText, x + slotSize - qtyWidth - 6, y + slotSize - 6);
         }
-    }
+}
 
     public int getXforCenteredText(String text) {
         int length = (int) g2.getFontMetrics().getStringBounds(text, g2).getWidth();

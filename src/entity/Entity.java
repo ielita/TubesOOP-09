@@ -30,6 +30,10 @@ public class Entity{
         this.gp = gp;
     }
 
+    public GamePanel getGp() {
+        return gp;
+    }
+
     public void draw(Graphics2D g2){
 
         BufferedImage image = null;

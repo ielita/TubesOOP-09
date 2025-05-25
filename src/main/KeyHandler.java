@@ -2,6 +2,11 @@ package main;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import items.Item;
 
 public class KeyHandler implements KeyListener{
 
@@ -117,10 +122,18 @@ public class KeyHandler implements KeyListener{
             }
             
             if (code == KeyEvent.VK_ENTER) {
-                java.util.List<items.Item> items = new java.util.ArrayList<>(gp.player.getInventory().keySet());
-                if (!items.isEmpty() && inventoryCursorIndex < items.size()) {
-                    gp.player.setOnhandItem(items.get(inventoryCursorIndex));
-                    System.out.println("Selected item: " + items.get(inventoryCursorIndex).getName());
+                List<Map.Entry<Item, Integer>> entries = new ArrayList<>(gp.player.getInventory().entrySet());
+                entries.sort((a, b) -> {
+                    boolean aEquip = a.getKey() instanceof items.equipment;
+                    boolean bEquip = b.getKey() instanceof items.equipment;
+                    if (aEquip && !bEquip) return -1;
+                    if (!aEquip && bEquip) return 1;
+                    return 0;
+                });
+                if (!entries.isEmpty() && inventoryCursorIndex < entries.size()) {
+                    Item selected = entries.get(inventoryCursorIndex).getKey();
+                    gp.player.setOnhandItem(selected);
+                    System.out.println("Selected item: " + gp.player.getOnhandItem().getName());
                 }
                 gp.gameState = gp.playState;
             }
@@ -162,6 +175,13 @@ public class KeyHandler implements KeyListener{
 
         if (code == KeyEvent.VK_I){
             interactPressed = true;
+        }
+
+        if (gp.gameState == gp.playState && code == KeyEvent.VK_F) {
+            Item onhand = gp.player.getOnhandItem();
+            if (onhand != null && onhand instanceof items.equipment) {
+                ((items.equipment)onhand).use(gp.player);
+            } 
         }
     }
 
