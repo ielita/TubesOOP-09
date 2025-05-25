@@ -1,22 +1,10 @@
 package entity;
 
+import items.*;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.HashMap;
 import java.util.List;
-
-import items.FishData;
-import items.Item;
-import items.equipment;
-import items.fish;
-import items.food;
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
-import java.awt.image.BufferedImage;
 import java.util.Map;
 import main.GamePanel;
 import main.InventoryManager;
@@ -52,7 +40,11 @@ public class Player extends Entity{
         inventoryManager = new InventoryManager();
 
         // test items
-        Item testItem1 = new food("apel", "Buah segar", 1);
+        Item testItem1 = new food("apel",gp, 1);
+        Item testItem2 = new equipment("Fishing Rod",gp);
+        inventoryManager.addItem(testItem1, 3);
+        inventoryManager.addItem(testItem2, 3);
+        
 
         setDefaultValues();
         getImage();

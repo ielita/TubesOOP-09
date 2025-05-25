@@ -19,7 +19,7 @@ public class MapManager {
     public MapManager(GamePanel gp) {
         this.gp = gp;
         previousMap = null;    
-        currentMap = "empty";
+        currentMap = "insideHouse";
         loadMapConfig(currentMap);
     }
     
