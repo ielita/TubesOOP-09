@@ -1,10 +1,9 @@
 package items;
 
+import entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
-import entity.Player;
 import main.GamePanel;
 import main.UtilityTool;
 
@@ -53,6 +52,9 @@ public class equipment extends Item{
                     System.out.println("Tidak ada ikan yang cocok di lokasi, season, dan waktu ini!");
                 }
             }
+        }
+        if (getName().equals("Hoe")) {
+            System.out.println("You used the Hoe.");
         }
     }
 

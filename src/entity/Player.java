@@ -43,7 +43,7 @@ public class Player extends Entity{
         Item testItem1 = new food("apel",gp, 1);
         Item testItem2 = new equipment("Fishing Rod",gp);
         inventoryManager.addItem(testItem1, 3);
-        inventoryManager.addItem(testItem2, 3);
+        inventoryManager.addItem(testItem2, 1);
         
 
         setDefaultValues();
