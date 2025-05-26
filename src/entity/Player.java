@@ -42,8 +42,17 @@ public class Player extends Entity{
         // test items
         Item testItem1 = new food("apel",gp, 1);
         Item testItem2 = new equipment("Fishing Rod",gp);
+        Item testItem3 = new equipment("Hoe",gp);
+        Item testItem4 = new seed("parsnip seed", gp, "", "cool", 3);
+        Item testItem5 = new equipment("Watering Can",gp);
+        Item testItem6 = new equipment("Sickle",gp);
+        
         inventoryManager.addItem(testItem1, 3);
         inventoryManager.addItem(testItem2, 1);
+        inventoryManager.addItem(testItem3, 1);
+        inventoryManager.addItem(testItem4, 10);
+        inventoryManager.addItem(testItem5, 1);
+        inventoryManager.addItem(testItem6, 1);
         
 
         setDefaultValues();
@@ -195,9 +204,60 @@ public class Player extends Entity{
         }
     }
 
+    public void plantSeed() {
+        Item onhand = getOnhandItem();
+        if (onhand instanceof items.seed) {
+            seed seedItem = (seed) onhand;
+
+            // Calculate tile position correctly - use center of player
+            int playerCenterX = worldX + solidArea.x + solidArea.width / 2;
+            int playerCenterY = worldY + solidArea.y + solidArea.height / 2;
+            
+            int facingX = playerCenterX;
+            int facingY = playerCenterY;
+            
+            switch (direction) {
+                case "up":    facingY -= gp.tileSize; break;
+                case "down":  facingY += gp.tileSize; break;
+                case "left":  facingX -= gp.tileSize; break;
+                case "right": facingX += gp.tileSize; break;
+            }
+            
+            int col = facingX / gp.tileSize;
+            int row = facingY / gp.tileSize;
+
+            // Cek batas map
+            if (col < 0 || row < 0 || col >= gp.tileM.mapManager.maxWorldCol || row >= gp.tileM.mapManager.maxWorldRow) return;
+
+            // Cek tile sudah tercangkul (id 7)
+            if (gp.tileM.mapManager.mapTileNum[col][row] == 7) {
+                // Change tile to planted (dry)
+                gp.tileM.mapManager.mapTileNum[col][row] = 8;
+                // Simpan data tanaman
+                if (gp.tileM.mapManager.plantGrowth == null) {
+                    gp.tileM.mapManager.plantGrowth = new int[gp.tileM.mapManager.maxWorldCol][gp.tileM.mapManager.maxWorldRow];
+                }
+                gp.tileM.mapManager.plantGrowth[col][row] = seedItem.getGrowthTime();
+                System.out.println("Seed planted at col:" + col + " row:" + row);
+
+                // Kurangi seed di inventory
+                removeItemFromInventory(seedItem, 1);
+
+                // Jika jumlah seed habis, hapus dari onhand
+                if (!getInventory().containsKey(seedItem)) {
+                    setOnhandItem(null);
+                }
+            }
+        }
+    }
+
     public boolean isFacingWater() {
-        int facingX = worldX;
-        int facingY = worldY;
+        // Use same calculation method as plantSeed for consistency
+        int playerCenterX = worldX + solidArea.x + solidArea.width / 2;
+        int playerCenterY = worldY + solidArea.y + solidArea.height / 2;
+        
+        int facingX = playerCenterX;
+        int facingY = playerCenterY;
         
         switch (direction) {
             case "up":    facingY -= gp.tileSize; break;
@@ -205,9 +265,11 @@ public class Player extends Entity{
             case "left":  facingX -= gp.tileSize; break;
             case "right": facingX += gp.tileSize; break;
         }
+        
         int col = facingX / gp.tileSize;
         int row = facingY / gp.tileSize;
-        if (col < 0 || row < 0 || col >= gp.maxWorldCol || row >= gp.maxWorldRow) return false;
+        
+        if (col < 0 || row < 0 || col >= gp.tileM.mapManager.maxWorldCol || row >= gp.tileM.mapManager.maxWorldRow) return false;
         int tileNum = gp.tileM.mapManager.mapTileNum[col][row];
 
         return tileNum == 6;

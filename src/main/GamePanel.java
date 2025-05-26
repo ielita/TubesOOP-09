@@ -117,6 +117,10 @@ public class GamePanel extends JPanel implements Runnable{
                 }
             }
         }
+        
+        if (timeM.isNewDay()) {
+            tileM.mapManager.updatePlantGrowth();
+        }
     }
 
     public void paintComponent(Graphics g){

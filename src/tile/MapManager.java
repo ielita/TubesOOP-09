@@ -15,6 +15,8 @@ public class MapManager {
     public int maxWorldCol;
     public int maxWorldRow;
     private float brightness = 1.0f; // 0.0f = dark, 1.0f = normal brightness
+    public int[][] plantGrowth; // Add this line
+    public boolean[][] wateredToday; // Track if tile was watered today
     
     public MapManager(GamePanel gp) {
         this.gp = gp;
@@ -36,6 +38,8 @@ public class MapManager {
 
             
             mapTileNum = new int[maxWorldCol][maxWorldRow];
+            plantGrowth = new int[maxWorldCol][maxWorldRow];
+            wateredToday = new boolean[maxWorldCol][maxWorldRow]; // Initialize watering array
             loadMap(br);
             
             br.close();
@@ -105,6 +109,32 @@ public class MapManager {
             // Restore original settings
             g2.setComposite(originalComposite);
             g2.setColor(originalColor);
+        }
+    }
+
+    public void updatePlantGrowth() {
+        for (int col = 0; col < maxWorldCol; col++) {
+            for (int row = 0; row < maxWorldRow; row++) {
+                // Only reduce growth time if plant exists AND was watered today
+                if (plantGrowth[col][row] > 0 && wateredToday[col][row]) {
+                    plantGrowth[col][row]--;
+                    if (plantGrowth[col][row] == 0) {
+                        // Change to harvested tile
+                        mapTileNum[col][row] = 11; // harvested
+                        System.out.println("Crop ready to harvest at col:" + col + " row:" + row);
+                    }
+                }
+                
+                // Reset watering status for new day and dry out tiles
+                wateredToday[col][row] = false;
+                
+                // Convert watered tiles back to dry versions
+                if (mapTileNum[col][row] == 9) { // tilted_w -> tilted
+                    mapTileNum[col][row] = 7;
+                } else if (mapTileNum[col][row] == 10) { // planted_w -> planted
+                    mapTileNum[col][row] = 8;
+                }
+            }
         }
     }
 }

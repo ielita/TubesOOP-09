@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import items.Item;
+import items.*;
 
 public class KeyHandler implements KeyListener{
 
@@ -181,7 +181,16 @@ public class KeyHandler implements KeyListener{
             Item onhand = gp.player.getOnhandItem();
             if (onhand != null && onhand instanceof items.equipment) {
                 ((items.equipment)onhand).use(gp.player);
-            } 
+            } else if (onhand != null && onhand instanceof items.seed) {
+                gp.player.plantSeed();
+            }
+        }
+
+        // Add this cheat code
+        if (code == KeyEvent.VK_1) {
+            // Skip one day cheat
+            gp.timeM.skipDay();
+            System.out.println("Day skipped! New date: " + gp.timeM.getDateString());
         }
     }
 

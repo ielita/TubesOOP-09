@@ -33,7 +33,12 @@ public class TileManager {
         setup(4, "wall", true);
         setup(5, "wall2", true);
         setup(6, "water", true);
-    }
+        setup(7, "tilted", false); // 7 = ID untuk tanah tercangkul
+        setup(8, "planted", false);
+        setup(9, "tilted_w", false);   // ID 9: tilled soil (watered)
+        setup(10, "planted_w", false); // ID 10: planted (watered)
+        setup(11, "harvest", false); // ID 11: ready to harvest
+}
 
     public void setup(int index, String imagePath, boolean collision) {
         UtilityTool uTool = new UtilityTool();

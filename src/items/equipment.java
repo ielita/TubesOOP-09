@@ -12,16 +12,120 @@ public class equipment extends Item{
         super(name, gp);
     }
 
-
+    
     public void use(Player player) {
+        GamePanel gp = player.getGp();
         
-        String time = player.getGp().timeM.getTimeString();
-        String season = player.getGp().timeM.getSeason();
-        String location = player.getGp().mapM.getCurrentMap();
-        // String weather = player.getGp().timeM.getWeather(); // Weatehr Belum diimplementasikan
+        if (getName().equals("Hoe")) {
+            // Use same calculation method as in Player class
+            int playerCenterX = player.worldX + player.solidArea.x + player.solidArea.width / 2;
+            int playerCenterY = player.worldY + player.solidArea.y + player.solidArea.height / 2;
+            
+            int facingX = playerCenterX;
+            int facingY = playerCenterY;
+            
+            switch (player.direction) {
+                case "up":    facingY -= gp.tileSize; break;
+                case "down":  facingY += gp.tileSize; break;
+                case "left":  facingX -= gp.tileSize; break;
+                case "right": facingX += gp.tileSize; break;
+            }
+            
+            int col = facingX / gp.tileSize;
+            int row = facingY / gp.tileSize;
+            
+            // Check bounds
+            if (col < 0 || row < 0 || col >= gp.tileM.mapManager.maxWorldCol || row >= gp.tileM.mapManager.maxWorldRow) return;
+            
+            // If tile is grass (id 0), change to tilted (id 7)
+            if (gp.tileM.mapManager.mapTileNum[col][row] == 0) {
+                gp.tileM.mapManager.mapTileNum[col][row] = 7;
+                System.out.println("Tile tilled at col:" + col + " row:" + row);
+            }
+            player.setEnergy(player.getEnergy()-10);
+        }
+        
+        if (getName().equals("Watering Can")) {
+            // Calculate tile position in front of player
+            int playerCenterX = player.worldX + player.solidArea.x + player.solidArea.width / 2;
+            int playerCenterY = player.worldY + player.solidArea.y + player.solidArea.height / 2;
+            
+            int facingX = playerCenterX;
+            int facingY = playerCenterY;
+            
+            switch (player.direction) {
+                case "up":    facingY -= gp.tileSize; break;
+                case "down":  facingY += gp.tileSize; break;
+                case "left":  facingX -= gp.tileSize; break;
+                case "right": facingX += gp.tileSize; break;
+            }
+            
+            int col = facingX / gp.tileSize;
+            int row = facingY / gp.tileSize;
+            
+            // Check bounds
+            if (col < 0 || row < 0 || col >= gp.tileM.mapManager.maxWorldCol || row >= gp.tileM.mapManager.maxWorldRow) return;
+            
+            int currentTile = gp.tileM.mapManager.mapTileNum[col][row];
 
-        if (player.isFacingWater()) {
-            if (getName().equals("Fishing Rod")) {
+            if (currentTile == 7) { // tilted -> tilted_w
+                gp.tileM.mapManager.mapTileNum[col][row] = 9;
+                System.out.println("Tilled soil watered at col:" + col + " row:" + row);
+            } else if (currentTile == 8) { // planted -> planted_w
+                gp.tileM.mapManager.mapTileNum[col][row] = 10;
+                // Mark as watered today
+                if (gp.tileM.mapManager.wateredToday == null) {
+                    gp.tileM.mapManager.wateredToday = new boolean[gp.tileM.mapManager.maxWorldCol][gp.tileM.mapManager.maxWorldRow];
+                }
+                gp.tileM.mapManager.wateredToday[col][row] = true;
+                System.out.println("Planted crop watered at col:" + col + " row:" + row);
+            }
+            player.setEnergy(player.getEnergy()-5);
+        }
+        
+        if (getName().equals("Sickle")) {
+            // Calculate tile position in front of player
+            int playerCenterX = player.worldX + player.solidArea.x + player.solidArea.width / 2;
+            int playerCenterY = player.worldY + player.solidArea.y + player.solidArea.height / 2;
+            
+            int facingX = playerCenterX;
+            int facingY = playerCenterY;
+            
+            switch (player.direction) {
+                case "up":    facingY -= gp.tileSize; break;
+                case "down":  facingY += gp.tileSize; break;
+                case "left":  facingX -= gp.tileSize; break;
+                case "right": facingX += gp.tileSize; break;
+            }
+            
+            int col = facingX / gp.tileSize;
+            int row = facingY / gp.tileSize;
+            
+            // Check bounds
+            if (col < 0 || row < 0 || col >= gp.tileM.mapManager.maxWorldCol || row >= gp.tileM.mapManager.maxWorldRow) return;
+            
+            // Check if tile is ready for harvest
+            if (gp.tileM.mapManager.mapTileNum[col][row] == 11) {
+                // Create crop item and add to inventory
+                crop harvestedCrop = new crop("Harvested Crop", gp, 50, 100, 1);
+                player.addItemToInventory(harvestedCrop, 1);
+                
+                // Reset tile to grass
+                gp.tileM.mapManager.mapTileNum[col][row] = 0;
+                gp.tileM.mapManager.plantGrowth[col][row] = 0;
+                
+                System.out.println("Crop harvested at col:" + col + " row:" + row);
+                player.setEnergy(player.getEnergy()-15);
+            }
+        }
+        
+        // Fishing Rod logic
+        if (getName().equals("Fishing Rod")) {
+            String time = gp.timeM.getTimeString();
+            String season = gp.timeM.getSeason();
+            String location = gp.mapM.getCurrentMap();
+
+            if (player.isFacingWater()) {
                 List<fish> allFish = player.listFish;
                 List<fish> availableFish = new ArrayList<>();
 
@@ -37,7 +141,6 @@ public class equipment extends Item{
                             break;
                         }
                     }
-                    // Belum check weather
 
                     if (seasonMatch && locationMatch && timeMatch) {
                         availableFish.add(f);
@@ -48,13 +151,11 @@ public class equipment extends Item{
                     fish caught = availableFish.get(new Random().nextInt(availableFish.size()));
                     player.addItemToInventory(caught, 1);
                     System.out.println("Kamu mendapatkan ikan: " + caught.getName());
+                    player.setEnergy(player.getEnergy()-20);
                 } else {
                     System.out.println("Tidak ada ikan yang cocok di lokasi, season, dan waktu ini!");
                 }
             }
-        }
-        if (getName().equals("Hoe")) {
-            System.out.println("You used the Hoe.");
         }
     }
 

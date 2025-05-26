@@ -13,14 +13,14 @@ public class TimeManager {
     private final String[] SEASONS = {"Spring", "Summer", "Fall", "Winter"};
     private int currentSeasonIndex;
     
-
-    
     // Add this after other fields
     private final float DAY_BRIGHTNESS = 1.0f;
     private final float NIGHT_BRIGHTNESS = 0.3f;
     private final int DAWN_HOUR = 6;  // 6:00 AM
     private final int DUSK_HOUR = 18; // 6:00 PM
     private final int TRANSITION_DURATION = 2; // Hours for sunrise/sunset
+
+    private static boolean newDay = false; // Tambahkan ini
 
     public TimeManager(GamePanel gp) {
         this.gp = gp;
@@ -40,14 +40,14 @@ public class TimeManager {
                 if (minute >= 60) {
                     hour += minute / 60;
                     minute %= 60;
-                    
-                    // Update brightness based on time
+
                     updateBrightness();
-                    
+
                     if (hour >= 24) {
                         hour = 0;
                         day++;
-                        
+                        newDay = true; // Set flag newDay
+
                         // Check for season change
                         if (day > DAYS_PER_SEASON) {
                             day = 1;
@@ -59,6 +59,15 @@ public class TimeManager {
                 lastUpdateTime = currentTime;
             }
         }
+    }
+
+    // Tambahkan method ini
+    public static boolean isNewDay() {
+        if (newDay) {
+            newDay = false;
+            return true;
+        }
+        return false;
     }
 
     private void updateBrightness() {
@@ -154,5 +163,31 @@ public class TimeManager {
 
     public String getSeason() {
         return season;
+    }
+
+    // Add this method for the cheat
+    public void skipDay() {
+        // Reset time to 6:00 AM (start of new day)
+        hour = 6;
+        minute = 0;
+        
+        // Increment day
+        day++;
+        newDay = true; // Trigger new day flag
+        
+        // Check for season change
+        if (day > DAYS_PER_SEASON) {
+            day = 1;
+            currentSeasonIndex = (currentSeasonIndex + 1) % 4;
+            season = SEASONS[currentSeasonIndex];
+        }
+        
+        // Update brightness to day time
+        updateBrightness();
+        
+        // Trigger plant growth update immediately
+        if (gp != null && gp.tileM != null && gp.tileM.mapManager != null) {
+            gp.tileM.mapManager.updatePlantGrowth();
+        }
     }
 }
