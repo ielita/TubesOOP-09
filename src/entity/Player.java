@@ -40,12 +40,13 @@ public class Player extends Entity{
         inventoryManager = new InventoryManager();
 
         // test items
-        Item testItem1 = new food("apel",gp, 1);
-        Item testItem2 = new equipment("Fishing Rod",gp);
-        Item testItem3 = new equipment("Hoe",gp);
+        Item testItem1 = new food("apel", gp, 1);
+        Item testItem2 = new equipment("Fishing Rod", gp);
+        Item testItem3 = new equipment("Hoe", gp);
         Item testItem4 = new seed("parsnip seed", gp, "", "cool", 3);
-        Item testItem5 = new equipment("Watering Can",gp);
-        Item testItem6 = new equipment("Sickle",gp);
+        Item testItem5 = new equipment("Watering Can", gp);
+        Item testItem6 = new equipment("Sickle", gp);
+        Item testItem7 = new equipment("Pickaxe", gp); // Add pickaxe
         
         inventoryManager.addItem(testItem1, 3);
         inventoryManager.addItem(testItem2, 1);
@@ -53,6 +54,7 @@ public class Player extends Entity{
         inventoryManager.addItem(testItem4, 10);
         inventoryManager.addItem(testItem5, 1);
         inventoryManager.addItem(testItem6, 1);
+        inventoryManager.addItem(testItem7, 1); // Add pickaxe to inventory
         
 
         setDefaultValues();
@@ -226,27 +228,46 @@ public class Player extends Entity{
             int col = facingX / gp.tileSize;
             int row = facingY / gp.tileSize;
 
-            // Cek batas map
+            // Check bounds
             if (col < 0 || row < 0 || col >= gp.tileM.mapManager.maxWorldCol || row >= gp.tileM.mapManager.maxWorldRow) return;
 
-            // Cek tile sudah tercangkul (id 7)
-            if (gp.tileM.mapManager.mapTileNum[col][row] == 7) {
-                // Change tile to planted (dry)
+            int currentTile = gp.tileM.mapManager.mapTileNum[col][row];
+            
+            // Check if tile is tilled (dry or watered)
+            if (currentTile == 7) { // tilted (dry) -> planted (dry)
                 gp.tileM.mapManager.mapTileNum[col][row] = 8;
-                // Simpan data tanaman
                 if (gp.tileM.mapManager.plantGrowth == null) {
                     gp.tileM.mapManager.plantGrowth = new int[gp.tileM.mapManager.maxWorldCol][gp.tileM.mapManager.maxWorldRow];
                 }
                 gp.tileM.mapManager.plantGrowth[col][row] = seedItem.getGrowthTime();
-                System.out.println("Seed planted at col:" + col + " row:" + row);
-
-                // Kurangi seed di inventory
-                removeItemFromInventory(seedItem, 1);
-
-                // Jika jumlah seed habis, hapus dari onhand
-                if (!getInventory().containsKey(seedItem)) {
-                    setOnhandItem(null);
+                System.out.println("Seed planted (dry) at col:" + col + " row:" + row);
+                
+            } else if (currentTile == 9) { // tilted_w (watered) -> planted_w (watered)
+                gp.tileM.mapManager.mapTileNum[col][row] = 10;
+                if (gp.tileM.mapManager.plantGrowth == null) {
+                    gp.tileM.mapManager.plantGrowth = new int[gp.tileM.mapManager.maxWorldCol][gp.tileM.mapManager.maxWorldRow];
                 }
+                gp.tileM.mapManager.plantGrowth[col][row] = seedItem.getGrowthTime();
+                
+                // Ensure watering status is maintained
+                if (gp.tileM.mapManager.wateredToday == null) {
+                    gp.tileM.mapManager.wateredToday = new boolean[gp.tileM.mapManager.maxWorldCol][gp.tileM.mapManager.maxWorldRow];
+                }
+                gp.tileM.mapManager.wateredToday[col][row] = true;
+                System.out.println("Seed planted (watered) at col:" + col + " row:" + row);
+                
+            } else {
+                // Cannot plant on this tile
+                System.out.println("Cannot plant here - tile must be tilled first!");
+                return;
+            }
+
+            // Reduce seed from inventory (only if planting was successful)
+            removeItemFromInventory(seedItem, 1);
+
+            // If seed count reaches 0, remove from onhand
+            if (!getInventory().containsKey(seedItem)) {
+                setOnhandItem(null);
             }
         }
     }

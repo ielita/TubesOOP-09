@@ -119,6 +119,58 @@ public class equipment extends Item{
             }
         }
         
+        if (getName().equals("Pickaxe")) {
+            // Calculate tile position in front of player
+            int playerCenterX = player.worldX + player.solidArea.x + player.solidArea.width / 2;
+            int playerCenterY = player.worldY + player.solidArea.y + player.solidArea.height / 2;
+            
+            int facingX = playerCenterX;
+            int facingY = playerCenterY;
+            
+            switch (player.direction) {
+                case "up":    facingY -= gp.tileSize; break;
+                case "down":  facingY += gp.tileSize; break;
+                case "left":  facingX -= gp.tileSize; break;
+                case "right": facingX += gp.tileSize; break;
+            }
+            
+            int col = facingX / gp.tileSize;
+            int row = facingY / gp.tileSize;
+            
+            // Check bounds
+            if (col < 0 || row < 0 || col >= gp.tileM.mapManager.maxWorldCol || row >= gp.tileM.mapManager.maxWorldRow) return;
+            
+            int currentTile = gp.tileM.mapManager.mapTileNum[col][row];
+            
+            // Convert tilted tiles back to grass
+            if (currentTile == 7) { // tilted -> grass
+                gp.tileM.mapManager.mapTileNum[col][row] = 0;
+                System.out.println("Tilted soil converted to grass at col:" + col + " row:" + row);
+                player.setEnergy(player.getEnergy()-12);
+            } else if (currentTile == 9) { // tilted_w -> grass
+                gp.tileM.mapManager.mapTileNum[col][row] = 0;
+                // Also reset watering status
+                if (gp.tileM.mapManager.wateredToday != null) {
+                    gp.tileM.mapManager.wateredToday[col][row] = false;
+                }
+                System.out.println("Watered tilted soil converted to grass at col:" + col + " row:" + row);
+                player.setEnergy(player.getEnergy()-12);
+            } else if (currentTile == 8) { // planted -> grass (destroy crop)
+                gp.tileM.mapManager.mapTileNum[col][row] = 0;
+                gp.tileM.mapManager.plantGrowth[col][row] = 0;
+                System.out.println("Planted crop destroyed and converted to grass at col:" + col + " row:" + row);
+                player.setEnergy(player.getEnergy()-15);
+            } else if (currentTile == 10) { // planted_w -> grass (destroy watered crop)
+                gp.tileM.mapManager.mapTileNum[col][row] = 0;
+                gp.tileM.mapManager.plantGrowth[col][row] = 0;
+                if (gp.tileM.mapManager.wateredToday != null) {
+                    gp.tileM.mapManager.wateredToday[col][row] = false;
+                }
+                System.out.println("Watered planted crop destroyed and converted to grass at col:" + col + " row:" + row);
+                player.setEnergy(player.getEnergy()-15);
+            }
+        }
+        
         // Fishing Rod logic
         if (getName().equals("Fishing Rod")) {
             String time = gp.timeM.getTimeString();
