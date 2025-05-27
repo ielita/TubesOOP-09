@@ -185,9 +185,22 @@ public class TimeManager {
         // Update brightness to day time
         updateBrightness();
         
-        // Trigger plant growth update immediately
+        System.out.println("=== NEW DAY: " + getDateString() + " ===");
+        
+        // Update current map plant growth
         if (gp != null && gp.tileM != null && gp.tileM.mapManager != null) {
             gp.tileM.mapManager.updatePlantGrowth();
+        }
+        
+        // Update all saved map states for consistency
+        updateAllMapStates();
+    }
+    
+    // Update this method to use the new MapManager method
+    private void updateAllMapStates() {
+        if (gp.tileM != null && gp.tileM.mapManager != null) {
+            gp.tileM.mapManager.updateAllSavedMapStates();
+            System.out.println("Updated all saved map states for new day");
         }
     }
 
