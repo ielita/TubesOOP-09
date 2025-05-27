@@ -127,10 +127,15 @@ public class Player extends Entity{
 
         up1 = setup("player/player_up_1");
         up2 = setup("player/player_up_2");
+        upidle = setup("player/player_up_3");
+        downidle = setup("player/player_down_3");
         down1 = setup("player/player_down_1");
         down2 = setup("player/player_down_2");
         left1 = setup("player/player_left_1");
         left2 = setup("player/player_left_2");
+        left3 = setup("player/player_left_3");
+
+        right3 = setup("player/player_right_3");
         right1 = setup("player/player_right_1");
         right2 = setup("player/player_right_2");
     }
@@ -195,10 +200,17 @@ public class Player extends Entity{
             int animationSpeed = keyH.sprintPressed ? 8 : 12;
             spriteCounter++;
             if (spriteCounter > animationSpeed) {
+                // spriteNum = 1+ (spriteNum + 1) % 4; 
                 if (spriteNum == 1) {
                     spriteNum = 2;
                 }
                 else if(spriteNum == 2) {
+                    spriteNum = 3;
+                }
+                else if(spriteNum == 3) {
+                    spriteNum = 4;
+                }
+                else if(spriteNum == 4) {
                     spriteNum = 1;
                 }
                 spriteCounter = 0;
@@ -309,7 +321,13 @@ public class Player extends Entity{
                     image = up1;
                 }
                 if (spriteNum == 2){
+                    image = upidle;
+                }
+                if (spriteNum == 3){
                     image = up2;
+                }
+                if (spriteNum == 4){
+                    image = upidle;
                 }
                 
                 break;
@@ -318,7 +336,13 @@ public class Player extends Entity{
                     image = down1;
                 }
                 if (spriteNum == 2){
+                    image = downidle;
+                }
+                if (spriteNum == 3){
                     image = down2;
+                }
+                if (spriteNum == 4){
+                    image = downidle;
                 }
                 break;
             case "left":
@@ -326,7 +350,13 @@ public class Player extends Entity{
                     image = left1;
                 }
                 if (spriteNum == 2){
+                    image = left3;
+                }
+                if (spriteNum == 3){
                     image = left2;
+                }
+                if (spriteNum == 4){
+                    image = left3;
                 }
                 break;
             case "right":
@@ -334,7 +364,13 @@ public class Player extends Entity{
                     image = right1;
                 }
                 if (spriteNum == 2){
+                    image = right3;
+                }
+                if (spriteNum == 3){
                     image = right2;
+                }
+                if (spriteNum == 4){
+                    image = right3;
                 }
                 break;
         }

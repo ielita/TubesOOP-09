@@ -16,7 +16,7 @@ public class NPC_clone extends Entity{
 
     public void getImage() {
 
-        up1 = setup("npc/ninja");
+        up1 = setup("npc/abigail/abigail-idle1.png");
     }
 
 
