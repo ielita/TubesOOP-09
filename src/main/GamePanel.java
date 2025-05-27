@@ -110,7 +110,7 @@ public class GamePanel extends JPanel implements Runnable{
             player.update();
             
             // Update current location from MapManager
-            currentMap = mapM.getCurrentMap();
+        
             
             // Update all objects
             for(int i = 0; i < obj.length; i++) {
