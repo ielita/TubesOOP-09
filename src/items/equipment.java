@@ -171,20 +171,23 @@ public class equipment extends Item{
             }
         }
         
-        // Fishing Rod logic
         if (getName().equals("Fishing Rod")) {
-            String time = gp.timeM.getTimeString();
-            String season = gp.timeM.getSeason();
-            String location = gp.mapM.getCurrentMap();
-
             if (player.isFacingWater()) {
-                List<fish> allFish = player.listFish;
-                List<fish> availableFish = new ArrayList<>();
+                // Kurangi energi
+                player.setEnergy(player.getEnergy() - 5);
 
+                // Tambah 15 menit ke waktu
+                gp.timeM.addMinutes(15);
+
+                // Filter ikan yang bisa didapat
+                List<fish> allFish = FishData.getAllFish(gp);
+                List<fish> availableFish = new ArrayList<>();
+                String time = gp.timeM.getTimeString();
+                String season = gp.timeM.getSeason();
+                String location = gp.mapM.getCurrentMap();
                 for (fish f : allFish) {
                     boolean seasonMatch = f.getSeasons().contains("Any") || f.getSeasons().contains(season);
                     boolean locationMatch = f.getLocation().contains("Any") || f.getLocation().contains(location);
-                   
                     boolean timeMatch = false;
                     UtilityTool util = new UtilityTool();
                     for (String t : f.getTime()) {
@@ -193,7 +196,6 @@ public class equipment extends Item{
                             break;
                         }
                     }
-
                     if (seasonMatch && locationMatch && timeMatch) {
                         availableFish.add(f);
                     }
@@ -201,9 +203,20 @@ public class equipment extends Item{
 
                 if (!availableFish.isEmpty()) {
                     fish caught = availableFish.get(new Random().nextInt(availableFish.size()));
-                    player.addItemToInventory(caught, 1);
-                    System.out.println("Kamu mendapatkan ikan: " + caught.getName());
-                    player.setEnergy(player.getEnergy()-20);
+
+                    // Tentukan range dan tries berdasarkan tipe ikan
+                    int min = 1, max = 10, tries = 10;
+                    String type = caught.getRarity();
+                    if ("common".equalsIgnoreCase(type)) {
+                        min = 1; max = 10; tries = 10;
+                    } else if ("regular".equalsIgnoreCase(type)) {
+                        min = 1; max = 100; tries = 10;
+                    } else if ("legendary".equalsIgnoreCase(type)) {
+                        min = 1; max = 500; tries = 7;
+                    }
+
+                    gp.fishingMiniGame.start(caught, min, max, tries);
+                    gp.gameState = gp.fishingMiniGameState;
                 } else {
                     System.out.println("Tidak ada ikan yang cocok di lokasi, season, dan waktu ini!");
                 }

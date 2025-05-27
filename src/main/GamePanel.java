@@ -56,6 +56,8 @@ public class GamePanel extends JPanel implements Runnable{
     public final int playState = 1;
     public final int pauseState = 2;
     public final int inventoryState = 3;
+    public final int fishingMiniGameState = 4;
+    public minigame.FishingMiniGame fishingMiniGame = new minigame.FishingMiniGame();
     public String currentMap = mapM.getCurrentMap(); 
     
     public GamePanel(){

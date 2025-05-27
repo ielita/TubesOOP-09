@@ -139,6 +139,45 @@ public class KeyHandler implements KeyListener{
             }
             return; 
         }
+
+        if (gp.gameState == gp.fishingMiniGameState && gp.fishingMiniGame.isActive()) {
+            // Input angka, hanya set input (belum submit)
+            if (code >= KeyEvent.VK_0 && code <= KeyEvent.VK_9) {
+                int num = code - KeyEvent.VK_0;
+                // Untuk range > 10, allow multi-digit input
+                if (gp.fishingMiniGame.getMax() > 10) {
+                    int current = gp.fishingMiniGame.getInput();
+                    if (current < 1000) { // prevent overflow
+                        gp.fishingMiniGame.setInput(current * 10 + num);
+                    }
+                } else {
+                    gp.fishingMiniGame.setInput(num);
+                }
+            } else if (code == KeyEvent.VK_BACK_SPACE || code == KeyEvent.VK_DELETE) {
+                gp.fishingMiniGame.setInput(0); // hapus input sebelum submit
+            }
+            // Submit hanya saat ENTER
+            if (code == KeyEvent.VK_ENTER && gp.fishingMiniGame.getInput() != 0) {
+                int guess = gp.fishingMiniGame.getInput();
+                if (guess == gp.fishingMiniGame.getAnswer()) {
+                    gp.player.addItemToInventory(gp.fishingMiniGame.getPendingFish(), 1);
+                    System.out.println("Benar! Kamu dapat ikan: " + gp.fishingMiniGame.getPendingFish().getName());
+                    gp.fishingMiniGame.finish();
+                    gp.gameState = gp.playState;
+                } else {
+                    gp.fishingMiniGame.decTries();
+                    if (gp.fishingMiniGame.getTries() <= 0) {
+                        System.out.println("Gagal! Kesempatan habis.");
+                        gp.fishingMiniGame.finish();
+                        gp.gameState = gp.playState;
+                    } else {
+                        System.out.println("Salah! Sisa kesempatan: " + gp.fishingMiniGame.getTries());
+                        gp.fishingMiniGame.resetInput(); // reset input untuk percobaan berikutnya
+                    }
+                }
+            }
+            return;
+        }
         
         if (gp.gameState != gp.playState) {
             return;
@@ -186,7 +225,6 @@ public class KeyHandler implements KeyListener{
             }
         }
 
-        // Add this cheat code
         if (code == KeyEvent.VK_1) {
             // Skip one day cheat
             gp.timeM.skipDay();
