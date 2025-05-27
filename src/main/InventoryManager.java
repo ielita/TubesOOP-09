@@ -7,6 +7,7 @@ import items.Item;
 public class InventoryManager {
     private Map<Item, Integer> inventory;
     private Item onhandItem;
+    private static final int MAX_INVENTORY_SIZE = 32; // Example limit, adjust as needed
 
     public InventoryManager() {
         inventory = new HashMap<>();
@@ -25,6 +26,10 @@ public class InventoryManager {
             inventory.put(existingItem, currentQuantity + quantity);
             System.out.println("Added " + quantity + " " + item.getName() + " (Total: " + (currentQuantity + quantity) + ")");
         } else {
+            if (inventory.size() >= MAX_INVENTORY_SIZE) {
+                System.out.println("Inventory full! Cannot add " + item.getName());
+                return; 
+            }
             // New item, add to inventory
             inventory.put(item, quantity);
             System.out.println("Added " + quantity + " " + item.getName() + " (New item)");

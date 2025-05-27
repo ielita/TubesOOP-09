@@ -63,6 +63,22 @@ public class Player extends Entity{
         equipment sickle = new equipment("Sickle", gp);
         addItemToInventory(sickle, 1);
         System.out.println("Added Sickle");
+
+        equipment fishingEquipment = new equipment("Fishing Rod", gp);
+        addItemToInventory(fishingEquipment, 1);
+
+        equipment test1 = new equipment("Test Item 1", gp);
+        addItemToInventory(test1, 5);
+
+        equipment test2 = new equipment("Test Item 2", gp);
+        addItemToInventory(test2, 3);
+
+        equipment test3 = new equipment("Test Item 3", gp);
+        addItemToInventory(test3, 2);
+
+        equipment test4 = new equipment("Test Item 4", gp);
+
+
         
         // Add starting seeds
         seed parsnipSeed = SeedData.getSeedByName(gp, "Parsnip Seeds");
