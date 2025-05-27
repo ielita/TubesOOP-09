@@ -7,7 +7,6 @@ import java.awt.image.BufferedImage;
 import java.util.Map;
 import object.OBJ_Chest;
 import object.OBJ_Door;
-import tile.MapManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +25,6 @@ public class UI {
 
     GamePanel gp;
     Graphics2D g2;
-    MapManager mapM = new MapManager(gp);
 
     public UI(GamePanel gp) {
         this.gp = gp;
@@ -59,10 +57,32 @@ public class UI {
             String dateText = season + " - Day " + day;
             g2.drawString(dateText, 50, 50);  // Top left corner
 
-            // Draw current map name
-            String currentMap = gp.mapM.getCurrentMap();
-            String mapText = "Location: " + currentMap.substring(0, 1).toUpperCase() + currentMap.substring(1);
-            g2.drawString(mapText, 50, 100);  // Below the date
+            // Draw current map name - Use gp.mapM
+            String currentMap = gp.tileM.mapManager.getCurrentMap();
+            if (currentMap != null && !currentMap.isEmpty()) {
+                // Format the map name properly
+                String displayName = currentMap;
+                if (currentMap.equals("insideHouse")) {
+                    displayName = "Inside House";
+                } else if (currentMap.equals("farm")) {
+                    displayName = "Farm";
+                } else if (currentMap.equals("town")) {
+                    displayName = "Town";
+                } else if (currentMap.equals("mountainlake")) {
+                    displayName = "Mountain Lake";
+                } else if (currentMap.equals("forestriver")) {
+                    displayName = "Forest River";
+                } else if (currentMap.equals("ocean")) {
+                    displayName = "Ocean";
+                }
+                
+                String mapText = "Location: " + displayName;
+                
+                // Draw main white text
+                g2.setColor(Color.WHITE);
+                g2.drawString(mapText, 50, 100);
+                
+            }
         }
 
         if (gp.gameState == gp.pauseState) {

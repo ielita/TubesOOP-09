@@ -56,7 +56,6 @@ public class GamePanel extends JPanel implements Runnable{
     public final int playState = 1;
     public final int pauseState = 2;
     public final int inventoryState = 3;
-    public String currentMap = mapM.getCurrentMap(); 
     
     public GamePanel(){
         this.setPreferredSize(new Dimension(screenWidth,screenHeight));
@@ -108,7 +107,7 @@ public class GamePanel extends JPanel implements Runnable{
             player.update();
             
             // Update current location from MapManager
-            currentMap = mapM.getCurrentMap();
+        
             
             // Update all objects
             for(int i = 0; i < obj.length; i++) {
