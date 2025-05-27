@@ -184,7 +184,8 @@ public class equipment extends Item{
                 List<fish> availableFish = new ArrayList<>();
                 String time = gp.timeM.getTimeString();
                 String season = gp.timeM.getSeason();
-                String location = gp.mapM.getCurrentMap();
+                String location = gp.tileM.mapManager.getCurrentMap();
+                System.out.println("Fishing at " + location + " during " + season + " at " + time);
                 for (fish f : allFish) {
                     boolean seasonMatch = f.getSeasons().contains("Any") || f.getSeasons().contains(season);
                     boolean locationMatch = f.getLocation().contains("Any") || f.getLocation().contains(location);
