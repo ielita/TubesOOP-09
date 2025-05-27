@@ -6,6 +6,7 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import main.GamePanel;
+import items.seed; // Add this import
 
 public class MapManager {
     GamePanel gp;
@@ -19,10 +20,13 @@ public class MapManager {
     public boolean[][] wateredToday;
     
     // Add these to store map states
-    private java.util.Map<String, int[][]> savedMapStates;
-    private java.util.Map<String, int[][]> savedPlantGrowth;
-    private java.util.Map<String, boolean[][]> savedWateredStates;
+    public java.util.Map<String, int[][]> savedMapStates;
+    public java.util.Map<String, int[][]> savedPlantGrowth;
+    public java.util.Map<String, boolean[][]> savedWateredStates;
     
+    // Add these fields for seed planting system
+    public seed[][] plantedSeeds;  // Track what seed is planted where
+
     public MapManager(GamePanel gp) {
         this.gp = gp;
         previousMap = null;    
@@ -203,27 +207,111 @@ public class MapManager {
         }
     }
 
+    // Add this method to initialize plant tracking arrays
+    public void initializePlantTracking() {
+        if (maxWorldCol > 0 && maxWorldRow > 0) {
+            plantedSeeds = new seed[maxWorldCol][maxWorldRow];
+            plantGrowth = new int[maxWorldCol][maxWorldRow];
+        }
+    }
+
+    // Update this method to handle daily resets properly
     public void updatePlantGrowth() {
+        if (plantGrowth == null) return;
+        
+        System.out.println("=== Daily Plant Growth Update ===");
+        
         for (int col = 0; col < maxWorldCol; col++) {
             for (int row = 0; row < maxWorldRow; row++) {
-                // Only reduce growth time if plant exists AND was watered today
-                if (plantGrowth[col][row] > 0 && wateredToday[col][row]) {
-                    plantGrowth[col][row]--;
-                    if (plantGrowth[col][row] == 0) {
-                        // Change to harvested tile
-                        mapTileNum[col][row] = 11; // harvested
-                        System.out.println("Crop ready to harvest at col:" + col + " row:" + row);
+                int currentTile = mapTileNum[col][row];
+                
+                // Reset watered tiles to dry at start of new day
+                if (currentTile == 9) { // watered tilled -> dry tilled
+                    mapTileNum[col][row] = 7;
+                    System.out.println("Watered tilled soil dried at " + col + "," + row);
+                } else if (currentTile == 10) { // watered planted -> dry planted
+                    mapTileNum[col][row] = 8;
+                    System.out.println("Watered planted soil dried at " + col + "," + row);
+                    
+                    // HANYA UPDATE GROWTH JIKA TANAMAN DI-WATER KEMARIN
+                    if (wateredToday != null && wateredToday[col][row]) {
+                        if (plantGrowth[col][row] > 0) {
+                            plantGrowth[col][row]--;
+                            System.out.println("Plant at " + col + "," + row + " grew! Days left: " + plantGrowth[col][row]);
+                            
+                            // Check if ready to harvest
+                            if (plantGrowth[col][row] <= 0) {
+                                mapTileNum[col][row] = 11; // Fully grown
+                                System.out.println("Crop ready to harvest at " + col + "," + row + "!");
+                            }
+                        }
+                    } else {
+                        System.out.println("Plant at " + col + "," + row + " didn't grow (not watered yesterday)");
                     }
                 }
                 
-                // Reset watering status for new day and dry out tiles
-                wateredToday[col][row] = false;
+                // Reset watered status for all tiles
+                if (wateredToday != null) {
+                    wateredToday[col][row] = false;
+                }
                 
-                // Convert watered tiles back to dry versions
-                if (mapTileNum[col][row] == 9) { // tilted_w -> tilted
-                    mapTileNum[col][row] = 7;
-                } else if (mapTileNum[col][row] == 10) { // planted_w -> planted
-                    mapTileNum[col][row] = 8;
+                // Update plant growth HANYA untuk planted tiles yang di-water kemarin
+                // (sudah di-handle di atas untuk tile 10 -> 8)
+            }
+        }
+        
+        System.out.println("=== Daily Update Complete ===");
+    }
+
+    // Add method to reset planted seed data when harvested
+    public void harvestCrop(int col, int row) {
+        if (plantedSeeds != null && plantGrowth != null) {
+            plantedSeeds[col][row] = null;
+            plantGrowth[col][row] = 0;
+            mapTileNum[col][row] = 7; // Back to tilled soil
+        }
+    }
+
+    // Add method to update all saved map states for daily changes
+    public void updateAllSavedMapStates() {
+        if (savedMapStates == null) return;
+        
+        for (String mapName : savedMapStates.keySet()) {
+            System.out.println("Updating saved state for: " + mapName);
+            
+            // Get saved states for this map
+            int[][] savedMap = savedMapStates.get(mapName);
+            int[][] savedGrowth = savedPlantGrowth.get(mapName);
+            boolean[][] savedWatered = savedWateredStates.get(mapName);
+            
+            if (savedMap == null || savedGrowth == null || savedWatered == null) continue;
+            
+            // Update each tile in the saved state
+            for (int col = 0; col < savedMap.length; col++) {
+                for (int row = 0; row < savedMap[col].length; row++) {
+                    int currentTile = savedMap[col][row];
+                    
+                    // Reset watered tiles to dry
+                    if (currentTile == 9) { // watered tilled -> dry tilled
+                        savedMap[col][row] = 7;
+                    } else if (currentTile == 10) { // watered planted -> dry planted
+                        savedMap[col][row] = 8;
+                        
+                        // HANYA UPDATE GROWTH JIKA DI-WATER KEMARIN
+                        if (savedWatered[col][row]) {
+                            if (savedGrowth[col][row] > 0) {
+                                savedGrowth[col][row]--;
+                                
+                                // Check if ready to harvest
+                                if (savedGrowth[col][row] <= 0) {
+                                    savedMap[col][row] = 11; // Fully grown
+                                }
+                            }
+                        }
+                    }
+                    
+                    // Reset watered status
+                    savedWatered[col][row] = false;
                 }
             }
         }

@@ -212,24 +212,35 @@ public class KeyHandler implements KeyListener{
             sprintPressed = true;
         }
 
-        if (code == KeyEvent.VK_I){
-            interactPressed = true;
-        }
-
-        if (gp.gameState == gp.playState && code == KeyEvent.VK_I) {
+        if (code == KeyEvent.VK_I) {
             Item onhand = gp.player.getOnhandItem();
             if (onhand != null && onhand instanceof items.equipment) {
                 ((items.equipment)onhand).use(gp.player);
             } else if (onhand != null && onhand instanceof items.seed) {
-                gp.player.plantSeed();
+                gp.player.plantSeed(); // Plant seed
             }
+            interactPressed = true;
         }
+        if (code == KeyEvent.VK_E) {
+            ePressed = true;
+        }
+        if (code == KeyEvent.VK_J) {
+            gp.gameState = gp.inventoryState;
+            inventoryCursorIndex = 0;
+        }
+        
+        // Remove harvest key since sickle already handles it
 
+        // Debug keys
         if (code == KeyEvent.VK_1) {
-            // Skip one day cheat
             gp.timeM.skipDay();
             System.out.println("Day skipped! New date: " + gp.timeM.getDateString());
         }
+        if (code == KeyEvent.VK_2) {
+            gp.player.addGold(100);
+            System.out.println("Added 100 gold! Total: " + gp.player.getGold() + "g");
+        }
+
     }
 
     @Override

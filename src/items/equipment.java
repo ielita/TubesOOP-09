@@ -68,10 +68,11 @@ public class equipment extends Item{
             
             int currentTile = gp.tileM.mapManager.mapTileNum[col][row];
 
-            if (currentTile == 7) { // tilted -> tilted_w
+            if (currentTile == 7) { // dry tilled -> watered tilled
                 gp.tileM.mapManager.mapTileNum[col][row] = 9;
                 System.out.println("Tilled soil watered at col:" + col + " row:" + row);
-            } else if (currentTile == 8) { // planted -> planted_w
+                player.setEnergy(player.getEnergy()-5);
+            } else if (currentTile == 8) { // dry planted -> watered planted
                 gp.tileM.mapManager.mapTileNum[col][row] = 10;
                 // Mark as watered today
                 if (gp.tileM.mapManager.wateredToday == null) {
@@ -79,8 +80,10 @@ public class equipment extends Item{
                 }
                 gp.tileM.mapManager.wateredToday[col][row] = true;
                 System.out.println("Planted crop watered at col:" + col + " row:" + row);
+                player.setEnergy(player.getEnergy()-5);
+            } else {
+                System.out.println("Nothing to water here!");
             }
-            player.setEnergy(player.getEnergy()-5);
         }
         
         if (getName().equals("Sickle")) {
@@ -106,16 +109,43 @@ public class equipment extends Item{
             
             // Check if tile is ready for harvest
             if (gp.tileM.mapManager.mapTileNum[col][row] == 11) {
-                // Create crop item and add to inventory
-                crop harvestedCrop = new crop("Harvested Crop", gp, 50, 100, 1);
-                player.addItemToInventory(harvestedCrop, 1);
                 
-                // Reset tile to grass
-                gp.tileM.mapManager.mapTileNum[col][row] = 0;
-                gp.tileM.mapManager.plantGrowth[col][row] = 0;
+                // Get the planted seed info to create proper crop
+                if (gp.tileM.mapManager.plantedSeeds != null && 
+                    gp.tileM.mapManager.plantedSeeds[col][row] != null) {
+                    
+                    seed plantedSeed = gp.tileM.mapManager.plantedSeeds[col][row];
+                    crop harvestedCrop = plantedSeed.plant(); // Use seed's plant() method
+                    
+                    // Add correct crop to inventory
+                    player.addItemToInventory(harvestedCrop, harvestedCrop.getjumlahCropPanen());
+                    
+                    System.out.println("Harvested " + harvestedCrop.getjumlahCropPanen() + " " + harvestedCrop.getName() + "!");
+                    System.out.println("Total value: " + harvestedCrop.getTotalValue() + "g");
+                    
+                    // Reset tile and clear seed info
+                    gp.tileM.mapManager.mapTileNum[col][row] = 7; // Back to tilled
+                    gp.tileM.mapManager.plantedSeeds[col][row] = null;
+                    if (gp.tileM.mapManager.plantGrowth != null) {
+                        gp.tileM.mapManager.plantGrowth[col][row] = 0;
+                    }
+                } else {
+                    // Fallback jika tidak ada seed info
+                    crop harvestedCrop = new crop("Unknown Crop", gp, 0, 25, 1);
+                    player.addItemToInventory(harvestedCrop, 1);
+                    
+                    // Reset tile
+                    gp.tileM.mapManager.mapTileNum[col][row] = 7;
+                    if (gp.tileM.mapManager.plantGrowth != null) {
+                        gp.tileM.mapManager.plantGrowth[col][row] = 0;
+                    }
+                    
+                    System.out.println("Harvested unknown crop (seed info missing)");
+                }
                 
-                System.out.println("Crop harvested at col:" + col + " row:" + row);
                 player.setEnergy(player.getEnergy()-15);
+            } else {
+                System.out.println("No crops ready to harvest here!");
             }
         }
         

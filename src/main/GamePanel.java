@@ -109,8 +109,11 @@ public class GamePanel extends JPanel implements Runnable{
             timeM.update(); // Update game time
             player.update();
             
-            // Update current location from MapManager
-        
+            // Check for new day and update plants
+            if (timeM.isNewDay()) {
+                System.out.println("New day detected - updating all plant growth");
+                tileM.mapManager.updatePlantGrowth();
+            }
             
             // Update all objects
             for(int i = 0; i < obj.length; i++) {
@@ -118,10 +121,6 @@ public class GamePanel extends JPanel implements Runnable{
                     obj[i].update();
                 }
             }
-        }
-        
-        if (timeM.isNewDay()) {
-            tileM.mapManager.updatePlantGrowth();
         }
     }
 
