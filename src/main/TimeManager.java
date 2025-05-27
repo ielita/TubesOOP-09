@@ -190,4 +190,24 @@ public class TimeManager {
             gp.tileM.mapManager.updatePlantGrowth();
         }
     }
+
+    public void addMinutes(int minutes) {
+        this.minute += minutes;
+        while (this.minute >= 60) {
+            this.minute -= 60;
+            this.hour += 1;
+        }
+        while (this.hour >= 24) {
+            this.hour -= 24;
+            this.day++;
+            newDay = true;
+            // Cek pergantian musim
+            if (day > DAYS_PER_SEASON) {
+                day = 1;
+                currentSeasonIndex = (currentSeasonIndex + 1) % 4;
+                season = SEASONS[currentSeasonIndex];
+            }
+        }
+        updateBrightness();
+    }
 }

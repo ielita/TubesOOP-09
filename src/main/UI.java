@@ -93,6 +93,10 @@ public class UI {
             drawInventory();
         }
 
+        if (gp.gameState == gp.fishingMiniGameState) {
+            drawFishingMiniGame();
+        }
+
         if (gp.keyH.showDebug) {
             g2.setFont(new Font("Arial", Font.PLAIN, 20));
             g2.setColor(Color.WHITE);
@@ -258,8 +262,54 @@ public class UI {
             int qtyWidth = g2.getFontMetrics().stringWidth(qtyText);
             g2.drawString(qtyText, x + slotSize - qtyWidth - 6, y + slotSize - 6);
         }
-}
+    }
+        
+    public void drawFishingMiniGame() {
+        int boxWidth = 420;
+        int boxHeight = 260;
+        int boxX = gp.screenWidth / 2 - boxWidth / 2;
+        int boxY = gp.screenHeight / 2 - boxHeight / 2;
 
+        // Background box
+        g2.setColor(new Color(30, 30, 60, 230));
+        g2.fillRoundRect(boxX, boxY, boxWidth, boxHeight, 30, 30);
+
+        // Title
+        g2.setColor(Color.WHITE);
+        g2.setFont(arial_40);
+        String title = "Mini Game: Fishing!";
+        int titleX = getXforCenteredText(title);
+        g2.drawString(title, titleX, boxY + 50);
+
+        // Instruction
+        g2.setFont(new Font("Arial", Font.PLAIN, 22));
+        String instr = "Tebak angka " + gp.fishingMiniGame.getMin() + "-" + gp.fishingMiniGame.getMax() + " untuk dapat ikan!";
+        int instrX = getXforCenteredText(instr);
+        g2.drawString(instr, instrX, boxY + 120);
+
+        // Sisa tries
+        g2.setFont(new Font("Arial", Font.PLAIN, 20));
+        String triesText = "Sisa kesempatan: " + gp.fishingMiniGame.getTries();
+        int triesX = getXforCenteredText(triesText);
+        g2.drawString(triesText, triesX, boxY + 150);
+
+        // Input box
+        g2.setFont(new Font("Arial", Font.BOLD, 32));
+        String inputText = "Input: ";
+        int inputVal = gp.fishingMiniGame.getInput();
+        if (inputVal != 0) {
+            inputText += inputVal;
+        } else {
+            inputText += "_";
+        }
+        int inputX = getXforCenteredText(inputText);
+        int inputBoxY = boxY + 200;
+        g2.setColor(new Color(60, 60, 100, 180));
+        g2.fillRoundRect(inputX - 30, inputBoxY - 36, 220, 48, 16, 16);
+        g2.setColor(Color.WHITE);
+        g2.drawString(inputText, inputX, inputBoxY);
+    }
+            
     public int getXforCenteredText(String text) {
         int length = (int) g2.getFontMetrics().getStringBounds(text, g2).getWidth();
         int x = gp.screenWidth / 2 - length / 2;
