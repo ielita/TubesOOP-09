@@ -49,6 +49,7 @@ public class Player extends Entity{
         Item testItem7 = new equipment("Pickaxe", gp); // Add pickaxe
         
         inventoryManager.addItem(testItem1, 3);
+        inventoryManager.addItem(testItem1, 3);
         inventoryManager.addItem(testItem2, 1);
         inventoryManager.addItem(testItem3, 1);
         inventoryManager.addItem(testItem4, 10);

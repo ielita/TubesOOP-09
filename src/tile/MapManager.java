@@ -14,14 +14,25 @@ public class MapManager {
     public int[][] mapTileNum;
     public int maxWorldCol;
     public int maxWorldRow;
-    private float brightness = 1.0f; // 0.0f = dark, 1.0f = normal brightness
-    public int[][] plantGrowth; // Add this line
-    public boolean[][] wateredToday; // Track if tile was watered today
+    private float brightness = 1.0f;
+    public int[][] plantGrowth;
+    public boolean[][] wateredToday;
+    
+    // Add these to store map states
+    private java.util.Map<String, int[][]> savedMapStates;
+    private java.util.Map<String, int[][]> savedPlantGrowth;
+    private java.util.Map<String, boolean[][]> savedWateredStates;
     
     public MapManager(GamePanel gp) {
         this.gp = gp;
         previousMap = null;    
         currentMap = "insideHouse";
+        
+        // Initialize the save state maps
+        savedMapStates = new java.util.HashMap<>();
+        savedPlantGrowth = new java.util.HashMap<>();
+        savedWateredStates = new java.util.HashMap<>();
+        
         loadMapConfig(currentMap);
     }
     
@@ -76,13 +87,93 @@ public class MapManager {
     }
     
     public void changeMap(String newMap, int playerX, int playerY) {
+        // Save current map state before changing
+        saveCurrentMapState();
+        
         currentMap = newMap;
         loadMapConfig(newMap);
+        
+        // Restore saved state if it exists
+        restoreMapState(newMap);
+        
         gp.aSetter.setObject(newMap);
-        gp.player.setPosition(playerX, playerY);  // Use the new method
-        System.out.println("Player spawned at: " + playerX + "," + playerY); // Debug print
+        gp.player.setPosition(playerX, playerY);
+        System.out.println("Changed to map: " + currentMap);
+        System.out.println("Player spawned at: " + playerX + "," + playerY);
     }
-
+    
+    private void saveCurrentMapState() {
+        if (currentMap != null && mapTileNum != null) {
+            // Deep copy the current map state
+            int[][] mapCopy = new int[maxWorldCol][maxWorldRow];
+            for (int col = 0; col < maxWorldCol; col++) {
+                for (int row = 0; row < maxWorldRow; row++) {
+                    mapCopy[col][row] = mapTileNum[col][row];
+                }
+            }
+            savedMapStates.put(currentMap, mapCopy);
+            
+            // Save plant growth state
+            if (plantGrowth != null) {
+                int[][] growthCopy = new int[maxWorldCol][maxWorldRow];
+                for (int col = 0; col < maxWorldCol; col++) {
+                    for (int row = 0; row < maxWorldRow; row++) {
+                        growthCopy[col][row] = plantGrowth[col][row];
+                    }
+                }
+                savedPlantGrowth.put(currentMap, growthCopy);
+            }
+            
+            // Save watered state
+            if (wateredToday != null) {
+                boolean[][] wateredCopy = new boolean[maxWorldCol][maxWorldRow];
+                for (int col = 0; col < maxWorldCol; col++) {
+                    for (int row = 0; row < maxWorldRow; row++) {
+                        wateredCopy[col][row] = wateredToday[col][row];
+                    }
+                }
+                savedWateredStates.put(currentMap, wateredCopy);
+            }
+            
+            System.out.println("Saved state for map: " + currentMap);
+        }
+    }
+    
+    private void restoreMapState(String mapName) {
+        // Restore map tiles if saved state exists
+        if (savedMapStates.containsKey(mapName)) {
+            int[][] savedMap = savedMapStates.get(mapName);
+            for (int col = 0; col < maxWorldCol; col++) {
+                for (int row = 0; row < maxWorldRow; row++) {
+                    mapTileNum[col][row] = savedMap[col][row];
+                }
+            }
+            System.out.println("Restored tile state for map: " + mapName);
+        }
+        
+        // Restore plant growth if saved state exists
+        if (savedPlantGrowth.containsKey(mapName)) {
+            int[][] savedGrowth = savedPlantGrowth.get(mapName);
+            for (int col = 0; col < maxWorldCol; col++) {
+                for (int row = 0; row < maxWorldRow; row++) {
+                    plantGrowth[col][row] = savedGrowth[col][row];
+                }
+            }
+            System.out.println("Restored plant growth for map: " + mapName);
+        }
+        
+        // Restore watered state if saved state exists
+        if (savedWateredStates.containsKey(mapName)) {
+            boolean[][] savedWatered = savedWateredStates.get(mapName);
+            for (int col = 0; col < maxWorldCol; col++) {
+                for (int row = 0; row < maxWorldRow; row++) {
+                    wateredToday[col][row] = savedWatered[col][row];
+                }
+            }
+            System.out.println("Restored watered state for map: " + mapName);
+        }
+    }
+    
     public String getCurrentMap() {
         return currentMap;
     }
