@@ -177,7 +177,7 @@ public class KeyHandler implements KeyListener{
             interactPressed = true;
         }
 
-        if (gp.gameState == gp.playState && code == KeyEvent.VK_F) {
+        if (gp.gameState == gp.playState && code == KeyEvent.VK_I) {
             Item onhand = gp.player.getOnhandItem();
             if (onhand != null && onhand instanceof items.equipment) {
                 ((items.equipment)onhand).use(gp.player);
