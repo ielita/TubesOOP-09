@@ -103,9 +103,12 @@ public class KeyHandler implements KeyListener{
 
         if (gp.gameState == gp.inventoryState) {
             int invSize = gp.player.getInventory().size();
-            int cols = 5;
+            int cols = 8; // Sesuaikan dengan UI
+            int rows = 4;
+            int maxSlots = cols * rows;
+            int visibleSize = Math.min(invSize, maxSlots);
 
-            if (code == KeyEvent.VK_D && inventoryCursorIndex + 1 < invSize && (inventoryCursorIndex + 1) % cols != 0) {
+            if (code == KeyEvent.VK_D && inventoryCursorIndex + 1 < visibleSize && (inventoryCursorIndex + 1) % cols != 0) {
                 inventoryCursorIndex++;
             }
 
@@ -117,7 +120,7 @@ public class KeyHandler implements KeyListener{
                 inventoryCursorIndex -= cols;
             }
             
-            if (code == KeyEvent.VK_S && inventoryCursorIndex + cols < invSize) {
+            if (code == KeyEvent.VK_S && inventoryCursorIndex + cols < visibleSize) {
                 inventoryCursorIndex += cols;
             }
             
@@ -128,9 +131,9 @@ public class KeyHandler implements KeyListener{
                     boolean bEquip = b.getKey() instanceof items.equipment;
                     if (aEquip && !bEquip) return -1;
                     if (!aEquip && bEquip) return 1;
-                    return 0;
+                    return a.getKey().getName().compareToIgnoreCase(b.getKey().getName());
                 });
-                if (!entries.isEmpty() && inventoryCursorIndex < entries.size()) {
+                if (!entries.isEmpty() && inventoryCursorIndex < entries.size() && inventoryCursorIndex < maxSlots) {
                     Item selected = entries.get(inventoryCursorIndex).getKey();
                     gp.player.setOnhandItem(selected);
                     System.out.println("Selected item: " + gp.player.getOnhandItem().getName());
@@ -138,7 +141,8 @@ public class KeyHandler implements KeyListener{
                 gp.gameState = gp.playState;
             }
             return; 
-        }
+        } 
+                
 
         if (gp.gameState == gp.fishingMiniGameState && gp.fishingMiniGame.isActive()) {
             // Input angka, hanya set input (belum submit)

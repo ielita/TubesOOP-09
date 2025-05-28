@@ -3,21 +3,30 @@ package main;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.Shape;
 import java.awt.image.BufferedImage;
-import java.util.Map;
+import java.util.Map.Entry;
+import java.awt.Font;
+import java.awt.FontFormatException;
+import java.io.File;
+import java.io.IOException;
+
+
 import object.OBJ_Chest;
 import object.OBJ_Door;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-
-import items.*;
 
 public class UI {
 
-    private Font arial_80;
-    private Font arial_40;
+    private Font pixelify40;
+    private Font pixelify26;
+    private Font pixelify22;
+    private Font pixelify36;
+    private Font pixelify80;
+    private Font pixelify15;
+    private Font pixelify13;
     private final Color SELECTED_COLOR = new Color(255, 255, 0);
     private final Color UNSELECTED_COLOR = new Color(255, 255, 255);
 
@@ -28,10 +37,24 @@ public class UI {
 
     public UI(GamePanel gp) {
         this.gp = gp;
-        arial_80 = new Font("Arial", Font.BOLD, 80);
-        arial_40 = new Font("Arial", Font.PLAIN, 40);
-        OBJ_Chest chest = new OBJ_Chest(gp);
-        chestImage = chest.image;
+        try {
+            Font pixelify = Font.createFont(Font.TRUETYPE_FONT, new File("res/font/PixelifySans-VariableFont_wght.ttf"));
+            pixelify40 = pixelify.deriveFont(Font.PLAIN, 40f);
+            pixelify26 = pixelify.deriveFont(Font.PLAIN, 26f);
+            pixelify22 = pixelify.deriveFont(Font.PLAIN, 22f);
+            pixelify36 = pixelify.deriveFont(Font.BOLD, 36f);
+            pixelify80 = pixelify.deriveFont(Font.BOLD, 80f);
+            pixelify15 = pixelify.deriveFont(Font.PLAIN, 15f);
+            pixelify13 = pixelify.deriveFont(Font.PLAIN, 13f);
+        } catch (FontFormatException | IOException e) {
+            pixelify40 = new Font("Arial", Font.PLAIN, 40);
+            pixelify26 = new Font("Arial", Font.PLAIN, 26);
+            pixelify22 = new Font("Arial", Font.PLAIN, 22);
+            pixelify36 = new Font("Arial", Font.BOLD, 36);
+            pixelify80 = new Font("Arial", Font.BOLD, 80);  
+            pixelify15 = new Font("Arial", Font.PLAIN, 15);
+            pixelify13 = new Font("Arial", Font.PLAIN, 13);
+        }
     }
 
     public void draw(Graphics2D g2) {
@@ -41,12 +64,12 @@ public class UI {
             drawMainMenu();
         }
 
-        g2.setFont(arial_40);
+        g2.setFont(pixelify40);
         g2.setColor(Color.WHITE);
 
         if (gp.gameState == gp.playState) {
             // Draw time in top-right corner
-            g2.setFont(arial_40);
+            g2.setFont(pixelify40);
             g2.setColor(Color.WHITE);
             String time = gp.timeM.getTimeString();
             g2.drawString(time, gp.screenWidth - 150, 50);
@@ -98,7 +121,7 @@ public class UI {
         }
 
         if (gp.keyH.showDebug) {
-            g2.setFont(new Font("Arial", Font.PLAIN, 20));
+            g2.setFont(pixelify22);
             g2.setColor(Color.WHITE);
             g2.drawString("Player World X: " + gp.player.worldX, 10, 400);
             g2.drawString("Player World Y: " + gp.player.worldY, 10, 420);
@@ -127,7 +150,7 @@ public class UI {
     }
 
     public void drawPauseScreen() {
-        g2.setFont(arial_80);
+        g2.setFont(pixelify80);
         String text = "PAUSED";
         int x = getXforCenteredText(text);
         int y = gp.tileSize * 3;
@@ -141,7 +164,7 @@ public class UI {
         g2.drawString(text, x, y);
 
         // Menu options
-        g2.setFont(arial_40);
+        g2.setFont(pixelify40);
         
         // Continue option
         text = "CONTINUE";
@@ -164,7 +187,7 @@ public class UI {
         g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
 
         // Title
-        g2.setFont(arial_80);
+        g2.setFont(pixelify80);
         String text = "SPAKBOR SI PETANI";
         int x = getXforCenteredText(text);
         int y = gp.tileSize * 3;
@@ -178,7 +201,7 @@ public class UI {
         g2.drawString(text, x, y);
 
         // Menu options
-        g2.setFont(arial_40);
+        g2.setFont(pixelify40);
         text = "START GAME";
         x = getXforCenteredText(text);
         y += gp.tileSize * 4;
@@ -202,99 +225,129 @@ public class UI {
     }
 
     public void drawInventory() {
-        int invWidth = 500;
-        int invHeight = 300;
+        int cols = 8;
+        int rows = 4;
+        int slotSize = 80;
+        int slotGapX = 32;
+        int slotGapY = 32;
+
+        int invWidth = cols * slotSize + (cols - 1) * slotGapX + 60;
+        int invHeight = rows * slotSize + (rows - 1) * (slotGapY + 12) + 100;
         int invX = gp.screenWidth / 2 - invWidth / 2;
         int invY = gp.screenHeight / 2 - invHeight / 2;
-        g2.setColor(new Color(30, 30, 30, 220));
+
+        // Kotak utama
+        g2.setColor(new Color(30, 30, 30, 230));
         g2.fillRoundRect(invX, invY, invWidth, invHeight, 30, 30);
 
+        // Outline putih kotak utama (hanya sekali, sebelum loop)
         g2.setColor(Color.WHITE);
-        g2.setFont(arial_40);
+        g2.setStroke(new java.awt.BasicStroke(4));
+        g2.drawRoundRect(invX, invY, invWidth, invHeight, 30, 30);
+
+        // CLIP: agar item tidak keluar kotak
+        Shape oldClip = g2.getClip();
+        g2.setClip(invX, invY, invWidth, invHeight);
+
+        g2.setColor(Color.WHITE);
+        g2.setFont(pixelify40);
         String title = "Inventory";
         int titleX = invX + (invWidth - g2.getFontMetrics().stringWidth(title)) / 2;
-        g2.drawString(title, titleX, invY + 40);
+        g2.drawString(title, titleX, invY + 45);
 
-        int cols = 5;
-        int slotSize = 64;
-        int slotGap = 20;
-        int startX = invX + 40;
-        int startY = invY + 60;
+        int totalGridWidth = cols * slotSize + (cols - 1) * slotGapX;
+        int startX = invX + (invWidth - totalGridWidth) / 2;
+        int startY = invY + 70;
 
-        List<Map.Entry<Item, Integer>> entries = new ArrayList<>(gp.player.getInventory().entrySet());
+        List<Entry<items.Item, Integer>> entries = new ArrayList<>(gp.player.getInventory().entrySet());
         entries.sort((a, b) -> {
-            boolean aEquip = a.getKey() instanceof equipment;
-            boolean bEquip = b.getKey() instanceof equipment;
+            boolean aEquip = a.getKey() instanceof items.equipment;
+            boolean bEquip = b.getKey() instanceof items.equipment;
             if (aEquip && !bEquip) return -1;
             if (!aEquip && bEquip) return 1;
-            return 0;
+            return a.getKey().getName().compareToIgnoreCase(b.getKey().getName());
         });
 
-        for (int i = 0; i < entries.size(); i++) {
-            Item item = entries.get(i).getKey();
+        int maxSlots = cols * rows;
+
+        for (int i = 0; i < entries.size() && i < maxSlots; i++) {
+            items.Item item = entries.get(i).getKey();
             int quantity = entries.get(i).getValue();
             int col = i % cols;
             int row = i / cols;
-            int x = startX + col * (slotSize + slotGap);
-            int y = startY + row * (slotSize + 40);
+            int x = startX + col * (slotSize + slotGapX);
+            int y = startY + row * (slotSize + slotGapY + 12);
 
+            // Slot background
+            g2.setColor(new Color(80, 80, 80, 210));
+            g2.fillRoundRect(x, y, slotSize, slotSize, 14, 14);
+
+            // Highlight if selected
             if (i == gp.keyH.inventoryCursorIndex) {
                 g2.setColor(Color.WHITE);
-                g2.setStroke(new java.awt.BasicStroke(3));
-                g2.drawRoundRect(x-2, y-2, slotSize+4, slotSize+4, 12, 12);
+                g2.setStroke(new java.awt.BasicStroke(2));
+                g2.drawRoundRect(x-2, y-2, slotSize+4, slotSize+4, 16, 16);
             }
 
-            g2.setColor(new Color(80, 80, 80, 200));
-            g2.fillRoundRect(x, y, slotSize, slotSize, 10, 10);
-
+            // Draw item image
             if (item.getImage() != null) {
-                g2.drawImage(item.getImage(), x + 8, y + 8, slotSize - 16, slotSize - 16, null);
+                g2.drawImage(item.getImage(), x + 12, y + 12, slotSize - 24, slotSize - 24, null);
             }
 
+            // Draw item name (centered below slot, font lebih besar)
             g2.setColor(Color.WHITE);
-            g2.setFont(new Font("Arial", Font.PLAIN, 14));
+            g2.setFont(pixelify15);
             String itemName = item.getName();
             int nameWidth = g2.getFontMetrics().stringWidth(itemName);
-            g2.drawString(itemName, x + (slotSize - nameWidth) / 2, y + slotSize + 15);
+            g2.drawString(itemName, x + (slotSize - nameWidth) / 2, y + slotSize + 20);
 
+            // Draw quantity (bottom right of slot)
             String qtyText = "x" + quantity;
-            g2.setFont(new Font("Arial", Font.BOLD, 14));
+            g2.setFont(pixelify13);
             int qtyWidth = g2.getFontMetrics().stringWidth(qtyText);
             g2.drawString(qtyText, x + slotSize - qtyWidth - 6, y + slotSize - 6);
         }
+
+        // Reset clip
+        g2.setClip(oldClip);
     }
         
     public void drawFishingMiniGame() {
-        int boxWidth = 420;
-        int boxHeight = 260;
+        int boxWidth = 600;
+        int boxHeight = 340;
         int boxX = gp.screenWidth / 2 - boxWidth / 2;
         int boxY = gp.screenHeight / 2 - boxHeight / 2;
 
         // Background box
         g2.setColor(new Color(30, 30, 60, 230));
-        g2.fillRoundRect(boxX, boxY, boxWidth, boxHeight, 30, 30);
+        g2.fillRoundRect(boxX, boxY, boxWidth, boxHeight, 36, 36);
+
+        // Outline putih di sekeliling box
+        g2.setColor(Color.WHITE);
+        g2.setStroke(new java.awt.BasicStroke(4));
+        g2.drawRoundRect(boxX, boxY, boxWidth, boxHeight, 36, 36);
 
         // Title
         g2.setColor(Color.WHITE);
-        g2.setFont(arial_40);
+        g2.setFont(pixelify40);
         String title = "Mini Game: Fishing!";
         int titleX = getXforCenteredText(title);
-        g2.drawString(title, titleX, boxY + 50);
+        g2.drawString(title, titleX, boxY + 60);
 
         // Instruction
-        g2.setFont(new Font("Arial", Font.PLAIN, 22));
+        g2.setFont(pixelify26);
         String instr = "Tebak angka " + gp.fishingMiniGame.getMin() + "-" + gp.fishingMiniGame.getMax() + " untuk dapat ikan!";
         int instrX = getXforCenteredText(instr);
-        g2.drawString(instr, instrX, boxY + 120);
+        g2.drawString(instr, instrX, boxY + 110);
 
         // Sisa tries
-        g2.setFont(new Font("Arial", Font.PLAIN, 20));
+        g2.setFont(pixelify22);
         String triesText = "Sisa kesempatan: " + gp.fishingMiniGame.getTries();
         int triesX = getXforCenteredText(triesText);
-        g2.drawString(triesText, triesX, boxY + 150);
+        g2.drawString(triesText, triesX, boxY + 170);
 
-        // Input box
-        g2.setFont(new Font("Arial", Font.BOLD, 32));
+        // Input box (benar-benar di tengah box)
+        g2.setFont(pixelify36);
         String inputText = "Input: ";
         int inputVal = gp.fishingMiniGame.getInput();
         if (inputVal != 0) {
@@ -302,12 +355,23 @@ public class UI {
         } else {
             inputText += "_";
         }
-        int inputX = getXforCenteredText(inputText);
-        int inputBoxY = boxY + 200;
+        int inputBoxWidth = 320;
+        int inputBoxHeight = 60;
+        int inputBoxX = boxX + (boxWidth - inputBoxWidth) / 2;
+        int inputBoxY = boxY + 210;
+
+        // Box input
         g2.setColor(new Color(60, 60, 100, 180));
-        g2.fillRoundRect(inputX - 30, inputBoxY - 36, 220, 48, 16, 16);
+        g2.fillRoundRect(inputBoxX, inputBoxY, inputBoxWidth, inputBoxHeight, 18, 18);
         g2.setColor(Color.WHITE);
-        g2.drawString(inputText, inputX, inputBoxY);
+        g2.setStroke(new java.awt.BasicStroke(2));
+        g2.drawRoundRect(inputBoxX, inputBoxY, inputBoxWidth, inputBoxHeight, 18, 18);
+
+        // Text input di tengah box input
+        int inputTextWidth = g2.getFontMetrics().stringWidth(inputText);
+        int inputTextX = inputBoxX + (inputBoxWidth - inputTextWidth) / 2;
+        int inputTextY = inputBoxY + inputBoxHeight / 2 + g2.getFontMetrics().getAscent() / 2 - 6;
+        g2.drawString(inputText, inputTextX, inputTextY);
     }
             
     public int getXforCenteredText(String text) {
