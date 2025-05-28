@@ -382,7 +382,7 @@ public class Player extends Entity{
     }
 
     public void setEnergy(int energy) {
-        this.energy = Math.max(0, Math.min(100, energy)); // Keep energy between 0-100
+        this.energy = Math.max(-20, Math.min(100, energy)); // Keep energy between 0-100
     }
 
     public void addEnergy(int amount) {
