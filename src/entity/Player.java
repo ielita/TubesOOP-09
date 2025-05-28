@@ -81,7 +81,7 @@ public class Player extends Entity{
         this.gold += amount;
     }
 
-    publ ic void spendGold(int amount) {
+    public void spendGold(int amount) {
         if (this.gold >= amount) {
             this.gold -= amount;
         }
