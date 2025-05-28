@@ -43,6 +43,10 @@ public class OBJ_Door extends SuperObject {
         if (collision) {
             message = "Going to " + destinationMap + "...";
             gp.tileM.mapManager.changeMap(destinationMap, destinationX, destinationY);
+            if (!gp.tileM.mapManager.getCurrentMap().equals("insideHouse")){
+            gp.player.setEnergy(gp.player.getEnergy()-10);
+            gp.timeM.setMinute(gp.timeM.getMinute() + 15);
+            }
             collision = false;
         }
     }

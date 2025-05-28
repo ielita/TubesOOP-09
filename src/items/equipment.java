@@ -22,6 +22,8 @@ public class equipment extends Item{
                 System.out.println("You can only till soil on your farm!");
                 return;
             }
+            gp.timeM.setMinute(gp.timeM.getMinute() + 5);
+            gp.player.setEnergy(gp.player.getEnergy() - 5);
             
             // Use same calculation method as in Player class
             int playerCenterX = player.worldX + player.solidArea.x + player.solidArea.width / 2;
@@ -48,7 +50,7 @@ public class equipment extends Item{
                 gp.tileM.mapManager.mapTileNum[col][row] = 7;
                 System.out.println("Tile tilled at col:" + col + " row:" + row);
             }
-            player.setEnergy(player.getEnergy()-10);
+
         }
         
         if (getName().equals("Watering Can")) {
@@ -57,6 +59,7 @@ public class equipment extends Item{
                 System.out.println("You can only water crops on your farm!");
                 return;
             }
+            
             
             // Calculate tile position in front of player
             int playerCenterX = player.worldX + player.solidArea.x + player.solidArea.width / 2;
@@ -84,6 +87,7 @@ public class equipment extends Item{
                 gp.tileM.mapManager.mapTileNum[col][row] = 9;
                 System.out.println("Tilled soil watered at col:" + col + " row:" + row);
                 player.setEnergy(player.getEnergy()-5);
+                gp.timeM.setMinute(gp.timeM.getMinute() + 5);
             } else if (currentTile == 8) { // dry planted -> watered planted
                 gp.tileM.mapManager.mapTileNum[col][row] = 10;
                 // Mark as watered today
@@ -93,6 +97,7 @@ public class equipment extends Item{
                 gp.tileM.mapManager.wateredToday[col][row] = true;
                 System.out.println("Planted crop watered at col:" + col + " row:" + row);
                 player.setEnergy(player.getEnergy()-5);
+                gp.timeM.setMinute(gp.timeM.getMinute() + 5);
             } else {
                 System.out.println("Nothing to water here!");
             }
@@ -104,7 +109,8 @@ public class equipment extends Item{
                 System.out.println("You can only harvest crops on your farm!");
                 return;
             }
-            
+            gp.timeM.setMinute(gp.timeM.getMinute() + 5);
+            gp.player.setEnergy(gp.player.getEnergy() - 5);
             // Calculate tile position in front of player
             int playerCenterX = player.worldX + player.solidArea.x + player.solidArea.width / 2;
             int playerCenterY = player.worldY + player.solidArea.y + player.solidArea.height / 2;
@@ -200,7 +206,8 @@ public class equipment extends Item{
             if (currentTile == 7) { // tilted -> grass
                 gp.tileM.mapManager.mapTileNum[col][row] = 0;
                 System.out.println("Tilted soil converted to grass at col:" + col + " row:" + row);
-                player.setEnergy(player.getEnergy()-12);
+                gp.player.setEnergy(player.getEnergy()-5);
+                gp.timeM.setMinute(gp.timeM.getMinute() + 5);
             } else if (currentTile == 9) { // tilted_w -> grass
                 gp.tileM.mapManager.mapTileNum[col][row] = 0;
                 // Also reset watering status
@@ -208,12 +215,14 @@ public class equipment extends Item{
                     gp.tileM.mapManager.wateredToday[col][row] = false;
                 }
                 System.out.println("Watered tilted soil converted to grass at col:" + col + " row:" + row);
-                player.setEnergy(player.getEnergy()-12);
+                gp.player.setEnergy(player.getEnergy()-5);
+                gp.timeM.setMinute(gp.timeM.getMinute() + 5);
             } else if (currentTile == 8) { // planted -> grass (destroy crop)
                 gp.tileM.mapManager.mapTileNum[col][row] = 0;
                 gp.tileM.mapManager.plantGrowth[col][row] = 0;
                 System.out.println("Planted crop destroyed and converted to grass at col:" + col + " row:" + row);
-                player.setEnergy(player.getEnergy()-15);
+                gp.player.setEnergy(player.getEnergy()-5);
+                gp.timeM.setMinute(gp.timeM.getMinute() + 5);
             } else if (currentTile == 10) { // planted_w -> grass (destroy watered crop)
                 gp.tileM.mapManager.mapTileNum[col][row] = 0;
                 gp.tileM.mapManager.plantGrowth[col][row] = 0;
@@ -221,7 +230,8 @@ public class equipment extends Item{
                     gp.tileM.mapManager.wateredToday[col][row] = false;
                 }
                 System.out.println("Watered planted crop destroyed and converted to grass at col:" + col + " row:" + row);
-                player.setEnergy(player.getEnergy()-15);
+                gp.player.setEnergy(player.getEnergy()-5);
+                gp.timeM.setMinute(gp.timeM.getMinute() + 5);
             }
         }
         

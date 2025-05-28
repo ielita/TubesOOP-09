@@ -10,7 +10,7 @@ import java.awt.Font;
 import java.awt.FontFormatException;
 import java.io.File;
 import java.io.IOException;
-
+import javax.imageio.ImageIO; // Tambahkan ini
 
 import object.OBJ_Chest;
 import object.OBJ_Door;
@@ -182,46 +182,100 @@ public class UI {
     }
 
     public void drawMainMenu() {
-        // Background
-        g2.setColor(new Color(0, 0, 0));
-        g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
+        // Background image
+        BufferedImage backgroundImage = null;
+        try {
+            backgroundImage = ImageIO.read(new File("res/menu/menuScreen.png")); // Ganti dengan path image kamu
+        } catch (IOException e) {
+            // Fallback jika image tidak ditemukan
+            System.out.println("Background image not found, using solid color");
+        }
+        
+        if (backgroundImage != null) {
+            // Draw scaled background image
+            g2.drawImage(backgroundImage, 0, 0, gp.screenWidth, gp.screenHeight, null);
+        } else {
+            // Fallback: solid color background
+            g2.setColor(new Color(0, 0, 0));
+            g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
+        }
 
-        // Title
+        // Title with better visibility
         g2.setFont(pixelify80);
-        String text = "SPAKBOR SI PETANI";
+        String text = "SPAKBOR HILLS";
         int x = getXforCenteredText(text);
         int y = gp.tileSize * 3;
 
-        // Shadow
-        g2.setColor(Color.gray);
-        g2.drawString(text, x + 5, y + 5);
+        // Title shadow (darker and more prominent)
+        g2.setColor(new Color(0, 0, 0, 180)); // Semi-transparent black
+        g2.drawString(text, x + 3, y + 3);
 
-        // Main text
-        g2.setColor(Color.white);
+        // Title outline (optional, for better readability)
+        g2.setColor(new Color(50, 50, 50));
+        g2.drawString(text, x + 1, y + 1);
+        g2.drawString(text, x - 1, y - 1);
+        g2.drawString(text, x + 1, y - 1);
+        g2.drawString(text, x - 1, y + 1);
+
+        // Main title text
+        g2.setColor(Color.WHITE);
         g2.drawString(text, x, y);
 
-        // Menu options
+        // Menu options with background boxes for better visibility
         g2.setFont(pixelify40);
+        
+        // START GAME
         text = "START GAME";
         x = getXforCenteredText(text);
         y += gp.tileSize * 4;
+        
+        if (gp.keyH.menuOption == 0) {
+            // Selected option background
+            g2.setColor(new Color(255, 255, 0, 100)); // Semi-transparent yellow
+            g2.fillRoundRect(x - 20, y - 35, g2.getFontMetrics().stringWidth(text) + 40, 45, 10, 10);
+        }
+        
+        g2.setColor(gp.keyH.menuOption == 0 ? SELECTED_COLOR : UNSELECTED_COLOR);
+        // Text shadow
+        g2.setColor(new Color(0, 0, 0, 150));
+        g2.drawString(text, x + 2, y + 2);
         g2.setColor(gp.keyH.menuOption == 0 ? SELECTED_COLOR : UNSELECTED_COLOR);
         g2.drawString(text, x, y);
 
+        // OPTIONS
         text = "OPTIONS";
         x = getXforCenteredText(text);
         y += gp.tileSize;
+        
+        if (gp.keyH.menuOption == 1) {
+            g2.setColor(new Color(255, 255, 0, 100));
+            g2.fillRoundRect(x - 20, y - 35, g2.getFontMetrics().stringWidth(text) + 40, 45, 10, 10);
+        }
+        
+        g2.setColor(new Color(0, 0, 0, 150));
+        g2.drawString(text, x + 2, y + 2);
         g2.setColor(gp.keyH.menuOption == 1 ? SELECTED_COLOR : UNSELECTED_COLOR);
         g2.drawString(text, x, y);
 
+        // EXIT
         text = "EXIT";
         x = getXforCenteredText(text);
         y += gp.tileSize;
+        
+        if (gp.keyH.menuOption == 2) {
+            g2.setColor(new Color(255, 255, 0, 100));
+            g2.fillRoundRect(x - 20, y - 35, g2.getFontMetrics().stringWidth(text) + 40, 45, 10, 10);
+        }
+        
+        g2.setColor(new Color(0, 0, 0, 150));
+        g2.drawString(text, x + 2, y + 2);
         g2.setColor(gp.keyH.menuOption == 2 ? SELECTED_COLOR : UNSELECTED_COLOR);
         g2.drawString(text, x, y);
 
-        // Draw chest icon
-        g2.drawImage(chestImage, gp.tileSize / 2, gp.tileSize / 2, gp.tileSize, gp.tileSize, null);
+        // Draw chest icon (if you want to keep it)
+        if (chestImage != null) {
+            g2.drawImage(chestImage, gp.tileSize / 2, gp.tileSize / 2, gp.tileSize, gp.tileSize, null);
+        }
     }
 
     public void drawInventory() {
