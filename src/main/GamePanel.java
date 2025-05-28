@@ -33,6 +33,7 @@ public class GamePanel extends JPanel implements Runnable{
     int FPS = 60;
 
     public TileManager tileM = new TileManager(this);
+    public MapManager mapM = new MapManager(this);
     public KeyHandler keyH = new KeyHandler(this);
 
     public UI ui = new UI(this);
@@ -57,7 +58,7 @@ public class GamePanel extends JPanel implements Runnable{
     public final int inventoryState = 3;
     public final int fishingMiniGameState = 4;
     public minigame.FishingMiniGame fishingMiniGame = new minigame.FishingMiniGame();
-    public String currentMap = tileM.mapManager.getCurrentMap(); 
+    public String currentMap = mapM.getCurrentMap(); 
     
     public GamePanel(){
         this.setPreferredSize(new Dimension(screenWidth,screenHeight));
@@ -70,7 +71,7 @@ public class GamePanel extends JPanel implements Runnable{
     public void setupGame(){
 
         aSetter.setNPC();
-        aSetter.setObject(tileM.mapManager.currentMap);
+        aSetter.setObject(mapM.currentMap);
         gameState = menuState;
     }
 
@@ -152,7 +153,7 @@ public class GamePanel extends JPanel implements Runnable{
         ui.draw(g2);
         
         // Draw brightness overlay at the end
-        tileM.mapManager.drawBrightnessOverlay(g2);
+        mapM.drawBrightnessOverlay(g2);
         
         g2.dispose(); 
     }

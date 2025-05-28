@@ -17,12 +17,6 @@ public class equipment extends Item{
         GamePanel gp = player.getGp();
         
         if (getName().equals("Hoe")) {
-            // Hanya bisa till di farm
-            if (!"farm".equals(gp.tileM.mapManager.getCurrentMap())) {
-                System.out.println("You can only till soil on your farm!");
-                return;
-            }
-            
             // Use same calculation method as in Player class
             int playerCenterX = player.worldX + player.solidArea.x + player.solidArea.width / 2;
             int playerCenterY = player.worldY + player.solidArea.y + player.solidArea.height / 2;
@@ -52,12 +46,6 @@ public class equipment extends Item{
         }
         
         if (getName().equals("Watering Can")) {
-            // Hanya bisa water di farm
-            if (!"farm".equals(gp.tileM.mapManager.getCurrentMap())) {
-                System.out.println("You can only water crops on your farm!");
-                return;
-            }
-            
             // Calculate tile position in front of player
             int playerCenterX = player.worldX + player.solidArea.x + player.solidArea.width / 2;
             int playerCenterY = player.worldY + player.solidArea.y + player.solidArea.height / 2;
@@ -99,12 +87,6 @@ public class equipment extends Item{
         }
         
         if (getName().equals("Sickle")) {
-            // Hanya bisa harvest di farm
-            if (!"farm".equals(gp.tileM.mapManager.getCurrentMap())) {
-                System.out.println("You can only harvest crops on your farm!");
-                return;
-            }
-            
             // Calculate tile position in front of player
             int playerCenterX = player.worldX + player.solidArea.x + player.solidArea.width / 2;
             int playerCenterY = player.worldY + player.solidArea.y + player.solidArea.height / 2;
@@ -168,12 +150,6 @@ public class equipment extends Item{
         }
         
         if (getName().equals("Pickaxe")) {
-            // Hanya bisa convert tiles di farm
-            if (!"farm".equals(gp.tileM.mapManager.getCurrentMap())) {
-                System.out.println("You can only modify soil on your farm!");
-                return;
-            }
-            
             // Calculate tile position in front of player
             int playerCenterX = player.worldX + player.solidArea.x + player.solidArea.width / 2;
             int playerCenterY = player.worldY + player.solidArea.y + player.solidArea.height / 2;
@@ -231,14 +207,14 @@ public class equipment extends Item{
                 player.setEnergy(player.getEnergy() - 5);
 
                 // Tambah 15 menit ke waktu
-                gp.timeM.setMinute(gp.timeM.getMinute() + 15);
+                gp.timeM.addMinutes(15);
 
                 // Filter ikan yang bisa didapat
                 List<fish> allFish = FishData.getAllFish(gp);
                 List<fish> availableFish = new ArrayList<>();
                 String time = gp.timeM.getTimeString();
                 String season = gp.timeM.getSeason();
-                String location = gp.tileM.mapManager.getCurrentMap();
+                String location = gp.mapM.getCurrentMap();
                 for (fish f : allFish) {
                     boolean seasonMatch = f.getSeasons().contains("Any") || f.getSeasons().contains(season);
                     boolean locationMatch = f.getLocation().contains("Any") || f.getLocation().contains(location);
