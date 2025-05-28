@@ -5,6 +5,7 @@ import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import entity.Player;
 
 import items.*;
 
@@ -142,9 +143,8 @@ public class KeyHandler implements KeyListener{
         
         if (gp.gameState != gp.playState) {
             return;
-        }
-
-        if (code == KeyEvent.VK_W ){//|| code == KeyEvent.VK_UP
+        } // Reset nothingPressed flag
+        if (code == KeyEvent.VK_W ){
             upPressed = true;
         }
         if (code == KeyEvent.VK_A){
@@ -156,6 +156,7 @@ public class KeyHandler implements KeyListener{
         if (code == KeyEvent.VK_D){
             rightPressed = true;
         }
+        
         if (code == KeyEvent.VK_ESCAPE){
             if (gp.gameState == gp.playState){
                 gp.gameState = gp.pauseState;
@@ -169,7 +170,7 @@ public class KeyHandler implements KeyListener{
             showDebug = !showDebug;
         }
 
-        if (code == KeyEvent.VK_P){
+        if (code == KeyEvent.VK_SHIFT){
             sprintPressed = true;
         }
 
@@ -213,7 +214,7 @@ public class KeyHandler implements KeyListener{
         if (code == KeyEvent.VK_I){
             interactPressed = false;
         }
-        if (code == KeyEvent.VK_P) {
+        if (code == KeyEvent.VK_SHIFT) {
             sprintPressed = false;
         }
     }

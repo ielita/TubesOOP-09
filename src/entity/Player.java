@@ -16,8 +16,8 @@ public class Player extends Entity{
 
     public final int screenX;
     public final int screenY;
-    private int defaultSpeed = 10;
-    private int sprintSpeed = 15;
+    private int defaultSpeed = 7;
+    private int sprintSpeed = 12;
     private int energy = 100;
     private int gold = 0;  // Add this line
     private String farmName;
@@ -35,8 +35,8 @@ public class Player extends Entity{
         solidArea.y = 25;
         solidAreaDefaultX = solidArea.x;
         solidAreaDefaultY = solidArea.y;
-        solidArea.width = 25;
-        solidArea.height = 25;
+        solidArea.width = 20;
+        solidArea.height = 32;
         inventoryManager = new InventoryManager();
 
         // test items
@@ -174,6 +174,7 @@ public class Player extends Entity{
             // CHECK TILE COLLISION
             collisionOn = false;
             gp.cChecker.checkTile(this);
+            gp.cChecker.checkEntity(this, gp.npc); // Check collision with NPCs
 
             // CHECK OBJECT COLLISION
             int objIndex = gp.cChecker.checkObject(this, true);
@@ -197,7 +198,7 @@ public class Player extends Entity{
             }
 
             // Faster animation when sprinting
-            int animationSpeed = keyH.sprintPressed ? 8 : 12;
+            int animationSpeed = keyH.sprintPressed ? 4 : 8;
             spriteCounter++;
             if (spriteCounter > animationSpeed) {
                 // spriteNum = 1+ (spriteNum + 1) % 4; 
@@ -215,6 +216,9 @@ public class Player extends Entity{
                 }
                 spriteCounter = 0;
             }
+        }
+        else{
+            spriteNum = 4;
         }
     }
 
@@ -329,6 +333,7 @@ public class Player extends Entity{
                 if (spriteNum == 4){
                     image = upidle;
                 }
+
                 
                 break;
             case "down":

@@ -78,6 +78,7 @@ public class MapManager {
     public void changeMap(String newMap, int playerX, int playerY) {
         currentMap = newMap;
         loadMapConfig(newMap);
+        gp.aSetter.setNPC(newMap);
         gp.aSetter.setObject(newMap);
         gp.player.setPosition(playerX, playerY);  // Use the new method
         System.out.println("Player spawned at: " + playerX + "," + playerY); // Debug print

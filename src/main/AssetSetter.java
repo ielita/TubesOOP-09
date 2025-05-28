@@ -1,5 +1,6 @@
 package main;
 
+import entity.NPC;
 // import main.GamePanel;
 import object.OBJ_Chest;
 import object.OBJ_Door;
@@ -22,12 +23,18 @@ public class AssetSetter {
         // Set new objects based on map
         if (mapName.equals("insideHouse")) {
             gp.obj[0] = new OBJ_Chest(gp);
+            
             gp.obj[0].worldX = 1 * gp.tileSize;
             gp.obj[0].worldY = 1 * gp.tileSize;
 
             gp.obj[1] = new OBJ_Door(gp, "farm", 3, 8);
             gp.obj[1].worldX = 2 * gp.tileSize;
             gp.obj[1].worldY = 5 * gp.tileSize;
+            System.out.println("Player is in insideHouse, objects set");
+
+            // gp.npc[0] = new NPC_clone(gp);
+            // gp.npc[0].worldX = 4 * gp.tileSize;
+            // gp.npc[0].worldY = 4 * gp.tileSize;
         }
 
         else if (mapName.equals("farm")) {
@@ -43,6 +50,7 @@ public class AssetSetter {
             gp.obj[2] = new OBJ_DoorOpen(gp, "town", 3, 22);
             gp.obj[2].worldX = 31 * gp.tileSize;
             gp.obj[2].worldY = 16 * gp.tileSize;
+            System.out.println("Player is in farm, doors set");
         }
 
         else if (mapName.equals("town")) {
@@ -72,7 +80,8 @@ public class AssetSetter {
             gp.obj[4] = new OBJ_DoorOpen(gp, "ocean", 7, 3);
             gp.obj[4].worldX = 24 * gp.tileSize;  // Center of map width
             gp.obj[4].worldY = 49 * gp.tileSize;  // Bottom wall
-    }
+            System.out.println("Player is in town, doors set");
+        }
         else if (mapName.equals("mountainlake")) {
             // Regular door
             gp.obj[0] = new OBJ_DoorOpen(gp, "town", 24, 3);
@@ -105,11 +114,22 @@ public class AssetSetter {
 
     
 
-    public void setNPC(){
+    public void setNPC(String mapName) {
+        for (int i = 0; i < gp.npc.length; i++) {
+            gp.npc[i] = null;
+        }
 
-        // gp.npc[0] =  new NPC_clone(gp);
-        // gp.npc[0].worldX = 4 * gp.tileSize;
-        // gp.npc[0].worldY = 4 * gp.tileSize;
+        if (mapName.equals("insideHouse")) {
+            gp.npc[0] =  new NPC(gp);
+            gp.npc[0].worldX = 4 * gp.tileSize;
+            gp.npc[0].worldY = 4 * gp.tileSize;
+            System.out.println("NPC set for insideHouse");
+        }
+        else{
+            // Add more NPCs for other maps if needed
+            System.out.println("No NPCs set for " + mapName);
+        }
+        
 
 
     }
