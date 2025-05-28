@@ -56,6 +56,9 @@ public class GamePanel extends JPanel implements Runnable{
     public final int playState = 1;
     public final int pauseState = 2;
     public final int inventoryState = 3;
+    public final int interacingState = 4;
+    public final int chattingState = 5;
+    public final int givingGiftState = 6;
     public String currentMap = mapM.getCurrentMap(); 
     
     public GamePanel(){
