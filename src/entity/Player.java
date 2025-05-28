@@ -64,9 +64,8 @@ public class Player extends Entity{
         addItemToInventory(sickle, 1);
         System.out.println("Added Sickle");
 
-        equipment fishingRod = new equipment("Fishing Rod", gp);
-        addItemToInventory(fishingRod, 1);
-        System.out.println("Added Fishing Rod");
+        equipment FishingRod = new equipment("Fishing Rod", gp);
+        addItemToInventory(FishingRod, 1);
         
         // Add starting seeds
         seed parsnipSeed = SeedData.getSeedByName(gp, "Parsnip Seeds");
@@ -247,7 +246,6 @@ public class Player extends Entity{
                     gp.obj[i].interact(gp, keyH);
                 }
             }
-            keyH.interactPressed = false;
         }
 
         // Movement checks

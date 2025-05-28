@@ -303,7 +303,7 @@ public class UI {
 
             // Draw quantity (bottom right of slot)
             String qtyText = "x" + quantity;
-            g2.setFont(pixelify13);
+            g2.setFont(pixelify22);
             int qtyWidth = g2.getFontMetrics().stringWidth(qtyText);
             g2.drawString(qtyText, x + slotSize - qtyWidth - 6, y + slotSize - 6);
         }
