@@ -1,9 +1,7 @@
 package main;
 
 // import main.GamePanel;
-import object.OBJ_Chest;
-import object.OBJ_Door;
-import object.OBJ_DoorOpen;
+import object.*;
 
 public class AssetSetter {
     GamePanel gp;
@@ -28,6 +26,15 @@ public class AssetSetter {
             gp.obj[1] = new OBJ_Door(gp, "farm", 3, 8);
             gp.obj[1].worldX = 2 * gp.tileSize;
             gp.obj[1].worldY = 5 * gp.tileSize;
+
+            gp.obj[2] = new OBJ_Bed1(gp);
+            gp.obj[2].worldX = 4 * gp.tileSize;
+            gp.obj[2].worldY = 3 * gp.tileSize;
+
+            gp.obj[3] = new OBJ_Bed2(gp);
+            gp.obj[3].worldX = 4 * gp.tileSize;
+            gp.obj[3].worldY = 4 * gp.tileSize;
+
         }
 
         else if (mapName.equals("farm")) {

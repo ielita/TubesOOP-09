@@ -63,6 +63,10 @@ public class Player extends Entity{
         equipment sickle = new equipment("Sickle", gp);
         addItemToInventory(sickle, 1);
         System.out.println("Added Sickle");
+
+        equipment fishingRod = new equipment("Fishing Rod", gp);
+        addItemToInventory(fishingRod, 1);
+        System.out.println("Added Fishing Rod");
         
         // Add starting seeds
         seed parsnipSeed = SeedData.getSeedByName(gp, "Parsnip Seeds");
@@ -128,6 +132,12 @@ public class Player extends Entity{
 
     // Plant seed method
     public void plantSeed() {
+        // Hanya bisa plant di farm
+        if (!"farm".equals(gp.tileM.mapManager.getCurrentMap())) {
+            System.out.println("You can only plant seeds on your farm!");
+            return;
+        }
+        
         Item onhand = getOnhandItem();
         if (onhand instanceof seed) {
             seed seedToPlant = (seed) onhand;
@@ -150,31 +160,27 @@ public class Player extends Entity{
             int row = facingY / gp.tileSize;
 
             // Check bounds
-            if (col < 0 || row < 0 || col >= gp.tileM.mapManager.maxWorldCol || row >= gp.tileM.mapManager.maxWorldRow) {
+            if (!gp.tileM.mapManager.isValidPosition(col, row)) {
                 System.out.println("Cannot plant here - out of bounds!");
                 return;
             }
 
             int currentTile = gp.tileM.mapManager.mapTileNum[col][row];
 
-            // Check if tile is tilled (tile 7 OR 9 - both dry and watered)
+            // Check if tile is tilled
             if (currentTile == 7 || currentTile == 9) {
                 // Initialize plant tracking if not done yet
-                if (gp.tileM.mapManager.plantedSeeds == null) {
-                    gp.tileM.mapManager.initializePlantTracking();
-                }
+                gp.tileM.mapManager.initializePlantTracking();
                 
-                // Plant the seed - convert to planted state
+                // Plant the seed
                 if (currentTile == 7) {
-                    gp.tileM.mapManager.mapTileNum[col][row] = 8; // planted (dry)
+                    gp.tileM.mapManager.mapTileNum[col][row] = 8;
                 } else if (currentTile == 9) {
-                    gp.tileM.mapManager.mapTileNum[col][row] = 10; // planted (watered)
+                    gp.tileM.mapManager.mapTileNum[col][row] = 10;
                 }
                 
-                // Store seed info for this tile
+                // Store seed info
                 gp.tileM.mapManager.plantedSeeds[col][row] = seedToPlant;
-                
-                // Set growth timer (days remaining)
                 gp.tileM.mapManager.plantGrowth[col][row] = seedToPlant.getGrowthTime();
                 
                 // Remove seed from inventory
@@ -183,7 +189,7 @@ public class Player extends Entity{
                 System.out.println("Planted " + seedToPlant.getName() + "!");
                 System.out.println("Will be ready in " + seedToPlant.getGrowthTime() + " days.");
                 
-                // If no more seeds of this type, clear onhand
+                // Clear onhand if no more seeds
                 if (!getInventory().containsKey(seedToPlant) || getInventory().get(seedToPlant) <= 0) {
                     setOnhandItem(null);
                 }
@@ -241,6 +247,7 @@ public class Player extends Entity{
                     gp.obj[i].interact(gp, keyH);
                 }
             }
+            keyH.interactPressed = false;
         }
 
         // Movement checks

@@ -10,7 +10,7 @@ import main.KeyHandler;
 
 public class OBJ_Door extends SuperObject {
     private CollisionChecker cChecker;
-    private KeyHandler keyH;
+
     private GamePanel gp;
     public String message = "";
     private String destinationMap;
