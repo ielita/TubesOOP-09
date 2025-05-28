@@ -129,7 +129,7 @@ public class FishData {
         ));
         list.add(new fish(
             "Catfish",
-            List.of("farm", "Pond"),
+            List.of("insideHouse", "Pond"),
             List.of("Spring", "Summer", "Fall"),
             List.of("06.00–22.00"),
             List.of("Rainy"),

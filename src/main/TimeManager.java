@@ -185,42 +185,9 @@ public class TimeManager {
         // Update brightness to day time
         updateBrightness();
         
-        System.out.println("=== NEW DAY: " + getDateString() + " ===");
-        
-        // Update current map plant growth
+        // Trigger plant growth update immediately
         if (gp != null && gp.tileM != null && gp.tileM.mapManager != null) {
             gp.tileM.mapManager.updatePlantGrowth();
         }
-        
-        // Update all saved map states for consistency
-        updateAllMapStates();
-    }
-    
-    // Update this method to use the new MapManager method
-    private void updateAllMapStates() {
-        if (gp.tileM != null && gp.tileM.mapManager != null) {
-            gp.tileM.mapManager.updateAllSavedMapStates();
-            System.out.println("Updated all saved map states for new day");
-        }
-    }
-
-    public void addMinutes(int minutes) {
-        this.minute += minutes;
-        while (this.minute >= 60) {
-            this.minute -= 60;
-            this.hour += 1;
-        }
-        while (this.hour >= 24) {
-            this.hour -= 24;
-            this.day++;
-            newDay = true;
-            // Cek pergantian musim
-            if (day > DAYS_PER_SEASON) {
-                day = 1;
-                currentSeasonIndex = (currentSeasonIndex + 1) % 4;
-                season = SEASONS[currentSeasonIndex];
-            }
-        }
-        updateBrightness();
     }
 }

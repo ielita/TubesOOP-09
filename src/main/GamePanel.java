@@ -5,6 +5,10 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+import java.awt.image.BufferedImage;
+
 import javax.swing.JPanel;
 import object.SuperObject;
 import tile.MapManager;
@@ -17,8 +21,8 @@ public class GamePanel extends JPanel implements Runnable{
     final int scale = 2;
 
     public final int tileSize = originalTileSize * scale; 
-    public final int maxScreenCol = 16;    // horizontal 
-    public final int maxScreenRow = 12;    // vertikal 
+    public final int maxScreenCol = 15;    // horizontal 
+    public final int maxScreenRow = 9;    // vertikal 
     public final int screenWidth = tileSize * maxScreenCol;    
     public final int screenHeight = tileSize * maxScreenRow;   
     
@@ -26,6 +30,14 @@ public class GamePanel extends JPanel implements Runnable{
 
     public final int maxWorldCol = 50;
     public final int maxWorldRow = 50;
+
+    // FOR FULL SCREEN
+    int screenHeight2 = screenHeight;
+    int screenWidth2 = screenWidth;
+
+    BufferedImage tempScreen; 
+    Graphics2D g2;
+
 
 // Default starting map
 
@@ -54,11 +66,12 @@ public class GamePanel extends JPanel implements Runnable{
     public int gameState;
     public final int menuState = 0;
     public final int playState = 1;
-    public final int pauseState = 2;
+    public final int optionsState = 2;
     public final int inventoryState = 3;
-    public final int fishingMiniGameState = 4;
-    public minigame.FishingMiniGame fishingMiniGame = new minigame.FishingMiniGame();
+    public final int keyBindingState = 4;
     public String currentMap = mapM.getCurrentMap(); 
+    public boolean fullScreenOn = false; 
+    public boolean backsoundOn = true; 
     
     public GamePanel(){
         this.setPreferredSize(new Dimension(screenWidth,screenHeight));
@@ -73,7 +86,45 @@ public class GamePanel extends JPanel implements Runnable{
         aSetter.setNPC();
         aSetter.setObject(mapM.currentMap);
         gameState = menuState;
+
+        tempScreen = new BufferedImage(screenWidth, screenHeight, BufferedImage.TYPE_INT_ARGB);
+        g2 = (Graphics2D) tempScreen.getGraphics();
+
+        setFullScreen();
+
     }
+
+public void setFullScreen() {
+    GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+    GraphicsDevice gd = ge.getDefaultScreenDevice();
+
+    if (fullScreenOn) {
+
+        Main.window.dispose(); 
+        Main.window.setUndecorated(true);
+        Main.window.setResizable(false);
+        Main.window.setVisible(true);
+
+        gd.setFullScreenWindow(Main.window);
+
+        screenWidth2 = Main.window.getWidth();
+        screenHeight2 = Main.window.getHeight();
+    } else {
+        gd.setFullScreenWindow(null); 
+
+        Main.window.dispose(); 
+        Main.window.setUndecorated(false);
+        Main.window.setResizable(true);
+        Main.window.setVisible(true);
+
+        Main.window.setSize(screenWidth, screenHeight);
+        Main.window.setLocationRelativeTo(null); 
+
+        screenWidth2 = screenWidth;
+        screenHeight2 = screenHeight;
+    }
+}
+
 
     public void startGameThread(){
         gameThread = new Thread(this);
@@ -83,7 +134,7 @@ public class GamePanel extends JPanel implements Runnable{
     @Override
     public void run(){
 
-            double drawInterval = 1000000000/FPS;
+            double drawInterval = 1000000000.0/FPS;
             double delta = 0;
             long lastTime = System.nanoTime();
             long currentTime;
@@ -98,7 +149,9 @@ public class GamePanel extends JPanel implements Runnable{
 
             if (delta >= 1){
                 update();
-                repaint();
+                drawToTempScreen();
+                drawToScreen();
+                // repaint();
                 delta --;
             }
         }
@@ -109,11 +162,8 @@ public class GamePanel extends JPanel implements Runnable{
             timeM.update(); // Update game time
             player.update();
             
-            // Check for new day and update plants
-            if (timeM.isNewDay()) {
-                System.out.println("New day detected - updating all plant growth");
-                tileM.mapManager.updatePlantGrowth();
-            }
+            // Update current location from MapManager
+            currentMap = mapM.getCurrentMap();
             
             // Update all objects
             for(int i = 0; i < obj.length; i++) {
@@ -122,40 +172,51 @@ public class GamePanel extends JPanel implements Runnable{
                 }
             }
         }
+        
+        if (timeM.isNewDay()) {
+            tileM.mapManager.updatePlantGrowth();
+        }
     }
 
-    public void paintComponent(Graphics g){
+    public void drawToTempScreen() {
+        // Clear the temp screen
+        g2.setColor(Color.black);
+        g2.fillRect(0, 0, screenWidth, screenHeight);
         
-        super.paintComponent(g);
-
-        Graphics2D g2 = (Graphics2D)g;
-        
-        //TILE
+        // Draw tile manager
         tileM.draw(g2);
-
-        //OBJECT
-        for(int i = 0; i < obj.length; i++){
-            if (obj[i] != null){
-                obj[i].draw(g2,this);
+        
+        // Draw objects
+        for(int i = 0; i < obj.length; i++) {
+            if (obj[i] != null) {
+                obj[i].draw(g2, this);
             }
         }
-
-        //NPC
-        for(int i = 0; i < npc.length; i++){
-            if (npc[i] != null){
+        
+        // Draw NPCs
+        for(int i = 0; i < npc.length; i++) {
+            if (npc[i] != null) {
                 npc[i].draw(g2);
             }
         }
-
-        //PLAYER
+        
+        // Draw player
         player.draw(g2);
         
+        // Draw UI
         ui.draw(g2);
+    }
+
+   
+
+
+    public void drawToScreen(){
         
-        // Draw brightness overlay at the end
-        mapM.drawBrightnessOverlay(g2);
+        Graphics g = this.getGraphics();
         
-        g2.dispose(); 
+        g.drawImage(tempScreen, 0, 0, screenWidth2, screenHeight2, null);
+        
+        g.dispose();
     }
 
     public void playMusic(int i){
@@ -163,11 +224,13 @@ public class GamePanel extends JPanel implements Runnable{
         music.setFile(i);
         music.play();
         music.loop();
+        backsoundOn = true;
     }
 
     public void stopMusic(){
         
         music.stop();
+        backsoundOn = false;
     }
 
     public void playSE(int i){

@@ -68,11 +68,10 @@ public class equipment extends Item{
             
             int currentTile = gp.tileM.mapManager.mapTileNum[col][row];
 
-            if (currentTile == 7) { // dry tilled -> watered tilled
+            if (currentTile == 7) { // tilted -> tilted_w
                 gp.tileM.mapManager.mapTileNum[col][row] = 9;
                 System.out.println("Tilled soil watered at col:" + col + " row:" + row);
-                player.setEnergy(player.getEnergy()-5);
-            } else if (currentTile == 8) { // dry planted -> watered planted
+            } else if (currentTile == 8) { // planted -> planted_w
                 gp.tileM.mapManager.mapTileNum[col][row] = 10;
                 // Mark as watered today
                 if (gp.tileM.mapManager.wateredToday == null) {
@@ -80,10 +79,8 @@ public class equipment extends Item{
                 }
                 gp.tileM.mapManager.wateredToday[col][row] = true;
                 System.out.println("Planted crop watered at col:" + col + " row:" + row);
-                player.setEnergy(player.getEnergy()-5);
-            } else {
-                System.out.println("Nothing to water here!");
             }
+            player.setEnergy(player.getEnergy()-5);
         }
         
         if (getName().equals("Sickle")) {
@@ -109,43 +106,16 @@ public class equipment extends Item{
             
             // Check if tile is ready for harvest
             if (gp.tileM.mapManager.mapTileNum[col][row] == 11) {
+                // Create crop item and add to inventory
+                crop harvestedCrop = new crop("Harvested Crop", gp, 50, 100, 1);
+                player.addItemToInventory(harvestedCrop, 1);
                 
-                // Get the planted seed info to create proper crop
-                if (gp.tileM.mapManager.plantedSeeds != null && 
-                    gp.tileM.mapManager.plantedSeeds[col][row] != null) {
-                    
-                    seed plantedSeed = gp.tileM.mapManager.plantedSeeds[col][row];
-                    crop harvestedCrop = plantedSeed.plant(); // Use seed's plant() method
-                    
-                    // Add correct crop to inventory
-                    player.addItemToInventory(harvestedCrop, harvestedCrop.getjumlahCropPanen());
-                    
-                    System.out.println("Harvested " + harvestedCrop.getjumlahCropPanen() + " " + harvestedCrop.getName() + "!");
-                    System.out.println("Total value: " + harvestedCrop.getTotalValue() + "g");
-                    
-                    // Reset tile and clear seed info
-                    gp.tileM.mapManager.mapTileNum[col][row] = 7; // Back to tilled
-                    gp.tileM.mapManager.plantedSeeds[col][row] = null;
-                    if (gp.tileM.mapManager.plantGrowth != null) {
-                        gp.tileM.mapManager.plantGrowth[col][row] = 0;
-                    }
-                } else {
-                    // Fallback jika tidak ada seed info
-                    crop harvestedCrop = new crop("Unknown Crop", gp, 0, 25, 1);
-                    player.addItemToInventory(harvestedCrop, 1);
-                    
-                    // Reset tile
-                    gp.tileM.mapManager.mapTileNum[col][row] = 7;
-                    if (gp.tileM.mapManager.plantGrowth != null) {
-                        gp.tileM.mapManager.plantGrowth[col][row] = 0;
-                    }
-                    
-                    System.out.println("Harvested unknown crop (seed info missing)");
-                }
+                // Reset tile to grass
+                gp.tileM.mapManager.mapTileNum[col][row] = 0;
+                gp.tileM.mapManager.plantGrowth[col][row] = 0;
                 
+                System.out.println("Crop harvested at col:" + col + " row:" + row);
                 player.setEnergy(player.getEnergy()-15);
-            } else {
-                System.out.println("No crops ready to harvest here!");
             }
         }
         
@@ -201,24 +171,20 @@ public class equipment extends Item{
             }
         }
         
+        // Fishing Rod logic
         if (getName().equals("Fishing Rod")) {
+            String time = gp.timeM.getTimeString();
+            String season = gp.timeM.getSeason();
+            String location = gp.mapM.getCurrentMap();
+
             if (player.isFacingWater()) {
-                // Kurangi energi
-                player.setEnergy(player.getEnergy() - 5);
-
-                // Tambah 15 menit ke waktu
-                gp.timeM.addMinutes(15);
-
-                // Filter ikan yang bisa didapat
-                List<fish> allFish = FishData.getAllFish(gp);
+                List<fish> allFish = player.listFish;
                 List<fish> availableFish = new ArrayList<>();
-                String time = gp.timeM.getTimeString();
-                String season = gp.timeM.getSeason();
-                String location = gp.tileM.mapManager.getCurrentMap();
-                System.out.println("Fishing at " + location + " during " + season + " at " + time);
+
                 for (fish f : allFish) {
                     boolean seasonMatch = f.getSeasons().contains("Any") || f.getSeasons().contains(season);
                     boolean locationMatch = f.getLocation().contains("Any") || f.getLocation().contains(location);
+                   
                     boolean timeMatch = false;
                     UtilityTool util = new UtilityTool();
                     for (String t : f.getTime()) {
@@ -227,6 +193,7 @@ public class equipment extends Item{
                             break;
                         }
                     }
+
                     if (seasonMatch && locationMatch && timeMatch) {
                         availableFish.add(f);
                     }
@@ -234,20 +201,9 @@ public class equipment extends Item{
 
                 if (!availableFish.isEmpty()) {
                     fish caught = availableFish.get(new Random().nextInt(availableFish.size()));
-
-                    // Tentukan range dan tries berdasarkan tipe ikan
-                    int min = 1, max = 10, tries = 10;
-                    String type = caught.getRarity();
-                    if ("common".equalsIgnoreCase(type)) {
-                        min = 1; max = 10; tries = 10;
-                    } else if ("regular".equalsIgnoreCase(type)) {
-                        min = 1; max = 100; tries = 10;
-                    } else if ("legendary".equalsIgnoreCase(type)) {
-                        min = 1; max = 500; tries = 7;
-                    }
-
-                    gp.fishingMiniGame.start(caught, min, max, tries);
-                    gp.gameState = gp.fishingMiniGameState;
+                    player.addItemToInventory(caught, 1);
+                    System.out.println("Kamu mendapatkan ikan: " + caught.getName());
+                    player.setEnergy(player.getEnergy()-20);
                 } else {
                     System.out.println("Tidak ada ikan yang cocok di lokasi, season, dan waktu ini!");
                 }
