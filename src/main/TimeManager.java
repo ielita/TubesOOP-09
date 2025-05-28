@@ -92,7 +92,7 @@ public class TimeManager {
             brightness = NIGHT_BRIGHTNESS;
         }
         
-        gp.mapM.setBrightness(brightness);
+        gp.tileM.mapManager.setBrightness(brightness);
     }
     
     public void setHour(int hour) {
@@ -142,10 +142,10 @@ public class TimeManager {
     public void setNight(boolean isNight) {
         if (isNight) {
             setHour(18); // Set to 18:00 for night
-            gp.mapM.setBrightness(0.3f);
+            gp.tileM.mapManager.setBrightness(0.3f);
         } else {
             setHour(6);  // Set to 06:00 for day
-            gp.mapM.setBrightness(1.0f); // Also add brightness for day
+            gp.tileM.mapManager.setBrightness(1.0f); // Also add brightness for day
         }
     }
     
@@ -187,40 +187,9 @@ public class TimeManager {
         
         System.out.println("=== NEW DAY: " + getDateString() + " ===");
         
-        // Update current map plant growth
+        // Update plant growth - hanya untuk farm
         if (gp != null && gp.tileM != null && gp.tileM.mapManager != null) {
             gp.tileM.mapManager.updatePlantGrowth();
         }
-        
-        // Update all saved map states for consistency
-        updateAllMapStates();
-    }
-    
-    // Update this method to use the new MapManager method
-    private void updateAllMapStates() {
-        if (gp.tileM != null && gp.tileM.mapManager != null) {
-            gp.tileM.mapManager.updateAllSavedMapStates();
-            System.out.println("Updated all saved map states for new day");
-        }
-    }
-
-    public void addMinutes(int minutes) {
-        this.minute += minutes;
-        while (this.minute >= 60) {
-            this.minute -= 60;
-            this.hour += 1;
-        }
-        while (this.hour >= 24) {
-            this.hour -= 24;
-            this.day++;
-            newDay = true;
-            // Cek pergantian musim
-            if (day > DAYS_PER_SEASON) {
-                day = 1;
-                currentSeasonIndex = (currentSeasonIndex + 1) % 4;
-                season = SEASONS[currentSeasonIndex];
-            }
-        }
-        updateBrightness();
     }
 }
