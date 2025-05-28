@@ -4,13 +4,12 @@ import items.*;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
-import java.util.List;
 import java.util.Map;
 import main.GamePanel;
 import main.InventoryManager;
 import main.KeyHandler;
 
-public class Player extends Entity{
+public class Player extends Entity {
 
     KeyHandler keyH;
 
@@ -20,7 +19,6 @@ public class Player extends Entity{
     private int sprintSpeed = 15;
     private int energy = 100;
     private int gold = 500;  // Change this line - start with 500 gold
-    private String farmName;
     public InventoryManager inventoryManager; // Add this line
 
     public Player(GamePanel gp, KeyHandler keyH){
