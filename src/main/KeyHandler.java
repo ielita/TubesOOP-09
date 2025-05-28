@@ -238,6 +238,10 @@ public class KeyHandler implements KeyListener{
             System.out.println("Added 100 gold! Total: " + gp.player.getGold() + "g");
         }
 
+        if (code == KeyEvent.VK_3) {
+            gp.timeM.setHour(gp.timeM.getHour() + 1);
+            
+        }
     }
 
     @Override

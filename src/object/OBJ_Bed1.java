@@ -32,13 +32,11 @@ public class OBJ_Bed1 extends SuperObject {
     protected void onInteract() {
         if (collision) {
             message = "Going to bed...";
-
-            gp.tileM.mapManager.changeMap("insideHouse", 3, 3);
-            collision = false;
-            gp.player.setEnergy(100);
-            gp.timeM.skipDay();
-
-
+            
+            // Call the new sleep method from player
+            gp.player.sleep();
+            
+            gp.keyH.interactPressed = false;
         }
     }
 

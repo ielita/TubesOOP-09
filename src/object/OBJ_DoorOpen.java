@@ -55,6 +55,7 @@ public class OBJ_DoorOpen extends SuperObject {
             if (!gp.tileM.mapManager.getCurrentMap().equals("insideHouse")){
             gp.player.setEnergy(gp.player.getEnergy()-10);
             gp.timeM.setMinute(gp.timeM.getMinute() + 15);
+            
             }
             hasTriggered = true;
     }

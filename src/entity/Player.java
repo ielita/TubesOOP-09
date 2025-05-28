@@ -380,7 +380,12 @@ public class Player extends Entity {
     }
 
     public void setEnergy(int energy) {
-        this.energy = Math.max(-20, Math.min(100, energy)); // Keep energy between 0-100
+        this.energy = Math.max(-20, Math.min(100, energy)); // Keep energy between -20 to 100
+        
+        // Auto sleep when energy reaches -20
+        if (this.energy <= -20) {
+            forceCollapse();
+        }
     }
 
     public void addEnergy(int amount) {
@@ -389,5 +394,41 @@ public class Player extends Entity {
 
     public void reduceEnergy(int amount) {
         setEnergy(energy - amount);
+    }
+
+    // Modify the sleep method
+    public void sleep() {
+        // Start sleep animation
+        gp.ui.startSleepAnimation();
+        
+        // Restore energy based on current energy level
+        if (getEnergy() > 10) {
+            setEnergy(100);  // Full energy if above 10
+        } else if (getEnergy() > 0 && getEnergy() <= 10) {
+            setEnergy(50);   // Half energy if very low but not exhausted
+        } else if (getEnergy() <= 0) {
+            setEnergy(10);   // Minimal energy if exhausted
+        }
+        
+        // Skip to next day
+        gp.timeM.skipDay();
+        
+        System.out.println("You slept well! Energy restored and new day begins.");
+    }
+
+    // Add this new method for forced collapse
+    private void forceCollapse() {
+        System.out.println("You collapsed from exhaustion! Waking up at home...");
+        
+        // Start sleep animation for forced collapse
+        gp.ui.startSleepAnimation();
+        
+        // Set minimal energy recovery for collapsing
+        this.energy = 10;  // Very low energy as penalty for collapsing
+        
+        // Skip to next day
+        gp.timeM.skipDay();
+        
+        System.out.println("You woke up exhausted in your bed. Take better care of yourself!");
     }
 }

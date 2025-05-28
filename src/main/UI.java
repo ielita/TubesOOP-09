@@ -35,6 +35,12 @@ public class UI {
     GamePanel gp;
     Graphics2D g2;
 
+    // Add sleep animation variables
+    private int sleepAnimationTimer = 0;
+    private int sleepAnimationStage = 0;
+    private final int SLEEP_ANIMATION_DURATION = 60; // frames per stage
+    private final int TOTAL_SLEEP_STAGES = 3;
+
     public UI(GamePanel gp) {
         this.gp = gp;
         try {
@@ -60,14 +66,14 @@ public class UI {
     public void draw(Graphics2D g2) {
         this.g2 = g2;
 
-        if (gp.gameState == gp.menuState) {
+        if(gp.gameState == gp.menuState) {
             drawMainMenu();
         }
 
         g2.setFont(pixelify40);
         g2.setColor(Color.WHITE);
 
-        if (gp.gameState == gp.playState) {
+        if(gp.gameState == gp.playState) {
             // Draw time in top-right corner
             g2.setFont(pixelify40);
             g2.setColor(Color.WHITE);
@@ -108,16 +114,21 @@ public class UI {
             }
         }
 
-        if (gp.gameState == gp.pauseState) {
+        if(gp.gameState == gp.pauseState) {
             drawPauseScreen();
         }
 
-        if (gp.gameState == gp.inventoryState) {
+        if(gp.gameState == gp.inventoryState) {
             drawInventory();
         }
 
-        if (gp.gameState == gp.fishingMiniGameState) {
+        if(gp.gameState == gp.fishingMiniGameState) {
             drawFishingMiniGame();
+        }
+        
+        // Add sleep screen drawing
+        if(gp.gameState == gp.sleepState) {
+            drawSleepScreen();
         }
 
         if (gp.keyH.showDebug) {
@@ -428,6 +439,61 @@ public class UI {
         g2.drawString(inputText, inputTextX, inputTextY);
     }
             
+    public void drawSleepScreen() {
+        // Fill screen with black
+        g2.setColor(Color.BLACK);
+        g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
+        
+        // Set text properties
+        g2.setFont(pixelify80);
+        g2.setColor(Color.WHITE);
+        
+        // Build text based on animation stage
+        String text = "you fell asleep";
+        for (int i = 0; i <= sleepAnimationStage; i++) {
+            text += " .";
+        }
+        
+        // Center the text
+        int x = getXforCenteredText(text);
+        int y = gp.screenHeight / 2;
+        g2.drawString(text, x, y);
+    }
+    
+    // Add method to update sleep animation
+    public void updateSleepAnimation() {
+        if (gp.gameState == gp.sleepState) {
+            sleepAnimationTimer++;
+            
+            if (sleepAnimationTimer >= SLEEP_ANIMATION_DURATION) {
+                sleepAnimationTimer = 0;
+                sleepAnimationStage++;
+                
+                // When animation is complete, finish sleep
+                if (sleepAnimationStage >= TOTAL_SLEEP_STAGES) {
+                    finishSleepAnimation();
+                }
+            }
+        }
+    }
+    
+    // Add method to start sleep animation
+    public void startSleepAnimation() {
+        sleepAnimationTimer = 0;
+        sleepAnimationStage = 0;
+        gp.gameState = gp.sleepState;
+    }
+    
+    // Add method to finish sleep animation
+    private void finishSleepAnimation() {
+        sleepAnimationTimer = 0;
+        sleepAnimationStage = 0;
+        
+        // Return to play state and spawn in house
+        gp.gameState = gp.playState;
+        gp.tileM.mapManager.changeMap("insideHouse", 3, 3);
+    }
+    
     public int getXforCenteredText(String text) {
         int length = (int) g2.getFontMetrics().getStringBounds(text, g2).getWidth();
         int x = gp.screenWidth / 2 - length / 2;

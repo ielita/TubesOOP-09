@@ -57,8 +57,12 @@ public class GamePanel extends JPanel implements Runnable{
     public final int pauseState = 2;
     public final int inventoryState = 3;
     public final int fishingMiniGameState = 4;
+    public final int sleepState = 5;
     public minigame.FishingMiniGame fishingMiniGame = new minigame.FishingMiniGame();
     public String currentMap = tileM.mapManager.getCurrentMap(); 
+    
+    // Add this flag after other variables
+    private boolean autoSleepTriggered = false;
     
     public GamePanel(){
         this.setPreferredSize(new Dimension(screenWidth,screenHeight));
@@ -106,21 +110,32 @@ public class GamePanel extends JPanel implements Runnable{
 
     public void update() {
         if(gameState == playState) {
-            timeM.update(); // Update game time
+            timeM.update();
             player.update();
             
-            // Check for new day and update plants
             if (timeM.isNewDay()) {
                 System.out.println("New day detected - updating all plant growth");
                 tileM.mapManager.updatePlantGrowth();
+                // Reset the auto sleep flag for new day
+                autoSleepTriggered = false;
             }
             
-            // Update all objects
             for(int i = 0; i < obj.length; i++) {
                 if(obj[i] != null) {
                     obj[i].update();
                 }
             }
+        
+            // Auto sleep at 02:00 - only trigger once
+            if(timeM.getTimeString().equals("02:00") && !autoSleepTriggered){
+                player.sleep();
+                autoSleepTriggered = true; // Prevent multiple calls
+            }  
+        }
+        
+        // Add sleep animation update
+        if(gameState == sleepState) {
+            ui.updateSleepAnimation();
         }
     }
 
