@@ -14,7 +14,6 @@ public class KeyHandler implements KeyListener{
     public boolean upPressed, downPressed, leftPressed, rightPressed, interactPressed;
     public boolean showDebug = false;
     public boolean sprintPressed = false;
-    public boolean ePressed = false;
     public int menuOption = 0;
     public int inventoryCursorIndex = 0;
     private final int NUM_OPTIONS = 3;
@@ -136,7 +135,6 @@ public class KeyHandler implements KeyListener{
                 if (!entries.isEmpty() && inventoryCursorIndex < entries.size() && inventoryCursorIndex < maxSlots) {
                     Item selected = entries.get(inventoryCursorIndex).getKey();
                     gp.player.setOnhandItem(selected);
-                    System.out.println("Selected item: " + gp.player.getOnhandItem().getName());
                 }
                 gp.gameState = gp.playState;
             }
@@ -145,22 +143,21 @@ public class KeyHandler implements KeyListener{
                 
 
         if (gp.gameState == gp.fishingMiniGameState && gp.fishingMiniGame.isActive()) {
-            // Input angka, hanya set input (belum submit)
+            
             if (code >= KeyEvent.VK_0 && code <= KeyEvent.VK_9) {
                 int num = code - KeyEvent.VK_0;
-                // Untuk range > 10, allow multi-digit input
                 if (gp.fishingMiniGame.getMax() > 10) {
                     int current = gp.fishingMiniGame.getInput();
-                    if (current < 1000) { // prevent overflow
+                    if (current < 1000) { 
                         gp.fishingMiniGame.setInput(current * 10 + num);
                     }
                 } else {
                     gp.fishingMiniGame.setInput(num);
                 }
             } else if (code == KeyEvent.VK_BACK_SPACE || code == KeyEvent.VK_DELETE) {
-                gp.fishingMiniGame.setInput(0); // hapus input sebelum submit
+                gp.fishingMiniGame.setInput(0);
             }
-            // Submit hanya saat ENTER
+
             if (code == KeyEvent.VK_ENTER && gp.fishingMiniGame.getInput() != 0) {
                 int guess = gp.fishingMiniGame.getInput();
                 if (guess == gp.fishingMiniGame.getAnswer()) {
@@ -176,7 +173,7 @@ public class KeyHandler implements KeyListener{
                         gp.gameState = gp.playState;
                     } else {
                         System.out.println("Salah! Sisa kesempatan: " + gp.fishingMiniGame.getTries());
-                        gp.fishingMiniGame.resetInput(); // reset input untuk percobaan berikutnya
+                        gp.fishingMiniGame.resetInput();
                     }
                 }
             }
@@ -187,7 +184,7 @@ public class KeyHandler implements KeyListener{
             return;
         }
 
-        if (code == KeyEvent.VK_W ){//|| code == KeyEvent.VK_UP
+        if (code == KeyEvent.VK_W ){
             upPressed = true;
         }
         if (code == KeyEvent.VK_A){
@@ -221,25 +218,21 @@ public class KeyHandler implements KeyListener{
             if (onhand != null && onhand instanceof items.equipment) {
                 ((items.equipment)onhand).use(gp.player);
             } else if (onhand != null && onhand instanceof items.seed) {
-                gp.player.plantSeed(); // Plant seed
+                gp.player.plantSeed();
             }
             interactPressed = true;
         }
-        if (code == KeyEvent.VK_E) {
-            ePressed = true;
-        }
+   
         if (code == KeyEvent.VK_J) {
             gp.gameState = gp.inventoryState;
             inventoryCursorIndex = 0;
         }
         
-        // Remove harvest key since sickle already handles it
-
-        // Debug keys
         if (code == KeyEvent.VK_1) {
             gp.timeM.skipDay();
             System.out.println("Day skipped! New date: " + gp.timeM.getDateString());
         }
+
         if (code == KeyEvent.VK_2) {
             gp.player.addGold(100);
             System.out.println("Added 100 gold! Total: " + gp.player.getGold() + "g");
