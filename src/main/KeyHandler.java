@@ -14,6 +14,7 @@ public class KeyHandler implements KeyListener{
     public boolean upPressed, downPressed, leftPressed, rightPressed, interactPressed;
     public boolean showDebug = false;
     public boolean sprintPressed = false;
+    public boolean enterPressed = false;
     public int menuOption = 0;
     public int inventoryCursorIndex = 0;
     private final int NUM_OPTIONS = 3;
@@ -63,30 +64,53 @@ public class KeyHandler implements KeyListener{
             }
         }
 
-        if(gp.gameState == gp.pauseState) {
+        if(gp.gameState == gp.optionsState) {
+            int maxCommandNum = 0;
+            switch(gp.ui.subState){
+                case 0: maxCommandNum = 4; break; 
+            }
             if(code == KeyEvent.VK_W || code == KeyEvent.VK_UP) {
-                pauseOption--;
-                if(pauseOption < 0) {
-                    pauseOption = PAUSE_OPTIONS - 1;
+                gp.ui.commandNum--;
+                // gp.playSE(9);
+                if(gp.ui.commandNum < 0) {
+                    gp.ui.commandNum = maxCommandNum;
                 }
             }
             if(code == KeyEvent.VK_S || code == KeyEvent.VK_DOWN) {
-                pauseOption++;
-                if(pauseOption >= PAUSE_OPTIONS) {
-                    pauseOption = 0;
+                gp.ui.commandNum++;
+                // gp.playSE(9);
+                if(gp.ui.commandNum > maxCommandNum) {
+                    gp.ui.commandNum = 0;
                 }
             }
             if(code == KeyEvent.VK_ENTER) {
-                switch(pauseOption) {
-                    case 0: // Continue
-                        gp.gameState = gp.playState;
-                        break;
-                    case 1: // Main Menu
-                        gp.gameState = gp.menuState;
-                        pauseOption = 0; // Reset pause menu selection
-                        gp.stopMusic(); // Stop game music
-                        break;
+
+                enterPressed = true;
+            }
+        }
+
+        if (gp.gameState == gp.keyBindingState){
+            int maxKeyBindNum = 0;
+            switch(gp.ui.subState){
+                case 0: maxKeyBindNum = 0; break; 
+            }
+            if(code == KeyEvent.VK_W || code == KeyEvent.VK_UP) {
+                gp.ui.keyBindNum--;
+                // gp.playSE(9);
+                if(gp.ui.keyBindNum < 0) {
+                    gp.ui.keyBindNum = maxKeyBindNum;
                 }
+            }
+            if(code == KeyEvent.VK_S || code == KeyEvent.VK_DOWN) {
+                gp.ui.keyBindNum++;
+                // gp.playSE(9);
+                if(gp.ui.keyBindNum > maxKeyBindNum) {
+                    gp.ui.keyBindNum = 0;
+                }
+            }
+            if(code == KeyEvent.VK_ENTER) {
+
+                enterPressed = true;
             }
         }
 
@@ -198,9 +222,9 @@ public class KeyHandler implements KeyListener{
         }
         if (code == KeyEvent.VK_ESCAPE){
             if (gp.gameState == gp.playState){
-                gp.gameState = gp.pauseState;
+                gp.gameState = gp.optionsState;
             }
-            else if(gp.gameState == gp.pauseState){
+            else if(gp.gameState == gp.optionsState){
                 gp.gameState = gp.playState;
             }
         }
@@ -209,9 +233,10 @@ public class KeyHandler implements KeyListener{
             showDebug = !showDebug;
         }
 
-        if (code == KeyEvent.VK_P){
+        if (code == KeyEvent.VK_SHIFT){
             sprintPressed = true;
         }
+
 
         if (code == KeyEvent.VK_I) {
             Item onhand = gp.player.getOnhandItem();
@@ -260,6 +285,9 @@ public class KeyHandler implements KeyListener{
             interactPressed = false;
         }
         if (code == KeyEvent.VK_P) {
+            sprintPressed = false;
+        }
+        if (code == KeyEvent.VK_SHIFT) {
             sprintPressed = false;
         }
     }

@@ -4,12 +4,11 @@ import javax.imageio.ImageIO;
 import java.io.IOException;
 import java.io.File;
 import javax.swing.ImageIcon;
-import java.io.FileNotFoundException;
 
 public class Main{
     
 
-
+    public static JFrame window; 
     public static void main(String[]args){
 
         ImageIcon logo = null;
@@ -21,7 +20,7 @@ public class Main{
             e.printStackTrace(); 
         }
 
-        JFrame window = new JFrame();
+        window = new JFrame();
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setResizable(false);
         window.setTitle("Spakbor si Petani");

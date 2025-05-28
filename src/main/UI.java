@@ -14,6 +14,7 @@ import javax.imageio.ImageIO; // Tambahkan ini
 
 import object.OBJ_Chest;
 import object.OBJ_Door;
+import tile.MapManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +27,8 @@ public class UI {
     private Font pixelify36;
     private Font pixelify80;
     private Font pixelify15;
-    private Font pixelify13;
+    private Font pixelify50;
+    private Font pixelify30;
     private final Color SELECTED_COLOR = new Color(255, 255, 0);
     private final Color UNSELECTED_COLOR = new Color(255, 255, 255);
 
@@ -34,6 +36,11 @@ public class UI {
 
     GamePanel gp;
     Graphics2D g2;
+
+    public int commandNum = 0;
+    public int keyBindNum = 0; 
+
+    int subState = 0; 
 
     public UI(GamePanel gp) {
         this.gp = gp;
@@ -45,7 +52,8 @@ public class UI {
             pixelify36 = pixelify.deriveFont(Font.BOLD, 36f);
             pixelify80 = pixelify.deriveFont(Font.BOLD, 80f);
             pixelify15 = pixelify.deriveFont(Font.PLAIN, 15f);
-            pixelify13 = pixelify.deriveFont(Font.PLAIN, 13f);
+            pixelify50 = pixelify.deriveFont(Font.PLAIN, 50f);
+            pixelify30 = pixelify.deriveFont(Font.PLAIN, 30f);
         } catch (FontFormatException | IOException e) {
             pixelify40 = new Font("Arial", Font.PLAIN, 40);
             pixelify26 = new Font("Arial", Font.PLAIN, 26);
@@ -53,7 +61,8 @@ public class UI {
             pixelify36 = new Font("Arial", Font.BOLD, 36);
             pixelify80 = new Font("Arial", Font.BOLD, 80);  
             pixelify15 = new Font("Arial", Font.PLAIN, 15);
-            pixelify13 = new Font("Arial", Font.PLAIN, 13);
+            pixelify50 = new Font("Arial", Font.PLAIN, 50);
+            pixelify30 = new Font("Arial", Font.PLAIN, 30);
         }
     }
 
@@ -108,8 +117,8 @@ public class UI {
             }
         }
 
-        if (gp.gameState == gp.pauseState) {
-            drawPauseScreen();
+        if (gp.gameState == gp.optionsState) {
+            drawOptionsScreen();
         }
 
         if (gp.gameState == gp.inventoryState) {
@@ -149,9 +158,240 @@ public class UI {
         }
     }
 
-    public void drawPauseScreen() {
+    private void drawsubWindow(int frameX, int frameY, int frameWidth, int frameHeight) {
+        Color backgroundColor = new Color(0, 0, 0, 180); // Semi-transparent black
+        g2.setColor(backgroundColor);
+        g2.fillRoundRect(frameX, frameY, frameWidth, frameHeight, 35, 35);
+
+        Color borderColor = new Color(255, 255, 255);
+        g2.setColor(borderColor);
+        g2.setStroke(new java.awt.BasicStroke(5));
+        g2.drawRoundRect(frameX + 5, frameY + 5, frameWidth - 10, frameHeight - 10, 25, 25);
+    }
+
+    public void drawOptionsScreen() {
+
+
+        int frameWidth = gp.tileSize * 6;
+        int frameHeight = gp.tileSize * 6;
+        int frameX = (gp.screenWidth - frameWidth) / 2;
+        int frameY = (gp.screenHeight - frameHeight) / 2 - 1 * gp.tileSize; 
+        drawsubWindow(frameX, frameY, frameWidth, frameHeight);
+
+
+        switch (subState) {
+            case 0: options_top(frameX, frameY); break;
+            case 1: break;
+            case 2: break;
+            case 3: break;
+            case 4:break;
+            }
+        
+        gp.keyH.enterPressed = false; 
+
+  
+    }
+
+    public void options_top(int frameX, int frameY){
+        int textX;
+        int textY; 
+
+        g2.setFont(pixelify50);
+        String text = "OPTIONS";
+        textX = getXforCenteredText(text);
+        textY = frameY + gp.tileSize ;
+        g2.drawString(text, textX, textY);
+        
+        textX = frameY + 4 * gp.tileSize - 25;
+        
+        g2.setFont(pixelify30);
+        
+        textY += gp.tileSize * 7 / 8;
+        g2.drawString("Fullscreen", textX, textY);
+        if (commandNum == 0) {
+            g2.drawString(">", textX -18, textY);
+            if(gp.keyH.enterPressed == true) {
+                if(gp.fullScreenOn == true) {
+                    gp.fullScreenOn = false;
+                    gp.setFullScreen();
+                } 
+                else if (gp.fullScreenOn == false) {
+                    gp.fullScreenOn = true;
+                    gp.setFullScreen();
+                }
+            }
+        }
+
+        textY += gp.tileSize *6/10 ;
+        g2.drawString("Backsound", textX, textY);
+        if (commandNum == 1) {
+            g2.drawString(">", textX -18, textY);
+            if(gp.keyH.enterPressed == true) {
+                gp.backsoundOn = !gp.backsoundOn;
+                if (gp.backsoundOn) {
+                    gp.playMusic(0); // Play background music
+                } else {
+                    gp.stopMusic(); // Stop background music
+                } 
+            } 
+        }
+
+        textY += gp.tileSize *6/10 ;
+        g2.drawString("Key Bindings", textX, textY);
+        if (commandNum == 2) {
+            g2.drawString(">", textX -18, textY);
+            if(gp.keyH.enterPressed == true) {
+                gp.gameState = gp.keyBindingState; // Switch to key binding state
+                gp.keyH.enterPressed = false; 
+                commandNum = 0; 
+            }
+        }
+        
+        textY += gp.tileSize *6/10 ;
+        g2.drawString("Main Menu", textX, textY);
+        if (commandNum == 3) {
+            g2.drawString(">", textX -18, textY);
+            if(gp.keyH.enterPressed == true) {
+                gp.gameState = gp.menuState;
+                gp.keyH.enterPressed = false; 
+                gp.stopMusic();
+            }
+            
+        }
+        
+        textY += gp.tileSize *6/10 ;
+        g2.drawString("Return to Game", textX, textY);
+        if (commandNum == 4) {
+            g2.drawString(">", textX -18, textY);
+            if(gp.keyH.enterPressed == true) {
+                gp.gameState = gp.playState;
+                gp.keyH.enterPressed = false; 
+            }
+        }
+        
+        
+        textX = frameY + 8 * gp.tileSize ;
+        textY = frameY + gp.tileSize * 15/8 ;
+
+        if (gp.fullScreenOn) {
+            g2.drawString("yes", textX, textY);
+        } else {
+            g2.drawString("no", textX, textY);
+        }
+        
+        textY += gp.tileSize *6/10;
+
+        if (gp.backsoundOn) {
+            g2.drawString("yes", textX, textY);
+        } else {
+            g2.drawString("no", textX, textY);
+        }
+        
+    }
+    
+
+
+    public void drawKeyBindings() {
+        int frameWidth = gp.tileSize * 6;
+        int frameHeight = gp.tileSize * 7;
+        int frameX = (gp.screenWidth - frameWidth) / 2;
+        int frameY = (gp.screenHeight - frameHeight) / 2 ; 
+        drawsubWindow(frameX, frameY, frameWidth, frameHeight);
+        
+        g2.setFont(pixelify40);
+        String text = "KEY BINDINGS";
+        int textX = getXforCenteredText(text);
+        int textY = frameY + gp.tileSize;
+        g2.drawString(text, textX, textY);
+        
+        g2.setFont(pixelify30);
+        textX = frameX +  gp.tileSize - 25;
+        
+        textY += gp.tileSize * 7 / 8;
+        g2.drawString("Move Up", textX, textY);
+        // if (keyBindNum == 0) {
+        //     g2.drawString(">", textX -18, textY);   
+        // }
+        
+        textY += gp.tileSize * 6 / 10;
+        g2.drawString("Move Down", textX, textY);
+        // if (keyBindNum == 1) {
+        //     g2.drawString(">", textX -18, textY);   
+        // }
+        
+        textY += gp.tileSize * 6 / 10;
+        g2.drawString("Move Left", textX, textY);
+        // if (keyBindNum == 2) {
+        //     g2.drawString(">", textX -18, textY);   
+        // }
+        
+        textY += gp.tileSize * 6 / 10;
+        g2.drawString("Move Right", textX, textY);
+        // if (keyBindNum == 3) {
+        //     g2.drawString(">", textX -18, textY);   
+        // }
+        
+        textY += gp.tileSize * 6 / 10;
+        g2.drawString("Run", textX, textY);
+
+        textY += gp.tileSize * 6 / 10;
+        g2.drawString("Inventory", textX, textY);
+
+        textY += gp.tileSize * 6 / 10;
+        g2.drawString("Interact", textX, textY);
+        // if (keyBindNum == 4) {
+        //     g2.drawString(">", textX -18, textY);   
+        // }
+        
+        textY += gp.tileSize * 6 / 10;
+        g2.drawString("Back", textX, textY);
+        if (keyBindNum == 0) {
+            g2.drawString(">", textX -18, textY);
+            if(gp.keyH.enterPressed == true) {
+                gp.gameState = gp.optionsState;
+                gp.keyH.enterPressed = false; 
+                gp.stopMusic();
+            }
+            
+        }
+
+        
+        textX = frameX +  5 * gp.tileSize;
+        textY = frameY + gp.tileSize + gp.tileSize * 7 / 8;
+        g2.drawString("w", textX, textY);
+
+        textY += gp.tileSize * 6 / 10;
+        g2.drawString("s", textX, textY);
+
+        textY += gp.tileSize * 6 / 10;
+        g2.drawString("a", textX, textY);
+
+        textY += gp.tileSize * 6 / 10;
+        g2.drawString("d", textX, textY);
+
+        textX = frameX +  5 * gp.tileSize - 25;
+        textY += gp.tileSize * 6 / 10;
+        g2.drawString("shift", textX, textY);
+        textX = frameX +  5 * gp.tileSize;
+        
+        textY += gp.tileSize * 6 / 10;
+        g2.drawString("j", textX, textY);
+
+        textY += gp.tileSize * 6 / 10;
+        g2.drawString("f", textX, textY);
+
+        // Add more key bindings as needed
+    }
+
+
+    public void drawMainMenu() {
+        // Background
+        g2.setColor(new Color(0, 0, 0));
+        g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
+
+        // Title
         g2.setFont(pixelify80);
-        String text = "PAUSED";
+        String text = "SPAKBOR SI PETANI";
         int x = getXforCenteredText(text);
         int y = gp.tileSize * 3;
 
@@ -165,117 +405,31 @@ public class UI {
 
         // Menu options
         g2.setFont(pixelify40);
-        
-        // Continue option
-        text = "CONTINUE";
+        text = "NEW GAME";
         x = getXforCenteredText(text);
-        y += gp.tileSize * 4;
-        g2.setColor(gp.keyH.pauseOption == 0 ? SELECTED_COLOR : UNSELECTED_COLOR);
-        g2.drawString(text, x, y);
-
-        // Main Menu option
-        text = "MAIN MENU";
-        x = getXforCenteredText(text);
-        y += gp.tileSize;
-        g2.setColor(gp.keyH.pauseOption == 1 ? SELECTED_COLOR : UNSELECTED_COLOR);
-        g2.drawString(text, x, y);
-    }
-
-    public void drawMainMenu() {
-        // Background image
-        BufferedImage backgroundImage = null;
-        try {
-            backgroundImage = ImageIO.read(new File("res/menu/menuScreen.png")); // Ganti dengan path image kamu
-        } catch (IOException e) {
-            // Fallback jika image tidak ditemukan
-            System.out.println("Background image not found, using solid color");
-        }
-        
-        if (backgroundImage != null) {
-            // Draw scaled background image
-            g2.drawImage(backgroundImage, 0, 0, gp.screenWidth, gp.screenHeight, null);
-        } else {
-            // Fallback: solid color background
-            g2.setColor(new Color(0, 0, 0));
-            g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
-        }
-
-        // Title with better visibility
-        g2.setFont(pixelify80);
-        String text = "SPAKBOR HILLS";
-        int x = getXforCenteredText(text);
-        int y = gp.tileSize * 3;
-
-        // Title shadow (darker and more prominent)
-        g2.setColor(new Color(0, 0, 0, 180)); // Semi-transparent black
-        g2.drawString(text, x + 3, y + 3);
-
-        // Title outline (optional, for better readability)
-        g2.setColor(new Color(50, 50, 50));
-        g2.drawString(text, x + 1, y + 1);
-        g2.drawString(text, x - 1, y - 1);
-        g2.drawString(text, x + 1, y - 1);
-        g2.drawString(text, x - 1, y + 1);
-
-        // Main title text
-        g2.setColor(Color.WHITE);
-        g2.drawString(text, x, y);
-
-        // Menu options with background boxes for better visibility
-        g2.setFont(pixelify40);
-        
-        // START GAME
-        text = "START GAME";
-        x = getXforCenteredText(text);
-        y += gp.tileSize * 4;
-        
-        if (gp.keyH.menuOption == 0) {
-            // Selected option background
-            g2.setColor(new Color(255, 255, 0, 100)); // Semi-transparent yellow
-            g2.fillRoundRect(x - 20, y - 35, g2.getFontMetrics().stringWidth(text) + 40, 45, 10, 10);
-        }
-        
-        g2.setColor(gp.keyH.menuOption == 0 ? SELECTED_COLOR : UNSELECTED_COLOR);
-        // Text shadow
-        g2.setColor(new Color(0, 0, 0, 150));
-        g2.drawString(text, x + 2, y + 2);
+        y += gp.tileSize * 2;
         g2.setColor(gp.keyH.menuOption == 0 ? SELECTED_COLOR : UNSELECTED_COLOR);
         g2.drawString(text, x, y);
 
-        // OPTIONS
         text = "OPTIONS";
         x = getXforCenteredText(text);
-        y += gp.tileSize;
-        
-        if (gp.keyH.menuOption == 1) {
-            g2.setColor(new Color(255, 255, 0, 100));
-            g2.fillRoundRect(x - 20, y - 35, g2.getFontMetrics().stringWidth(text) + 40, 45, 10, 10);
-        }
-        
-        g2.setColor(new Color(0, 0, 0, 150));
-        g2.drawString(text, x + 2, y + 2);
+        y += gp.tileSize * 2 / 3;
         g2.setColor(gp.keyH.menuOption == 1 ? SELECTED_COLOR : UNSELECTED_COLOR);
         g2.drawString(text, x, y);
 
-        // EXIT
-        text = "EXIT";
+        text = "CREDITS";
         x = getXforCenteredText(text);
-        y += gp.tileSize;
-        
-        if (gp.keyH.menuOption == 2) {
-            g2.setColor(new Color(255, 255, 0, 100));
-            g2.fillRoundRect(x - 20, y - 35, g2.getFontMetrics().stringWidth(text) + 40, 45, 10, 10);
-        }
-        
-        g2.setColor(new Color(0, 0, 0, 150));
-        g2.drawString(text, x + 2, y + 2);
+        y += gp.tileSize * 2 / 3;
         g2.setColor(gp.keyH.menuOption == 2 ? SELECTED_COLOR : UNSELECTED_COLOR);
         g2.drawString(text, x, y);
 
-        // Draw chest icon (if you want to keep it)
-        if (chestImage != null) {
-            g2.drawImage(chestImage, gp.tileSize / 2, gp.tileSize / 2, gp.tileSize, gp.tileSize, null);
-        }
+        text = "EXIT";
+        x = getXforCenteredText(text);
+        y += gp.tileSize * 2 / 3;
+        g2.setColor(gp.keyH.menuOption == 3 ? SELECTED_COLOR : UNSELECTED_COLOR);
+        g2.drawString(text, x, y);
+
+
     }
 
     public void drawInventory() {
