@@ -19,7 +19,7 @@ public class Player extends Entity{
     private int defaultSpeed = 7;
     private int sprintSpeed = 12;
     private int energy = 100;
-    private int gold = 0;  // Add this line
+    private int gold = 0;
     private String farmName;
     InventoryManager inventoryManager = new InventoryManager();
     public List<fish> listFish = FishData.getAllFish(gp);
@@ -81,7 +81,7 @@ public class Player extends Entity{
         this.gold += amount;
     }
 
-    public void spendGold(int amount) {
+    publ ic void spendGold(int amount) {
         if (this.gold >= amount) {
             this.gold -= amount;
         }

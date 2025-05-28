@@ -1,6 +1,9 @@
 package main;
 
+import java.util.List;
+
 import entity.NPC;
+import entity.NPCdata;
 // import main.GamePanel;
 import object.OBJ_Chest;
 import object.OBJ_Door;
@@ -119,16 +122,22 @@ public class AssetSetter {
             gp.npc[i] = null;
         }
 
-        if (mapName.equals("insideHouse")) {
-            gp.npc[0] =  new NPC(gp);
-            gp.npc[0].worldX = 4 * gp.tileSize;
-            gp.npc[0].worldY = 4 * gp.tileSize;
-            System.out.println("NPC set for insideHouse");
+        // Get all NPCs from NPCdata
+        List<NPC> allNPCs = NPCdata.getAllNPC(gp);
+
+        
+        int npcIndex = 0;
+        for (NPC npc : allNPCs) {
+            // Suppose you have a getMapName() or similar method/property
+            if (mapName.equals("insideHouse") && npcIndex < gp.npc.length) {
+                gp.npc[npcIndex] = npc;
+                npcIndex++;
+                gp.npc[0].worldX = 4 * gp.tileSize;
+                gp.npc[0].worldY = 4 * gp.tileSize;
+            }
         }
-        else{
-            // Add more NPCs for other maps if needed
-            System.out.println("No NPCs set for " + mapName);
-        }
+        
+
         
 
 

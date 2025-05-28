@@ -17,7 +17,9 @@ public class NPC extends Entity{
     private List<String> hatedItems;
     private String relationshipStatus;
 
-    public NPC(GamePanel gp){
+    public NPC(GamePanel gp, String name, int heartPoints, 
+               List<String> lovedItems, List<String> likedItems, 
+               List<String> hatedItems, String relationshipStatus) {
         super(gp);
 
         direction = "down";
@@ -98,7 +100,7 @@ public class NPC extends Entity{
         // Implement chatting logic here
         System.out.println(name + " says: Hello!");
     }       
-    public void giveGift(Item item) {
+    public void giveGift(String item) {
         if (lovedItems.contains(item)) {
             heartPoints += 10;
             System.out.println(name + " loves this gift! Heart points increased.");
