@@ -1,8 +1,12 @@
 package tile;
 
 import java.awt.Graphics2D;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+
 import javax.imageio.ImageIO;
 import main.GamePanel;
 import main.UtilityTool;
@@ -25,19 +29,8 @@ public class TileManager {
             tile[i] = new Tile();
         }
 
-        // Then setup the tiles we need
-        setup(0, "grass", false);
-        setup(1, "land", false);
-        setup(2, "tree", true);
-        setup(3, "tree2", true);
-        setup(4, "wall", true);
-        setup(5, "wall2", true);
-        setup(6, "water", true);
-        setup(7, "tilted", false); // 7 = ID untuk tanah tercangkul
-        setup(8, "planted", false);
-        setup(9, "tilted_w", false);   // ID 9: tilled soil (watered)
-        setup(10, "planted_w", false); // ID 10: planted (watered)
-        setup(11, "harvest", false); // ID 11: ready to harvest
+
+        loadTile("tiledata");
 }
 
     public void setup(int index, String imagePath, boolean collision) {
@@ -52,6 +45,41 @@ public class TileManager {
             e.printStackTrace();
         }
     }
+    
+    public void loadTile(String tileName) {
+        try {
+            FileInputStream fis = new FileInputStream("res/tilesconfig/" + tileName + ".txt");
+            BufferedReader br = new BufferedReader(new InputStreamReader(fis));
+
+            String idLine;
+            while ((idLine = br.readLine()) != null) {
+                idLine = idLine.trim();
+                if (idLine.isEmpty()) continue; // Skip empty lines
+
+                int id = Integer.parseInt(idLine);
+
+                String imageLine = br.readLine();
+                String collisionLine = br.readLine();
+
+                if (imageLine == null || collisionLine == null) {
+                    System.out.println("Incomplete data at ID " + id);
+                    break;
+                }
+
+                String imageName = imageLine.trim();
+                String baseName = imageName.replace(".png", "");
+                boolean collision = Boolean.parseBoolean(collisionLine.trim());
+
+                setup(id, baseName, collision);
+            }
+
+            br.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
     public void draw(Graphics2D g2) {
         int worldCol = 0;
