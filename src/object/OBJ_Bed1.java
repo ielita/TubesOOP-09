@@ -39,6 +39,11 @@ public class OBJ_Bed1 extends SuperObject {
             gp.timeM.skipDay();
 
 
+
+            // Call the new sleep method from player
+            gp.player.sleep();
+
+            gp.keyH.interactPressed = false;
         }
     }
 

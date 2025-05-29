@@ -37,6 +37,11 @@ public class UI {
     GamePanel gp;
     Graphics2D g2;
 
+    private int sleepAnimationTimer = 0;
+    private int sleepAnimationStage = 0;
+    private final int SLEEP_ANIMATION_DURATION = 60; // frames per stage
+    private final int TOTAL_SLEEP_STAGES = 3;
+
     public int commandNum = 0;
     public int keyBindNum = 0; 
 
@@ -115,6 +120,7 @@ public class UI {
                 g2.drawString(mapText, 50, 100);
                 
             }
+            drawOnHandPopup();
         }
 
         if (gp.gameState == gp.optionsState) {
@@ -127,6 +133,18 @@ public class UI {
 
         if (gp.gameState == gp.fishingMiniGameState) {
             drawFishingMiniGame();
+        }
+
+        if(gp.gameState == gp.sleepState) {
+            drawSleepScreen();
+        }
+
+        if (gp.gameState == gp.keyBindingState) {
+            drawKeyBindings();
+        }
+
+        if (gp.gameState == gp.fishingResultState) {
+            drawFishingResult();
         }
 
         if (gp.keyH.showDebug) {
@@ -383,55 +401,157 @@ public class UI {
         // Add more key bindings as needed
     }
 
-
-    public void drawMainMenu() {
-        // Background
-        g2.setColor(new Color(0, 0, 0));
+    public void drawSleepScreen() {
+        // Fill screen with black
+        g2.setColor(Color.BLACK);
         g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
 
-        // Title
+        // Set text properties
         g2.setFont(pixelify80);
-        String text = "SPAKBOR SI PETANI";
+        g2.setColor(Color.WHITE);
+
+        // Build text based on animation stage
+        String text = "you fell asleep";
+        for (int i = 0; i <= sleepAnimationStage; i++) {
+            text += " .";
+        }
+
+        // Center the text
+        int x = getXforCenteredText(text);
+        int y = gp.screenHeight / 2;
+        g2.drawString(text, x, y);
+    }
+    
+        public void updateSleepAnimation() {
+        if (gp.gameState == gp.sleepState) {
+            sleepAnimationTimer++;
+
+            if (sleepAnimationTimer >= SLEEP_ANIMATION_DURATION) {
+                sleepAnimationTimer = 0;
+                sleepAnimationStage++;
+
+                // When animation is complete, finish sleep
+                if (sleepAnimationStage >= TOTAL_SLEEP_STAGES) {
+                    finishSleepAnimation();
+                }
+            }
+        }
+    }
+
+    // Add method to start sleep animation
+    public void startSleepAnimation() {
+        sleepAnimationTimer = 0;
+        sleepAnimationStage = 0;
+        gp.gameState = gp.sleepState;
+    }
+
+    // Add method to finish sleep animation
+    private void finishSleepAnimation() {
+        sleepAnimationTimer = 0;
+        sleepAnimationStage = 0;
+
+        // Return to play state and spawn in house
+        gp.gameState = gp.playState;
+        gp.tileM.mapManager.changeMap("insideHouse", 3, 3);
+    }
+
+    public void drawMainMenu() {
+        // Background image
+        BufferedImage backgroundImage = null;
+        try {
+            backgroundImage = ImageIO.read(new File("res/menu/menuScreen.png")); // Ganti dengan path image kamu
+        } catch (IOException e) {
+            // Fallback jika image tidak ditemukan
+            System.out.println("Background image not found, using solid color");
+        }
+        
+        if (backgroundImage != null) {
+            // Draw scaled background image
+            g2.drawImage(backgroundImage, 0, 0, gp.screenWidth, gp.screenHeight, null);
+        } else {
+            // Fallback: solid color background
+            g2.setColor(new Color(0, 0, 0));
+            g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
+        }
+
+        // Title with better visibility
+        g2.setFont(pixelify80);
+        String text = "SPAKBOR HILLS";
         int x = getXforCenteredText(text);
         int y = gp.tileSize * 3;
 
-        // Shadow
-        g2.setColor(Color.gray);
-        g2.drawString(text, x + 5, y + 5);
+        // Title shadow (darker and more prominent)
+        g2.setColor(new Color(0, 0, 0, 180)); // Semi-transparent black
+        g2.drawString(text, x + 3, y + 3);
 
-        // Main text
-        g2.setColor(Color.white);
+        // Title outline (optional, for better readability)
+        g2.setColor(new Color(50, 50, 50));
+        g2.drawString(text, x + 1, y + 1);
+        g2.drawString(text, x - 1, y - 1);
+        g2.drawString(text, x + 1, y - 1);
+        g2.drawString(text, x - 1, y + 1);
+
+        // Main title text
+        g2.setColor(Color.WHITE);
         g2.drawString(text, x, y);
 
-        // Menu options
+        // Menu options with background boxes for better visibility
         g2.setFont(pixelify40);
-        text = "NEW GAME";
+        
+        // START GAME
+        text = "START GAME";
         x = getXforCenteredText(text);
-        y += gp.tileSize * 2;
+        y += gp.tileSize * 4;
+        
+        if (gp.keyH.menuOption == 0) {
+            // Selected option background
+            g2.setColor(new Color(255, 255, 0, 100)); // Semi-transparent yellow
+            g2.fillRoundRect(x - 20, y - 35, g2.getFontMetrics().stringWidth(text) + 40, 45, 10, 10);
+        }
+        
+        g2.setColor(gp.keyH.menuOption == 0 ? SELECTED_COLOR : UNSELECTED_COLOR);
+        // Text shadow
+        g2.setColor(new Color(0, 0, 0, 150));
+        g2.drawString(text, x + 2, y + 2);
         g2.setColor(gp.keyH.menuOption == 0 ? SELECTED_COLOR : UNSELECTED_COLOR);
         g2.drawString(text, x, y);
 
+        // OPTIONS
         text = "OPTIONS";
         x = getXforCenteredText(text);
-        y += gp.tileSize * 2 / 3;
+        y += gp.tileSize;
+        
+        if (gp.keyH.menuOption == 1) {
+            g2.setColor(new Color(255, 255, 0, 100));
+            g2.fillRoundRect(x - 20, y - 35, g2.getFontMetrics().stringWidth(text) + 40, 45, 10, 10);
+        }
+        
+        g2.setColor(new Color(0, 0, 0, 150));
+        g2.drawString(text, x + 2, y + 2);
         g2.setColor(gp.keyH.menuOption == 1 ? SELECTED_COLOR : UNSELECTED_COLOR);
         g2.drawString(text, x, y);
 
-        text = "CREDITS";
+        // EXIT
+        text = "EXIT";
         x = getXforCenteredText(text);
-        y += gp.tileSize * 2 / 3;
+        y += gp.tileSize;
+        
+        if (gp.keyH.menuOption == 2) {
+            g2.setColor(new Color(255, 255, 0, 100));
+            g2.fillRoundRect(x - 20, y - 35, g2.getFontMetrics().stringWidth(text) + 40, 45, 10, 10);
+        }
+        
+        g2.setColor(new Color(0, 0, 0, 150));
+        g2.drawString(text, x + 2, y + 2);
         g2.setColor(gp.keyH.menuOption == 2 ? SELECTED_COLOR : UNSELECTED_COLOR);
         g2.drawString(text, x, y);
 
-        text = "EXIT";
-        x = getXforCenteredText(text);
-        y += gp.tileSize * 2 / 3;
-        g2.setColor(gp.keyH.menuOption == 3 ? SELECTED_COLOR : UNSELECTED_COLOR);
-        g2.drawString(text, x, y);
-
-
+        // Draw chest icon (if you want to keep it)
+        if (chestImage != null) {
+            g2.drawImage(chestImage, gp.tileSize / 2, gp.tileSize / 2, gp.tileSize, gp.tileSize, null);
+        }
     }
-
+    
     public void drawInventory() {
         int cols = 8;
         int rows = 4;
@@ -581,7 +701,134 @@ public class UI {
         int inputTextY = inputBoxY + inputBoxHeight / 2 + g2.getFontMetrics().getAscent() / 2 - 6;
         g2.drawString(inputText, inputTextX, inputTextY);
     }
-            
+
+    public void drawOnHandPopup() {
+        items.Item onhand = gp.player.getOnhandItem();
+        if (onhand == null) return;
+
+        int popupWidth = 160;
+        int popupHeight = 54;
+        int marginX = 18;
+        int marginY = 18;
+        int x = gp.getWidth() - popupWidth - marginX;
+        int y = gp.getHeight() - popupHeight - marginY;
+
+        // Shadow
+        g2.setColor(new Color(0, 0, 0, 100));
+        g2.fillRoundRect(x + 4, y + 4, popupWidth, popupHeight, 18, 18);
+
+        // Background (transparan, glossy)
+        g2.setColor(new Color(40, 40, 60, 200));
+        g2.fillRoundRect(x, y, popupWidth, popupHeight, 18, 18);
+
+        // Glossy effect
+        g2.setColor(new Color(255, 255, 255, 40));
+        g2.fillRoundRect(x + 2, y + 2, popupWidth - 4, popupHeight / 2, 16, 12);
+
+        // Outline
+        g2.setColor(new Color(255, 255, 255, 180));
+        g2.setStroke(new java.awt.BasicStroke(2));
+        g2.drawRoundRect(x, y, popupWidth, popupHeight, 18, 18);
+
+        // Gambar item (bulat)
+        int iconX = x + 10;
+        int iconY = y + 6;
+        int iconSize = 40;
+        g2.setColor(new Color(255,255,255,60));
+        g2.fillOval(iconX-2, iconY-2, iconSize+4, iconSize+4);
+        if (onhand.getImage() != null) {
+            g2.setClip(iconX, iconY, iconSize, iconSize);
+            g2.drawImage(onhand.getImage(), iconX, iconY, iconSize, iconSize, null);
+            g2.setClip(null);
+        }
+
+        // Nama item (font lebih kecil, bold, sedikit shadow)
+        g2.setFont(pixelify15);
+        String name = onhand.getName();
+        int nameX = iconX + iconSize + 8;
+        int nameY = y + popupHeight / 2 + 6;
+        g2.setColor(new Color(0,0,0,120));
+        g2.drawString(name, nameX+1, nameY+1);
+        g2.setColor(Color.WHITE);
+        g2.drawString(name, nameX, nameY);
+    }
+    
+    public void drawFishingResult() {
+        String text = gp.fishingMiniGame.getResultMessage();
+        items.fish item = gp.fishingMiniGame.getResultItem();
+
+        int boxWidth = 500;
+        int boxHeight = 220;
+        int boxX = gp.getWidth() / 2 - boxWidth / 2;
+        int boxY = gp.getHeight() / 2 - boxHeight / 2;
+
+        // Shadow
+        g2.setColor(new Color(0, 0, 0, 120));
+        g2.fillRoundRect(boxX + 6, boxY + 6, boxWidth, boxHeight, 36, 36);
+
+        // Background
+        g2.setColor(new Color(40, 70, 40, 230));
+        g2.fillRoundRect(boxX, boxY, boxWidth, boxHeight, 36, 36);
+
+        // Glossy effect
+        g2.setColor(new Color(255, 255, 255, 30));
+        g2.fillRoundRect(boxX + 8, boxY + 8, boxWidth - 16, boxHeight / 3, 24, 18);
+
+        // Outline putih
+        g2.setColor(Color.WHITE);
+        g2.setStroke(new java.awt.BasicStroke(4));
+        g2.drawRoundRect(boxX, boxY, boxWidth, boxHeight, 36, 36);
+
+        // Pesan utama (wrap jika terlalu panjang)
+        g2.setFont(pixelify30);
+        g2.setColor(Color.WHITE);
+
+        // Word wrap manual
+        java.util.List<String> lines = new java.util.ArrayList<>();
+        int maxTextWidth = boxWidth - 40;
+        String[] words = text.split(" ");
+        StringBuilder line = new StringBuilder();
+        for (String word : words) {
+            String testLine = line.length() == 0 ? word : line + " " + word;
+            int testWidth = g2.getFontMetrics().stringWidth(testLine);
+            if (testWidth > maxTextWidth && line.length() > 0) {
+                lines.add(line.toString());
+                line = new StringBuilder(word);
+            } else {
+                if (line.length() > 0) line.append(" ");
+                line.append(word);
+            }
+        }
+        if (line.length() > 0) lines.add(line.toString());
+
+        int totalTextHeight = lines.size() * g2.getFontMetrics().getHeight();
+        int startY = boxY + 60 + (item != null ? 0 : 30) - totalTextHeight / 2 + 10;
+        for (int i = 0; i < lines.size(); i++) {
+            String l = lines.get(i);
+            int textWidth = g2.getFontMetrics().stringWidth(l);
+            int textX = boxX + (boxWidth - textWidth) / 2;
+            int textY = startY + i * g2.getFontMetrics().getHeight();
+            g2.drawString(l, textX, textY);
+        }
+
+        // Jika berhasil, tampilkan gambar ikan di tengah bawah
+        if (item != null && item.getImage() != null) {
+            int imgW = 64, imgH = 64;
+            int imgX = boxX + (boxWidth - imgW) / 2;
+            int imgY = boxY + 110;
+            g2.drawImage(item.getImage(), imgX, imgY, imgW, imgH, null);
+        }
+
+        // Instruksi keluar (kecil, di bawah, tengah)
+        g2.setFont(pixelify22);
+        String instr = "Tekan ENTER untuk menutup";
+        int instrWidth = g2.getFontMetrics().stringWidth(instr);
+        int instrX = boxX + (boxWidth - instrWidth) / 2;
+        int instrY = boxY + boxHeight - 28;
+        g2.setColor(new Color(255,255,255,180));
+        g2.drawString(instr, instrX, instrY);
+    }
+
     public int getXforCenteredText(String text) {
         int length = (int) g2.getFontMetrics().getStringBounds(text, g2).getWidth();
         int x = gp.screenWidth / 2 - length / 2;

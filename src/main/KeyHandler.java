@@ -18,9 +18,7 @@ public class KeyHandler implements KeyListener{
     public int menuOption = 0;
     public int inventoryCursorIndex = 0;
     private final int NUM_OPTIONS = 3;
-    // Add pause menu option
-    public int pauseOption = 0;
-    private final int PAUSE_OPTIONS = 2; // Continue and Main Menu
+    
 
     public KeyHandler(GamePanel gp){
         this.gp = gp;
@@ -86,6 +84,7 @@ public class KeyHandler implements KeyListener{
             if(code == KeyEvent.VK_ENTER) {
 
                 enterPressed = true;
+                
             }
         }
 
@@ -165,9 +164,7 @@ public class KeyHandler implements KeyListener{
             return; 
         } 
                 
-
         if (gp.gameState == gp.fishingMiniGameState && gp.fishingMiniGame.isActive()) {
-            
             if (code >= KeyEvent.VK_0 && code <= KeyEvent.VK_9) {
                 int num = code - KeyEvent.VK_0;
                 if (gp.fishingMiniGame.getMax() > 10) {
@@ -184,26 +181,20 @@ public class KeyHandler implements KeyListener{
 
             if (code == KeyEvent.VK_ENTER && gp.fishingMiniGame.getInput() != 0) {
                 int guess = gp.fishingMiniGame.getInput();
-                if (guess == gp.fishingMiniGame.getAnswer()) {
-                    gp.player.addItemToInventory(gp.fishingMiniGame.getPendingFish(), 1);
-                    System.out.println("Benar! Kamu dapat ikan: " + gp.fishingMiniGame.getPendingFish().getName());
-                    gp.fishingMiniGame.finish();
-                    gp.gameState = gp.playState;
-                } else {
-                    gp.fishingMiniGame.decTries();
-                    if (gp.fishingMiniGame.getTries() <= 0) {
-                        System.out.println("Gagal! Kesempatan habis.");
-                        gp.fishingMiniGame.finish();
-                        gp.gameState = gp.playState;
-                    } else {
-                        System.out.println("Salah! Sisa kesempatan: " + gp.fishingMiniGame.getTries());
-                        gp.fishingMiniGame.resetInput();
-                    }
+                gp.fishingMiniGame.processGuess(guess, gp.player);
+                if (!gp.fishingMiniGame.isActive()) {
+                    gp.gameState = gp.fishingResultState;
                 }
             }
             return;
         }
-        
+
+        if (gp.gameState == gp.fishingResultState && code == KeyEvent.VK_ENTER) {
+            gp.fishingMiniGame.finish();
+            gp.gameState = gp.playState;
+            return;
+        }
+
         if (gp.gameState != gp.playState) {
             return;
         }
@@ -261,6 +252,11 @@ public class KeyHandler implements KeyListener{
         if (code == KeyEvent.VK_2) {
             gp.player.addGold(100);
             System.out.println("Added 100 gold! Total: " + gp.player.getGold() + "g");
+        }
+        
+        
+        if (code == KeyEvent.VK_3) {
+            gp.timeM.setHour(gp.timeM.getHour() + 1);
         }
 
     }

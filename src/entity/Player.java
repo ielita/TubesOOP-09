@@ -224,10 +224,15 @@ public class Player extends Entity {
 
         up1 = setup("player/player_up_1");
         up2 = setup("player/player_up_2");
+        upidle = setup("player/player_up_3");
+        downidle = setup("player/player_down_3");
         down1 = setup("player/player_down_1");
         down2 = setup("player/player_down_2");
         left1 = setup("player/player_left_1");
         left2 = setup("player/player_left_2");
+        left3 = setup("player/player_left_3");
+
+        right3 = setup("player/player_right_3");
         right1 = setup("player/player_right_1");
         right2 = setup("player/player_right_2");
     }
@@ -266,6 +271,7 @@ public class Player extends Entity {
             // CHECK TILE COLLISION
             collisionOn = false;
             gp.cChecker.checkTile(this);
+            gp.cChecker.checkEntity(this, gp.npc); // Check collision with NPCs
 
             // CHECK OBJECT COLLISION
             int objIndex = gp.cChecker.checkObject(this, true);
@@ -289,17 +295,27 @@ public class Player extends Entity {
             }
 
             // Faster animation when sprinting
-            int animationSpeed = keyH.sprintPressed ? 8 : 12;
+            int animationSpeed = keyH.sprintPressed ? 4 : 8;
             spriteCounter++;
             if (spriteCounter > animationSpeed) {
+                // spriteNum = 1+ (spriteNum + 1) % 4; 
                 if (spriteNum == 1) {
                     spriteNum = 2;
                 }
                 else if(spriteNum == 2) {
+                    spriteNum = 3;
+                }
+                else if(spriteNum == 3) {
+                    spriteNum = 4;
+                }
+                else if(spriteNum == 4) {
                     spriteNum = 1;
                 }
                 spriteCounter = 0;
             }
+        }
+        else{
+            spriteNum = 4;
         }
     }
 
@@ -340,8 +356,15 @@ public class Player extends Entity {
                     image = up1;
                 }
                 if (spriteNum == 2){
+                    image = upidle;
+                }
+                if (spriteNum == 3){
                     image = up2;
                 }
+                if (spriteNum == 4){
+                    image = upidle;
+                }
+
                 
                 break;
             case "down":
@@ -349,7 +372,13 @@ public class Player extends Entity {
                     image = down1;
                 }
                 if (spriteNum == 2){
+                    image = downidle;
+                }
+                if (spriteNum == 3){
                     image = down2;
+                }
+                if (spriteNum == 4){
+                    image = downidle;
                 }
                 break;
             case "left":
@@ -357,7 +386,13 @@ public class Player extends Entity {
                     image = left1;
                 }
                 if (spriteNum == 2){
+                    image = left3;
+                }
+                if (spriteNum == 3){
                     image = left2;
+                }
+                if (spriteNum == 4){
+                    image = left3;
                 }
                 break;
             case "right":
@@ -365,7 +400,13 @@ public class Player extends Entity {
                     image = right1;
                 }
                 if (spriteNum == 2){
+                    image = right3;
+                }
+                if (spriteNum == 3){
                     image = right2;
+                }
+                if (spriteNum == 4){
+                    image = right3;
                 }
                 break;
         }
@@ -381,6 +422,12 @@ public class Player extends Entity {
 
     public void setEnergy(int energy) {
         this.energy = Math.max(-20, Math.min(100, energy)); // Keep energy between 0-100
+        this.energy = Math.max(-20, Math.min(100, energy)); // Keep energy between -20 to 100
+
+        // Auto sleep when energy reaches -20
+        if (this.energy <= -20) {
+            forceCollapse();
+        }
     }
 
     public void addEnergy(int amount) {
@@ -389,5 +436,41 @@ public class Player extends Entity {
 
     public void reduceEnergy(int amount) {
         setEnergy(energy - amount);
+    }
+
+    // Modify the sleep method
+    public void sleep() {
+        // Start sleep animation
+        gp.ui.startSleepAnimation();
+
+        // Restore energy based on current energy level
+        if (getEnergy() > 10) {
+            setEnergy(100);  // Full energy if above 10
+        } else if (getEnergy() > 0 && getEnergy() <= 10) {
+            setEnergy(50);   // Half energy if very low but not exhausted
+        } else if (getEnergy() <= 0) {
+            setEnergy(10);   // Minimal energy if exhausted
+        }
+
+        // Skip to next day
+        gp.timeM.skipDay();
+
+        System.out.println("You slept well! Energy restored and new day begins.");
+    }
+
+    // Add this new method for forced collapse
+    private void forceCollapse() {
+        System.out.println("You collapsed from exhaustion! Waking up at home...");
+
+        // Start sleep animation for forced collapse
+        gp.ui.startSleepAnimation();
+
+        // Set minimal energy recovery for collapsing
+        this.energy = 10;  // Very low energy as penalty for collapsing
+
+        // Skip to next day
+        gp.timeM.skipDay();
+
+        System.out.println("You woke up exhausted in your bed. Take better care of yourself!");
     }
 }

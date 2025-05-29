@@ -70,10 +70,14 @@ public class GamePanel extends JPanel implements Runnable{
     public final int interactingState = 6;
     public final int chattingState = 7;
     public final int givingGiftState = 8;
+    public final int sleepState = 9;
+    public final int fishingResultState = 10;
     public minigame.FishingMiniGame fishingMiniGame = new minigame.FishingMiniGame();
     public String currentMap = tileM.mapManager.getCurrentMap(); 
     public boolean fullScreenOn = false; 
     public boolean backsoundOn = true; 
+
+    private boolean autoSleepTriggered = false;
     
     public GamePanel(){
         this.setPreferredSize(new Dimension(screenWidth,screenHeight));
@@ -130,6 +134,7 @@ public class GamePanel extends JPanel implements Runnable{
             screenHeight2 = screenHeight;
         }
     }
+
     public void startGameThread(){
         gameThread = new Thread(this);
         gameThread.start();
@@ -138,7 +143,7 @@ public class GamePanel extends JPanel implements Runnable{
     @Override
     public void run(){
 
-            double drawInterval = 1000000000/FPS;
+            double drawInterval = 1000000000.0/FPS;
             double delta = 0;
             long lastTime = System.nanoTime();
             long currentTime;
@@ -153,7 +158,9 @@ public class GamePanel extends JPanel implements Runnable{
 
             if (delta >= 1){
                 update();
+                drawToScreen();
                 repaint();
+                // repaint();
                 delta --;
             }
         }
@@ -162,20 +169,34 @@ public class GamePanel extends JPanel implements Runnable{
     public void update() {
         if(gameState == playState) {
             timeM.update(); // Update game time
+            timeM.update();
             player.update();
-            
+
             // Check for new day and update plants
             if (timeM.isNewDay()) {
                 System.out.println("New day detected - updating all plant growth");
                 tileM.mapManager.updatePlantGrowth();
+                // Reset the auto sleep flag for new day
+                autoSleepTriggered = false;
             }
-            
+
             // Update all objects
             for(int i = 0; i < obj.length; i++) {
                 if(obj[i] != null) {
                     obj[i].update();
                 }
             }
+
+            // Auto sleep at 02:00 - only trigger once
+            if(timeM.getTimeString().equals("02:00") && !autoSleepTriggered){
+                player.sleep();
+                autoSleepTriggered = true; // Prevent multiple calls
+            }  
+        }
+
+        // Add sleep animation update
+        if(gameState == sleepState) {
+            ui.updateSleepAnimation();
         }
     }
 
