@@ -27,8 +27,8 @@ public class AssetSetter {
             gp.obj[0].worldY = 1 * gp.tileSize;
 
             gp.obj[1] = new OBJ_Door(gp, "farm", 3, 8);
-            gp.obj[1].worldX = 2 * gp.tileSize;
-            gp.obj[1].worldY = 5 * gp.tileSize;
+            gp.obj[1].worldX = 12 * gp.tileSize;
+            gp.obj[1].worldY = 23 * gp.tileSize;
 
             gp.obj[2] = new OBJ_Bed1(gp);
             gp.obj[2].worldX = 4 * gp.tileSize;
@@ -38,10 +38,14 @@ public class AssetSetter {
             gp.obj[3].worldX = 4 * gp.tileSize;
             gp.obj[3].worldY = 4 * gp.tileSize;
 
+            gp.obj[4] = new OBJ_Chest(gp);
+            gp.obj[4].worldX = 2 * gp.tileSize;
+            gp.obj[4].worldY = 1 * gp.tileSize;
+
         }
 
         else if (mapName.equals("farm")) {
-            gp.obj[0] = new OBJ_DoorOpen(gp, "insideHouse", 2, 3);
+            gp.obj[0] = new OBJ_DoorOpen(gp, "insideHouse", 12, 22);
             gp.obj[0].worldX = 3 * gp.tileSize;
             gp.obj[0].worldY = 6 * gp.tileSize;
 

@@ -8,7 +8,6 @@ public class FoodData {
     public static List<food> getAllFoods(GamePanel gp) {
         List<food> list = new ArrayList<>();
 
-        // Direct constructor calls: name, gp, energi, hargabeli, hargajual
         list.add(new food("Fish n' Chips", gp, 50, 150, 135));
         list.add(new food("Baguette", gp, 25, 100, 80));
         list.add(new food("Sashimi", gp, 70, 300, 275));
@@ -25,7 +24,6 @@ public class FoodData {
         return list;
     }
 
-    // Get food by name
     public static food getFoodByName(GamePanel gp, String foodName) {
         List<food> allFoods = getAllFoods(gp);
         

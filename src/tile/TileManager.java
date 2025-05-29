@@ -14,7 +14,7 @@ public class TileManager {
 
     public TileManager(GamePanel gp) {
         this.gp = gp;
-        tile = new Tile[20];
+        tile = new Tile[200];
         mapManager = new MapManager(gp);
         getTileImage();
     }
@@ -35,6 +35,16 @@ public class TileManager {
         setup(9, "tilted_w", false);  
         setup(10, "planted_w", false); 
         setup(11, "harvest", false); 
+        setup(12, "woodtile", false);
+        setup(13, "woodwallsideleft", true);
+        setup(14, "woodwallsidedown", true);
+        setup(15, "woodwallsideright", true);
+        setup(16, "woodwallsideup", true);
+        setup(17, "woodwallcorner1", true);
+        setup(18, "woodwallcorner2", true);
+        setup(19, "woodwallcorner3", true);
+        setup(20, "woodwallcorner4", true);
+        
 }
 
     public void setup(int index, String imagePath, boolean collision) {

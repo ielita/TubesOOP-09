@@ -40,7 +40,6 @@ public class food extends Item implements consumable, buysellable {
         this.energi = energi;
     }
 
-    // Check if food can be bought from store
     public boolean canBeBought() {
         return hargabeli > 0;
     }

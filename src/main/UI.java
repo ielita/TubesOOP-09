@@ -913,7 +913,7 @@ public class UI {
         int storeWidth = cols * slotSize + (cols - 1) * slotGapX + 60;
         int storeHeight = rows * slotSize + (rows - 1) * slotGapY + 180;
         int storeX = gp.screenWidth / 2 - 60;
-        int storeY = gp.screenHeight / 2 - storeHeight / 2 - 10;
+        int storeY = gp.screenHeight / 2 - storeHeight / 2 - 30;
 
         g2.setColor(new Color(30, 30, 30, 230));
         g2.fillRoundRect(storeX, storeY, storeWidth, storeHeight, 30, 30);
