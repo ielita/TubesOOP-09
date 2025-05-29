@@ -663,7 +663,7 @@ public class UI {
         int boxY = gp.screenHeight / 2 - boxHeight / 2;
 
         // Background box
-        g2.setColor(new Color(30, 30, 60, 230));
+        g2.setColor(new Color(0, 0, 0, 120));
         g2.fillRoundRect(boxX, boxY, boxWidth, boxHeight, 36, 36);
 
         // Outline putih di sekeliling box
@@ -705,7 +705,7 @@ public class UI {
         int inputBoxY = boxY + 210;
 
         // Box input
-        g2.setColor(new Color(60, 60, 100, 180));
+        g2.setColor(new Color(0, 0, 0, 120));
         g2.fillRoundRect(inputBoxX, inputBoxY, inputBoxWidth, inputBoxHeight, 18, 18);
         g2.setColor(Color.WHITE);
         g2.setStroke(new java.awt.BasicStroke(2));
@@ -725,7 +725,7 @@ public class UI {
         items.Item onhand = gp.player.getOnhandItem();
         if (onhand == null) return;
 
-        int popupWidth = 160;
+        int popupWidth = 240;
         int popupHeight = 54;
         int marginX = 18;
         int marginY = 18;
