@@ -37,7 +37,7 @@ public class GamePanel extends JPanel implements Runnable{
     BufferedImage tempScreen; 
     Graphics2D g2;
 
-// Default starting map
+    // Default starting map
 
     //FPS
     int FPS = 60;
@@ -160,8 +160,8 @@ public class GamePanel extends JPanel implements Runnable{
 
             if (delta >= 1){
                 update();
+                drawToTempScreen();
                 drawToScreen();
-                repaint();
                 // repaint();
                 delta --;
             }
@@ -211,44 +211,80 @@ public class GamePanel extends JPanel implements Runnable{
         }
     }
 
-    public void paintComponent(Graphics g){
+    // public void paintComponent(Graphics g){
         
-        super.paintComponent(g);
+    //     super.paintComponent(g);
 
-        Graphics2D g2 = (Graphics2D)g;
+    //     Graphics2D g2 = (Graphics2D)g;
         
-        //TILE
-        tileM.draw(g2);
+    //     //TILE
+    //     tileM.draw(g2);
 
-        //OBJECT
-        for(int i = 0; i < obj.length; i++){
-            if (obj[i] != null){
-                obj[i].draw(g2,this);
+    //     //OBJECT
+    //     for(int i = 0; i < obj.length; i++){
+    //         if (obj[i] != null){
+    //             obj[i].draw(g2,this);
+    //         }
+    //     }
+
+    //     //NPC
+    //     for(int i = 0; i < npc.length; i++){
+    //         if (npc[i] != null){
+    //             npc[i].draw(g2);
+    //         }
+    //     }
+
+    //     //PLAYER
+    //     player.draw(g2);
+        
+    //     ui.draw(g2);
+        
+    //     // Draw brightness overlay at the end
+    //     tileM.mapManager.drawBrightnessOverlay(g2);
+        
+    //     g2.dispose(); 
+    // }
+
+    public void drawToTempScreen() {
+        Graphics2D g2Temp = (Graphics2D) tempScreen.getGraphics();
+
+        // Clear screen (optional but helps with artifacts)
+        g2Temp.setColor(Color.black);
+        g2Temp.fillRect(0, 0, screenWidth, screenHeight);
+
+        // TILE
+        tileM.draw(g2Temp);
+
+        // OBJECT
+        for (int i = 0; i < obj.length; i++) {
+            if (obj[i] != null) {
+                obj[i].draw(g2Temp, this);
             }
         }
 
-        //NPC
-        for(int i = 0; i < npc.length; i++){
-            if (npc[i] != null){
-                npc[i].draw(g2);
+        // NPC
+        for (int i = 0; i < npc.length; i++) {
+            if (npc[i] != null) {
+                npc[i].draw(g2Temp);
             }
         }
 
-        //PLAYER
-        player.draw(g2);
-        
-        ui.draw(g2);
-        
-        // Draw brightness overlay at the end
-        tileM.mapManager.drawBrightnessOverlay(g2);
-        
-        g2.dispose(); 
+        // PLAYER
+        player.draw(g2Temp);
+
+        // UI
+        ui.draw(g2Temp);
+
+        // Brightness Overlay (e.g. for day/night effect)
+        tileM.mapManager.drawBrightnessOverlay(g2Temp);
+
     }
+
 
     public void drawToScreen() {
         Graphics g = this.getGraphics();
         // Gambar ke ukuran panel yang sebenarnya
-        g.drawImage(tempScreen, 0, 0, getWidth(), getHeight(), null);
+        g.drawImage(tempScreen, 0, 0, screenWidth2, screenHeight2, null);
         g.dispose();
     }
 
