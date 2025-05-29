@@ -224,10 +224,15 @@ public class Player extends Entity {
 
         up1 = setup("player/player_up_1");
         up2 = setup("player/player_up_2");
+        upidle = setup("player/player_up_3");
+        downidle = setup("player/player_down_3");
         down1 = setup("player/player_down_1");
         down2 = setup("player/player_down_2");
         left1 = setup("player/player_left_1");
         left2 = setup("player/player_left_2");
+        left3 = setup("player/player_left_3");
+
+        right3 = setup("player/player_right_3");
         right1 = setup("player/player_right_1");
         right2 = setup("player/player_right_2");
     }
@@ -266,6 +271,7 @@ public class Player extends Entity {
             // CHECK TILE COLLISION
             collisionOn = false;
             gp.cChecker.checkTile(this);
+            gp.cChecker.checkEntity(this, gp.npc); // Check collision with NPCs
 
             // CHECK OBJECT COLLISION
             int objIndex = gp.cChecker.checkObject(this, true);
@@ -289,22 +295,31 @@ public class Player extends Entity {
             }
 
             // Faster animation when sprinting
-            int animationSpeed = keyH.sprintPressed ? 8 : 12;
+            int animationSpeed = keyH.sprintPressed ? 4 : 8;
             spriteCounter++;
             if (spriteCounter > animationSpeed) {
+                // spriteNum = 1+ (spriteNum + 1) % 4; 
                 if (spriteNum == 1) {
                     spriteNum = 2;
                 }
                 else if(spriteNum == 2) {
+                    spriteNum = 3;
+                }
+                else if(spriteNum == 3) {
+                    spriteNum = 4;
+                }
+                else if(spriteNum == 4) {
                     spriteNum = 1;
                 }
                 spriteCounter = 0;
             }
         }
+        else{
+            spriteNum = 4;
+        }
     }
 
-    public boolean isFacingWater() {
-        // Use same calculation method as plantSeed for consistency
+    public int getFacingTile() {
         int playerCenterX = worldX + solidArea.x + solidArea.width / 2;
         int playerCenterY = worldY + solidArea.y + solidArea.height / 2;
         
@@ -321,10 +336,10 @@ public class Player extends Entity {
         int col = facingX / gp.tileSize;
         int row = facingY / gp.tileSize;
         
-        if (col < 0 || row < 0 || col >= gp.tileM.mapManager.maxWorldCol || row >= gp.tileM.mapManager.maxWorldRow) return false;
+        if (col < 0 || row < 0 || col >= gp.tileM.mapManager.maxWorldCol || row >= gp.tileM.mapManager.maxWorldRow) return -1;
         int tileNum = gp.tileM.mapManager.mapTileNum[col][row];
 
-        return tileNum == 6;
+        return tileNum;
     }
 
     public void draw(Graphics2D g2){
@@ -340,8 +355,15 @@ public class Player extends Entity {
                     image = up1;
                 }
                 if (spriteNum == 2){
+                    image = upidle;
+                }
+                if (spriteNum == 3){
                     image = up2;
                 }
+                if (spriteNum == 4){
+                    image = upidle;
+                }
+
                 
                 break;
             case "down":
@@ -349,7 +371,13 @@ public class Player extends Entity {
                     image = down1;
                 }
                 if (spriteNum == 2){
+                    image = downidle;
+                }
+                if (spriteNum == 3){
                     image = down2;
+                }
+                if (spriteNum == 4){
+                    image = downidle;
                 }
                 break;
             case "left":
@@ -357,7 +385,13 @@ public class Player extends Entity {
                     image = left1;
                 }
                 if (spriteNum == 2){
+                    image = left3;
+                }
+                if (spriteNum == 3){
                     image = left2;
+                }
+                if (spriteNum == 4){
+                    image = left3;
                 }
                 break;
             case "right":
@@ -365,7 +399,13 @@ public class Player extends Entity {
                     image = right1;
                 }
                 if (spriteNum == 2){
+                    image = right3;
+                }
+                if (spriteNum == 3){
                     image = right2;
+                }
+                if (spriteNum == 4){
+                    image = right3;
                 }
                 break;
         }

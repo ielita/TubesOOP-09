@@ -14,12 +14,11 @@ public class KeyHandler implements KeyListener{
     public boolean upPressed, downPressed, leftPressed, rightPressed, interactPressed;
     public boolean showDebug = false;
     public boolean sprintPressed = false;
+    public boolean enterPressed = false;
     public int menuOption = 0;
     public int inventoryCursorIndex = 0;
     private final int NUM_OPTIONS = 3;
-    // Add pause menu option
-    public int pauseOption = 0;
-    private final int PAUSE_OPTIONS = 2; // Continue and Main Menu
+    
 
     public KeyHandler(GamePanel gp){
         this.gp = gp;
@@ -63,30 +62,54 @@ public class KeyHandler implements KeyListener{
             }
         }
 
-        if(gp.gameState == gp.pauseState) {
+        if(gp.gameState == gp.optionsState) {
+            int maxCommandNum = 0;
+            switch(gp.ui.subState){
+                case 0: maxCommandNum = 4; break; 
+            }
             if(code == KeyEvent.VK_W || code == KeyEvent.VK_UP) {
-                pauseOption--;
-                if(pauseOption < 0) {
-                    pauseOption = PAUSE_OPTIONS - 1;
+                gp.ui.commandNum--;
+                // gp.playSE(9);
+                if(gp.ui.commandNum < 0) {
+                    gp.ui.commandNum = maxCommandNum;
                 }
             }
             if(code == KeyEvent.VK_S || code == KeyEvent.VK_DOWN) {
-                pauseOption++;
-                if(pauseOption >= PAUSE_OPTIONS) {
-                    pauseOption = 0;
+                gp.ui.commandNum++;
+                // gp.playSE(9);
+                if(gp.ui.commandNum > maxCommandNum) {
+                    gp.ui.commandNum = 0;
                 }
             }
             if(code == KeyEvent.VK_ENTER) {
-                switch(pauseOption) {
-                    case 0: // Continue
-                        gp.gameState = gp.playState;
-                        break;
-                    case 1: // Main Menu
-                        gp.gameState = gp.menuState;
-                        pauseOption = 0; // Reset pause menu selection
-                        gp.stopMusic(); // Stop game music
-                        break;
+
+                enterPressed = true;
+                
+            }
+        }
+
+        if (gp.gameState == gp.keyBindingState){
+            int maxKeyBindNum = 0;
+            switch(gp.ui.subState){
+                case 0: maxKeyBindNum = 0; break; 
+            }
+            if(code == KeyEvent.VK_W || code == KeyEvent.VK_UP) {
+                gp.ui.keyBindNum--;
+                // gp.playSE(9);
+                if(gp.ui.keyBindNum < 0) {
+                    gp.ui.keyBindNum = maxKeyBindNum;
                 }
+            }
+            if(code == KeyEvent.VK_S || code == KeyEvent.VK_DOWN) {
+                gp.ui.keyBindNum++;
+                // gp.playSE(9);
+                if(gp.ui.keyBindNum > maxKeyBindNum) {
+                    gp.ui.keyBindNum = 0;
+                }
+            }
+            if(code == KeyEvent.VK_ENTER) {
+
+                enterPressed = true;
             }
         }
 
@@ -132,9 +155,14 @@ public class KeyHandler implements KeyListener{
                     if (!aEquip && bEquip) return 1;
                     return a.getKey().getName().compareToIgnoreCase(b.getKey().getName());
                 });
+
                 if (!entries.isEmpty() && inventoryCursorIndex < entries.size() && inventoryCursorIndex < maxSlots) {
                     Item selected = entries.get(inventoryCursorIndex).getKey();
-                    gp.player.setOnhandItem(selected);
+                    if (selected == gp.player.getOnhandItem()) {
+                        gp.player.setOnhandItem(null); // Unset if already selected
+                    } else {
+                        gp.player.setOnhandItem(selected);
+                    }
                 }
                 gp.gameState = gp.playState;
             }
@@ -214,7 +242,6 @@ public class KeyHandler implements KeyListener{
         }       
 
         if (gp.gameState == gp.fishingMiniGameState && gp.fishingMiniGame.isActive()) {
-            
             if (code >= KeyEvent.VK_0 && code <= KeyEvent.VK_9) {
                 int num = code - KeyEvent.VK_0;
                 if (gp.fishingMiniGame.getMax() > 10) {
@@ -231,26 +258,92 @@ public class KeyHandler implements KeyListener{
 
             if (code == KeyEvent.VK_ENTER && gp.fishingMiniGame.getInput() != 0) {
                 int guess = gp.fishingMiniGame.getInput();
-                if (guess == gp.fishingMiniGame.getAnswer()) {
-                    gp.player.addItemToInventory(gp.fishingMiniGame.getPendingFish(), 1);
-                    System.out.println("Benar! Kamu dapat ikan: " + gp.fishingMiniGame.getPendingFish().getName());
-                    gp.fishingMiniGame.finish();
-                    gp.gameState = gp.playState;
-                } else {
-                    gp.fishingMiniGame.decTries();
-                    if (gp.fishingMiniGame.getTries() <= 0) {
-                        System.out.println("Gagal! Kesempatan habis.");
-                        gp.fishingMiniGame.finish();
-                        gp.gameState = gp.playState;
-                    } else {
-                        System.out.println("Salah! Sisa kesempatan: " + gp.fishingMiniGame.getTries());
-                        gp.fishingMiniGame.resetInput();
-                    }
+                gp.fishingMiniGame.processGuess(guess, gp.player);
+                if (!gp.fishingMiniGame.isActive()) {
+                    gp.gameState = gp.fishingResultState;
                 }
             }
             return;
         }
-        
+
+        if (gp.gameState == gp.fishingResultState && code == KeyEvent.VK_ENTER) {
+            gp.fishingMiniGame.finish();
+            gp.gameState = gp.playState;
+            return;
+        }
+
+        if (gp.gameState == gp.shippingBinState) {
+            int invSize = gp.player.getInventory().size();
+            int cols = 8; // Sesuaikan dengan UI
+            int rows = 4;
+            int maxSlots = cols * rows;
+            int visibleSize = Math.min(invSize, maxSlots);
+
+            if (code == KeyEvent.VK_D && inventoryCursorIndex + 1 < visibleSize && (inventoryCursorIndex + 1) % cols != 0) {
+                inventoryCursorIndex++;
+            }
+
+            if (code == KeyEvent.VK_A && inventoryCursorIndex % cols != 0) {
+                inventoryCursorIndex--;
+            }
+
+            if (code == KeyEvent.VK_W && inventoryCursorIndex - cols >= 0) {
+                inventoryCursorIndex -= cols;
+            }
+
+            if (code == KeyEvent.VK_S && inventoryCursorIndex + cols < visibleSize) {
+                inventoryCursorIndex += cols;
+            }
+
+            if (code == KeyEvent.VK_ENTER) {
+                List<Map.Entry<Item, Integer>> entries = new ArrayList<>(gp.player.getInventory().entrySet());
+                entries.sort((a, b) -> {
+                    boolean aEquip = a.getKey() instanceof items.equipment;
+                    boolean bEquip = b.getKey() instanceof items.equipment;
+                    if (aEquip && !bEquip) return -1;
+                    if (!aEquip && bEquip) return 1;
+                    return a.getKey().getName().compareToIgnoreCase(b.getKey().getName());
+                });
+                if (!entries.isEmpty() && inventoryCursorIndex < entries.size() && inventoryCursorIndex < maxSlots) {
+                    Item selected = entries.get(inventoryCursorIndex).getKey();
+                    gp.player.setOnhandItem(selected);
+                }
+
+            }
+            if (code == KeyEvent.VK_Y){
+                Item onhandItem = gp.player.getOnhandItem();
+
+                if (onhandItem == null){
+                    System.out.println("No item selected to sell!");
+                    return;
+                }
+
+                if (onhandItem instanceof buysellable){
+
+                    buysellable sellableItem = (buysellable) onhandItem;
+                    int sellPrice = sellableItem.getHargaJual();
+                    String itemName = onhandItem.getName();
+
+                    // Remove item from inventory
+                    gp.player.inventoryManager.removeItem(onhandItem, 1);
+
+                    // Add gold to shipping bin
+                    object.OBJ_ShippingBin.goldEarned += sellPrice;
+
+                    System.out.println("Sold " + itemName + " for " + sellPrice + " gold");
+                    System.out.println("Total gold in shipping bin: " + object.OBJ_ShippingBin.goldEarned);
+                }
+                else {
+                    System.out.println("Item " + onhandItem.getName() + " cannot be sold!");
+                }
+            }
+
+            if (code == KeyEvent.VK_I){
+                gp.gameState = gp.playState;
+            }
+            return; 
+        }       
+
         if (gp.gameState != gp.playState) {
             return;
         }
@@ -269,9 +362,9 @@ public class KeyHandler implements KeyListener{
         }
         if (code == KeyEvent.VK_ESCAPE){
             if (gp.gameState == gp.playState){
-                gp.gameState = gp.pauseState;
+                gp.gameState = gp.optionsState;
             }
-            else if(gp.gameState == gp.pauseState){
+            else if(gp.gameState == gp.optionsState){
                 gp.gameState = gp.playState;
             }
         }
@@ -280,9 +373,10 @@ public class KeyHandler implements KeyListener{
             showDebug = !showDebug;
         }
 
-        if (code == KeyEvent.VK_P){
+        if (code == KeyEvent.VK_SHIFT){
             sprintPressed = true;
         }
+
 
         if (code == KeyEvent.VK_I) {
             Item onhand = gp.player.getOnhandItem();
@@ -307,6 +401,11 @@ public class KeyHandler implements KeyListener{
         if (code == KeyEvent.VK_2) {
             gp.player.addGold(100);
             System.out.println("Added 100 gold! Total: " + gp.player.getGold() + "g");
+        }
+        
+        
+        if (code == KeyEvent.VK_3) {
+            gp.timeM.setHour(gp.timeM.getHour() + 1);
         }
 
         if (code == KeyEvent.VK_3) {
@@ -335,6 +434,9 @@ public class KeyHandler implements KeyListener{
             interactPressed = false;
         }
         if (code == KeyEvent.VK_P) {
+            sprintPressed = false;
+        }
+        if (code == KeyEvent.VK_SHIFT) {
             sprintPressed = false;
         }
     }

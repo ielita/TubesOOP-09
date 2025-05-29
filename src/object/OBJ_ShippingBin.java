@@ -19,7 +19,7 @@ public class OBJ_ShippingBin extends SuperObject {
         this.keyH = gp.keyH;
         name = "ShippingBin"; // Fix name
         this.inventory = gp.player.inventoryManager;
-        
+
 
         try {
             image = ImageIO.read(new File("res/objects/shippingbin.png"));
@@ -45,7 +45,6 @@ public class OBJ_ShippingBin extends SuperObject {
             message = "Opening shipping bin...";
             gp.gameState = gp.shippingBinState;
             gp.keyH.inventoryCursorIndex = 0; 
-            gp.player.setOnhandItem(null);
             return;
         }
     }

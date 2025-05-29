@@ -1,6 +1,7 @@
 package items;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -35,8 +36,8 @@ public abstract class Item {
 
     public BufferedImage loadImageFromResource() {
         try {
-            String path = "/res/items/" + name + ".png";
-            return ImageIO.read(getClass().getResourceAsStream(path));
+            String path = "res/items/" + name + ".png";
+            return ImageIO.read(new File(path));
         } catch (IOException | IllegalArgumentException e) {
             System.out.println("Error loading item image: " + name);
             return null;

@@ -19,12 +19,11 @@ public class TimeManager {
     private final int DUSK_HOUR = 18; // 6:00 PM
     private final int TRANSITION_DURATION = 2; // Hours for sunrise/sunset
 
-    // Change to non-static instance variable
-    private boolean newDay = false;
+    private boolean newDay = false; // Tambahkan ini
 
     public TimeManager(GamePanel gp) {
         this.gp = gp;
-        hour = 8;      
+        hour = 8;      // Start at 6:00
         minute = 0;
         day = 1;       // Start at day 1
         currentSeasonIndex = 0;  // Start in Spring
@@ -62,7 +61,6 @@ public class TimeManager {
         }
     }
 
-    // Change to non-static instance method
     public boolean isNewDay() {
         if (newDay) {
             newDay = false; // Reset flag after checking
@@ -76,6 +74,7 @@ public class TimeManager {
     public boolean checkNewDayFlag() {
         return newDay;
     }
+
 
     private void updateBrightness() {
         float brightness;
@@ -181,9 +180,8 @@ public class TimeManager {
         // Increment day
         day++;
         newDay = true; // Trigger new day flag
-        
         System.out.println("=== SKIP DAY TRIGGERED: " + getDateString() + " ===");
-        
+
         // Check for season change
         if (day > DAYS_PER_SEASON) {
             day = 1;

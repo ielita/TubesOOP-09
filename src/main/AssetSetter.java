@@ -1,5 +1,10 @@
 package main;
 
+import java.util.List;
+
+import entity.NPC;
+import entity.NPCdata;
+import object.OBJ_ShippingBin;
 // import main.GamePanel;
 import object.*;
 
@@ -54,7 +59,6 @@ public class AssetSetter {
             gp.obj[3] = new OBJ_ShippingBin(gp);
             gp.obj[3].worldX = 7 * gp.tileSize;
             gp.obj[3].worldY = 6 * gp.tileSize;
-            
         }
 
         else if (mapName.equals("town")) {
@@ -115,15 +119,26 @@ public class AssetSetter {
 
     }
 
-    
+    public void setNPC(String mapName) {
+        for (int i = 0; i < gp.npc.length; i++) {
+            gp.npc[i] = null;
+        }
 
-    public void setNPC(){
+        // Get all NPCs from NPCdata
+        List<NPC> allNPCs = NPCdata.getAllNPC(gp);
 
-        // gp.npc[0] =  new NPC_clone(gp);
-        // gp.npc[0].worldX = 4 * gp.tileSize;
-        // gp.npc[0].worldY = 4 * gp.tileSize;
-
-
+        
+        int npcIndex = 0;
+        for (NPC npc : allNPCs) {
+            // Suppose you have a getMapName() or similar method/property
+            if (mapName.equals("insideHouse") && npcIndex < gp.npc.length) {
+                gp.npc[npcIndex] = npc;
+                npcIndex++;
+                gp.npc[0].worldX = 4 * gp.tileSize;
+                gp.npc[0].worldY = 4 * gp.tileSize;
+            }
+        }
     }
+        
 
 }

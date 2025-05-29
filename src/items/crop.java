@@ -19,6 +19,7 @@ public class crop extends Item implements consumable, buysellable, cookable{
         return hargabeli;
     }
     
+    @Override
     public int getHargaJual(){
         return hargajual;
     }

@@ -55,4 +55,32 @@ public class CropData {
         
         return null;
     }
+
+    // Get high-value crops (sell price > 100g each)
+    public static List<crop> getHighValueCrops(GamePanel gp) {
+        List<crop> allCrops = getAllCrops(gp);
+        List<crop> highValueCrops = new ArrayList<>();
+        
+        for (crop c : allCrops) {
+            if (c.getHargaJual() > 100) {
+                highValueCrops.add(c);
+            }
+        }
+        
+        return highValueCrops;
+    }
+
+    // Get multi-harvest crops (yield > 1)
+    public static List<crop> getMultiHarvestCrops(GamePanel gp) {
+        List<crop> allCrops = getAllCrops(gp);
+        List<crop> multiHarvestCrops = new ArrayList<>();
+        
+        for (crop c : allCrops) {
+            if (c.getjumlahCropPanen() > 1) {
+                multiHarvestCrops.add(c);
+            }
+        }
+        
+        return multiHarvestCrops;
+    }
 }
