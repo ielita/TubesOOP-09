@@ -618,36 +618,36 @@ public class UI {
         g2.setFont(pixelify26);
         
         String binitem = "Pilih item!";
-        int binitemX = binX + (binWidth - g2.getFontMetrics().stringWidth(title)) / 2 ; // Fix: use actual text width
+        int binitemX = binX + (binWidth - g2.getFontMetrics().stringWidth(title)) / 2 -5; // Fix: use actual text width
         g2.drawString(binitem, binitemX, binY + 90 + 10);
         }
         else if (gp.player.getOnhandItem() != null && gp.player.getOnhandItem() instanceof items.buysellable ){  
         g2.setFont(pixelify22);
         String binitem = "Nama : " + gp.player.getOnhandItem().getName();
-        int binitemX = binX + (binWidth - g2.getFontMetrics().stringWidth(title)) / 2 ; // Fix: use actual text width
+        int binitemX = binX + (binWidth - g2.getFontMetrics().stringWidth(title)) / 2 -5; // Fix: use actual text width
         g2.drawString(binitem, binitemX, binY + 90 + 10);
 
         String binprice = "Harga : " + ((items.buysellable)gp.player.getOnhandItem()).getHargaJual();
-        int binpriceX = binX + (binWidth - g2.getFontMetrics().stringWidth(title)) / 2 ;
+        int binpriceX = binX + (binWidth - g2.getFontMetrics().stringWidth(title)) / 2 -5;
         g2.drawString(binprice, binpriceX, binY + 135 + 10);
 
         String binoption = "Apakah anda yakin";
-        int binoptionX = binX + (binWidth - g2.getFontMetrics().stringWidth(title)) / 2 ;
+        int binoptionX = binX + (binWidth - g2.getFontMetrics().stringWidth(title)) / 2 -5;
         g2.drawString(binoption, binoptionX, binY + 180 + 10);
 
-        String binoption2 = "Ingin menjual item ini? (Y)";
-        int binoption2X = binX + (binWidth - g2.getFontMetrics().stringWidth(title)) / 2 ;
+        String binoption2 = "Ingin menjual item ini? (Enter)";
+        int binoption2X = binX + (binWidth - g2.getFontMetrics().stringWidth(title)) / 2 -5;
         g2.drawString(binoption2, binoption2X, binY + 210 + 10);
         }
 
         else if (gp.player.getOnhandItem() != null && !(gp.player.getOnhandItem() instanceof items.buysellable) ){  
         g2.setFont(pixelify22);
         String binitem = "Nama : " + gp.player.getOnhandItem().getName();
-        int binitemX = binX + (binWidth - g2.getFontMetrics().stringWidth(title)) / 2 ; // Fix: use actual text width
+        int binitemX = binX + (binWidth - g2.getFontMetrics().stringWidth(title)) / 2 -5; // Fix: use actual text width
         g2.drawString(binitem, binitemX, binY + 90 + 10);
 
         String binprice = "Item ini tidak bisa dijual!";
-        int binpriceX = binX + (binWidth - g2.getFontMetrics().stringWidth(title)) / 2 ;
+        int binpriceX = binX + (binWidth - g2.getFontMetrics().stringWidth(title)) / 2 -5;
         g2.drawString(binprice, binpriceX, binY + 135 + 10);
 
         }

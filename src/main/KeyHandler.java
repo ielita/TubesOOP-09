@@ -179,7 +179,7 @@ public class KeyHandler implements KeyListener{
                 }
 
             }
-            if (code == KeyEvent.VK_Y){
+            if (code == KeyEvent.VK_ENTER){
                 Item onhandItem = gp.player.getOnhandItem();
                 
                 if (onhandItem == null){
@@ -207,6 +207,7 @@ public class KeyHandler implements KeyListener{
             }
 
             if (code == KeyEvent.VK_I){
+                gp.player.setOnhandItem(null);
                 gp.gameState = gp.playState;
             }
             return; 

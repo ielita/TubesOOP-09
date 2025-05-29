@@ -45,6 +45,7 @@ public class OBJ_ShippingBin extends SuperObject {
             message = "Opening shipping bin...";
             gp.gameState = gp.shippingBinState;
             gp.keyH.inventoryCursorIndex = 0; 
+            gp.player.setOnhandItem(null);
             return;
         }
     }
