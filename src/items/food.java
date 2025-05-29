@@ -18,7 +18,7 @@ public class food extends Item implements consumable, buysellable {
         return hargabeli;
     }
 
-    public int gethargajual() {
+    public int getHargaJual() {
         return hargajual;
     }
 

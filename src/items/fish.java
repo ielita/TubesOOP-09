@@ -64,7 +64,7 @@ public class fish extends Item implements buysellable, consumable, cookable{
         this.rarity = rarity;
     }
 
-    public int getHargajual() {
+    public int getHargaJual() {
         int seasonCount = seasons.size();
         int weatherCount = weather.size();
         int locationCount = location.size();

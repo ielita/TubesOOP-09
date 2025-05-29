@@ -13,18 +13,18 @@ public class TimeManager {
     private final String[] SEASONS = {"Spring", "Summer", "Fall", "Winter"};
     private int currentSeasonIndex;
     
-    // Add this after other fields
     private final float DAY_BRIGHTNESS = 1.0f;
     private final float NIGHT_BRIGHTNESS = 0.3f;
     private final int DAWN_HOUR = 6;  // 6:00 AM
     private final int DUSK_HOUR = 18; // 6:00 PM
     private final int TRANSITION_DURATION = 2; // Hours for sunrise/sunset
 
-    private static boolean newDay = false; // Tambahkan ini
+    // Change to non-static instance variable
+    private boolean newDay = false;
 
     public TimeManager(GamePanel gp) {
         this.gp = gp;
-        hour = 6;      // Start at 6:00
+        hour = 8;      
         minute = 0;
         day = 1;       // Start at day 1
         currentSeasonIndex = 0;  // Start in Spring
@@ -47,6 +47,7 @@ public class TimeManager {
                         hour = 0;
                         day++;
                         newDay = true; // Set flag newDay
+                        System.out.println("=== NEW DAY TRIGGERED: " + getDateString() + " ===");
 
                         // Check for season change
                         if (day > DAYS_PER_SEASON) {
@@ -61,13 +62,19 @@ public class TimeManager {
         }
     }
 
-    // Tambahkan method ini
-    public static boolean isNewDay() {
+    // Change to non-static instance method
+    public boolean isNewDay() {
         if (newDay) {
-            newDay = false;
+            newDay = false; // Reset flag after checking
+            System.out.println("isNewDay() returning TRUE and resetting flag");
             return true;
         }
         return false;
+    }
+
+    // Also add a method to check without consuming the flag
+    public boolean checkNewDayFlag() {
+        return newDay;
     }
 
     private void updateBrightness() {
@@ -175,6 +182,8 @@ public class TimeManager {
         day++;
         newDay = true; // Trigger new day flag
         
+        System.out.println("=== SKIP DAY TRIGGERED: " + getDateString() + " ===");
+        
         // Check for season change
         if (day > DAYS_PER_SEASON) {
             day = 1;
@@ -185,7 +194,7 @@ public class TimeManager {
         // Update brightness to day time
         updateBrightness();
         
-        System.out.println("=== NEW DAY: " + getDateString() + " ===");
+        System.out.println("Day skipped! New date: " + getDateString());
         
         // Update plant growth - hanya untuk farm
         if (gp != null && gp.tileM != null && gp.tileM.mapManager != null) {

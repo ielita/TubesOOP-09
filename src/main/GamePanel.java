@@ -58,6 +58,8 @@ public class GamePanel extends JPanel implements Runnable{
     public final int inventoryState = 3;
     public final int fishingMiniGameState = 4;
     public final int sleepState = 5;
+    public final int shippingBinState = 10;
+    
     public minigame.FishingMiniGame fishingMiniGame = new minigame.FishingMiniGame();
     public String currentMap = tileM.mapManager.getCurrentMap(); 
     
@@ -116,7 +118,6 @@ public class GamePanel extends JPanel implements Runnable{
             if (timeM.isNewDay()) {
                 System.out.println("New day detected - updating all plant growth");
                 tileM.mapManager.updatePlantGrowth();
-                // Reset the auto sleep flag for new day
                 autoSleepTriggered = false;
             }
             
@@ -126,10 +127,19 @@ public class GamePanel extends JPanel implements Runnable{
                 }
             }
         
-            // Auto sleep at 02:00 - only trigger once
+            // Auto sleep at 02:00 - process shipping bin gold
             if(timeM.getTimeString().equals("02:00") && !autoSleepTriggered){
+                // Process shipping bin gold before auto-sleep
+                if (object.OBJ_ShippingBin.goldEarned > 0) {
+                    int goldFromShipping = object.OBJ_ShippingBin.goldEarned;
+                    player.addGold(goldFromShipping);
+                    System.out.println("You passed out from exhaustion!");
+                    System.out.println("Shipping bin delivered " + goldFromShipping + " gold overnight!");
+                    object.OBJ_ShippingBin.goldEarned = 0;
+                }
+                
                 player.sleep();
-                autoSleepTriggered = true; // Prevent multiple calls
+                autoSleepTriggered = true;
             }  
         }
         

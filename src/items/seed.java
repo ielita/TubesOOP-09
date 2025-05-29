@@ -26,7 +26,7 @@ public class seed extends Item implements buysellable {
         this.hargabeli = hargabeli;
     }
 
-    public int getHargajual() {
+    public int getHargaJual() {
         return hargajual;
     }
 

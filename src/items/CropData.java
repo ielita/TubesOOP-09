@@ -62,7 +62,7 @@ public class CropData {
         List<crop> highValueCrops = new ArrayList<>();
         
         for (crop c : allCrops) {
-            if (c.gethargajual() > 100) {
+            if (c.getHargaJual() > 100) {
                 highValueCrops.add(c);
             }
         }

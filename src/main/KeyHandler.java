@@ -140,7 +140,77 @@ public class KeyHandler implements KeyListener{
             }
             return; 
         } 
+
+        if (gp.gameState == gp.shippingBinState) {
+            int invSize = gp.player.getInventory().size();
+            int cols = 8; // Sesuaikan dengan UI
+            int rows = 4;
+            int maxSlots = cols * rows;
+            int visibleSize = Math.min(invSize, maxSlots);
+
+            if (code == KeyEvent.VK_D && inventoryCursorIndex + 1 < visibleSize && (inventoryCursorIndex + 1) % cols != 0) {
+                inventoryCursorIndex++;
+            }
+
+            if (code == KeyEvent.VK_A && inventoryCursorIndex % cols != 0) {
+                inventoryCursorIndex--;
+            }
+            
+            if (code == KeyEvent.VK_W && inventoryCursorIndex - cols >= 0) {
+                inventoryCursorIndex -= cols;
+            }
+            
+            if (code == KeyEvent.VK_S && inventoryCursorIndex + cols < visibleSize) {
+                inventoryCursorIndex += cols;
+            }
+            
+            if (code == KeyEvent.VK_ENTER) {
+                List<Map.Entry<Item, Integer>> entries = new ArrayList<>(gp.player.getInventory().entrySet());
+                entries.sort((a, b) -> {
+                    boolean aEquip = a.getKey() instanceof items.equipment;
+                    boolean bEquip = b.getKey() instanceof items.equipment;
+                    if (aEquip && !bEquip) return -1;
+                    if (!aEquip && bEquip) return 1;
+                    return a.getKey().getName().compareToIgnoreCase(b.getKey().getName());
+                });
+                if (!entries.isEmpty() && inventoryCursorIndex < entries.size() && inventoryCursorIndex < maxSlots) {
+                    Item selected = entries.get(inventoryCursorIndex).getKey();
+                    gp.player.setOnhandItem(selected);
+                }
+
+            }
+            if (code == KeyEvent.VK_Y){
+                Item onhandItem = gp.player.getOnhandItem();
                 
+                if (onhandItem == null){
+                    System.out.println("No item selected to sell!");
+                    return;
+                }
+                
+                if (onhandItem instanceof buysellable){
+                    buysellable sellableItem = (buysellable) onhandItem;
+                    int sellPrice = sellableItem.getHargaJual();
+                    String itemName = onhandItem.getName();
+                    
+                    // Remove item from inventory
+                    gp.player.inventoryManager.removeItem(onhandItem, 1);
+                    
+                    // Add gold to shipping bin
+                    object.OBJ_ShippingBin.goldEarned += sellPrice;
+                    
+                    System.out.println("Sold " + itemName + " for " + sellPrice + " gold");
+                    System.out.println("Total gold in shipping bin: " + object.OBJ_ShippingBin.goldEarned);
+                }
+                else {
+                    System.out.println("Item " + onhandItem.getName() + " cannot be sold!");
+                }
+            }
+
+            if (code == KeyEvent.VK_I){
+                gp.gameState = gp.playState;
+            }
+            return; 
+        }       
 
         if (gp.gameState == gp.fishingMiniGameState && gp.fishingMiniGame.isActive()) {
             

@@ -58,6 +58,7 @@ public class InventoryManager {
                 // Clear onhand if this was the onhand item
                 if (onhandItem != null && onhandItem.getName().equals(existingItem.getName())) {
                     onhandItem = null;
+                    System.out.println("Cleared onhand item: " + existingItem.getName());
                 }
             } else {
                 // Reduce quantity
