@@ -51,9 +51,9 @@ public class AssetSetter {
             gp.obj[2].worldX = 31 * gp.tileSize;
             gp.obj[2].worldY = 16 * gp.tileSize;
 
-            gp.obj[2] = new OBJ_ShippingBin(gp);
-            gp.obj[2].worldX = 7 * gp.tileSize;
-            gp.obj[2].worldY = 6 * gp.tileSize;
+            gp.obj[3] = new OBJ_ShippingBin(gp);
+            gp.obj[3].worldX = 7 * gp.tileSize;
+            gp.obj[3].worldY = 6 * gp.tileSize;
             
         }
 

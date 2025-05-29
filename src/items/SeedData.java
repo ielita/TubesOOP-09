@@ -11,9 +11,9 @@ public class SeedData {
         seed parsnipSeeds = new seed(
             "Parsnip Seeds",
             gp,
-            "A common root vegetable. Takes 4 days to mature.",
+            "A common root vegetable. Takes 1 days to mature.",
             "Parsnip",
-            4
+            1
         );
         parsnipSeeds.setHargabeli(20);
         parsnipSeeds.setHargajual(10);
@@ -23,9 +23,9 @@ public class SeedData {
         seed cauliflowerSeeds = new seed(
             "Cauliflower Seeds",
             gp,
-            "A valuable vegetable. Takes 12 days to mature.",
+            "A valuable vegetable. Takes 5 days to mature.",
             "Cauliflower",
-            12
+            5
         );
         cauliflowerSeeds.setHargabeli(80);
         cauliflowerSeeds.setHargajual(40);
@@ -35,9 +35,9 @@ public class SeedData {
         seed potatoSeeds = new seed(
             "Potato Seeds",
             gp,
-            "A versatile tuber. Takes 6 days to mature.",
+            "A versatile tuber. Takes 3 days to mature.",
             "Potato",
-            6
+            3
         );
         potatoSeeds.setHargabeli(50);
         potatoSeeds.setHargajual(25);
@@ -47,9 +47,9 @@ public class SeedData {
         seed wheatSeeds = new seed(
             "Wheat Seeds",
             gp,
-            "A grain crop. Takes 4 days to mature. Yields 3 crops per harvest.",
+            "A grain crop. Takes 1 days to mature. Yields 3 crops per harvest.",
             "Wheat",
-            4
+            1
         );
         wheatSeeds.setHargabeli(50);
         wheatSeeds.setHargajual(25);
@@ -59,84 +59,84 @@ public class SeedData {
         seed blueberrySeeds = new seed(
             "Blueberry Seeds",
             gp,
-            "A fruit bush. Takes 13 days to mature. Yields 3 berries per harvest.",
+            "A fruit bush. Takes 7 days to mature. Yields 3 berries per harvest.",
             "Blueberry",
-            13
+            7
         );
-        blueberrySeeds.setHargabeli(150);
-        blueberrySeeds.setHargajual(75);
+        blueberrySeeds.setHargabeli(80);
+        blueberrySeeds.setHargajual(40);
         list.add(blueberrySeeds);
 
         // 6. Tomato Seeds - 11 days growth
         seed tomatoSeeds = new seed(
             "Tomato Seeds",
             gp,
-            "A popular vegetable. Takes 11 days to mature.",
+            "A popular vegetable. Takes 3 days to mature.",
             "Tomato",
-            11
+            3
         );
-        tomatoSeeds.setHargabeli(90);
-        tomatoSeeds.setHargajual(45);
+        tomatoSeeds.setHargabeli(50);
+        tomatoSeeds.setHargajual(25);
         list.add(tomatoSeeds);
 
         // 7. Hot Pepper Seeds - 5 days growth
         seed hotPepperSeeds = new seed(
             "Hot Pepper Seeds",
             gp,
-            "A spicy pepper. Takes 5 days to mature.",
+            "A spicy pepper. Takes 1 days to mature.",
             "Hot Pepper",
-            5
+            1
         );
-        hotPepperSeeds.setHargabeli(20);
-        hotPepperSeeds.setHargajual(10);
+        hotPepperSeeds.setHargabeli(40);
+        hotPepperSeeds.setHargajual(20);
         list.add(hotPepperSeeds);
 
         // 8. Melon Seeds - 12 days growth
         seed melonSeeds = new seed(
             "Melon Seeds",
             gp,
-            "A large, sweet fruit. Takes 12 days to mature.",
+            "A large, sweet fruit. Takes 4 days to mature.",
             "Melon",
-            12
+            4
         );
-        melonSeeds.setHargabeli(125);
-        melonSeeds.setHargajual(60);
+        melonSeeds.setHargabeli(80);
+        melonSeeds.setHargajual(40);
         list.add(melonSeeds);
 
         // 9. Cranberry Seeds - 7 days growth, yields 10
         seed cranberrySeeds = new seed(
             "Cranberry Seeds",
             gp,
-            "A tart berry bush. Takes 7 days to mature. Yields 10 cranberries per harvest.",
+            "A tart berry bush. Takes 2 days to mature. Yields 10 cranberries per harvest.",
             "Cranberry",
-            7
+            2
         );
-        cranberrySeeds.setHargabeli(60);
-        cranberrySeeds.setHargajual(30);
+        cranberrySeeds.setHargabeli(100);
+        cranberrySeeds.setHargajual(50);
         list.add(cranberrySeeds);
 
         // 10. Pumpkin Seeds - 13 days growth
         seed pumpkinSeeds = new seed(
             "Pumpkin Seeds",
             gp,
-            "A large orange gourd. Takes 13 days to mature.",
+            "A large orange gourd. Takes 7 days to mature.",
             "Pumpkin",
-            13
+            7
         );
-        pumpkinSeeds.setHargabeli(300);
-        pumpkinSeeds.setHargajual(150);
+        pumpkinSeeds.setHargabeli(150);
+        pumpkinSeeds.setHargajual(75);
         list.add(pumpkinSeeds);
 
         // 11. Grape Seeds - 10 days growth, yields 20
         seed grapeSeeds = new seed(
             "Grape Seeds",
             gp,
-            "A vine fruit. Takes 10 days to mature. Yields 20 grapes per harvest.",
+            "A vine fruit. Takes 3 days to mature. Yields 20 grapes per harvest.",
             "Grape",
-            10
+            3
         );
-        grapeSeeds.setHargabeli(100);
-        grapeSeeds.setHargajual(50);
+        grapeSeeds.setHargabeli(60);
+        grapeSeeds.setHargajual(30);
         list.add(grapeSeeds);
 
         return list;
@@ -223,70 +223,5 @@ public class SeedData {
         }
         
         return filteredSeeds;
-    }
-
-    // Get fast-growing seeds (4-6 days)
-    public static List<seed> getFastGrowingSeeds(GamePanel gp) {
-        return getSeedsByGrowthTime(gp, 4, 6);
-    }
-
-    // Get medium-growing seeds (7-11 days)
-    public static List<seed> getMediumGrowingSeeds(GamePanel gp) {
-        return getSeedsByGrowthTime(gp, 7, 11);
-    }
-
-    // Get slow-growing seeds (12+ days)
-    public static List<seed> getSlowGrowingSeeds(GamePanel gp) {
-        return getSeedsByGrowthTime(gp, 12, 30);
-    }
-
-    // Get seeds by price range
-    public static List<seed> getSeedsByPriceRange(GamePanel gp, int minPrice, int maxPrice) {
-        List<seed> allSeeds = getAllSeeds(gp);
-        List<seed> filteredSeeds = new ArrayList<>();
-        
-        for (seed s : allSeeds) {
-            if (s.getHargabeli() >= minPrice && s.getHargabeli() <= maxPrice) {
-                filteredSeeds.add(s);
-            }
-        }
-        
-        return filteredSeeds;
-    }
-
-    // Get affordable seeds (under 100g)
-    public static List<seed> getAffordableSeeds(GamePanel gp) {
-        return getSeedsByPriceRange(gp, 0, 100);
-    }
-
-    // Get expensive seeds (100g+)
-    public static List<seed> getExpensiveSeeds(GamePanel gp) {
-        return getSeedsByPriceRange(gp, 100, 1000);
-    }
-
-    // Get best ROI seeds (Return on Investment)
-    public static List<seed> getBestROISeeds(GamePanel gp) {
-        List<seed> allSeeds = getAllSeeds(gp);
-        
-        // Sort by profit percentage (ROI)
-        allSeeds.sort((s1, s2) -> 
-            Double.compare(s2.getProfitPercentage(), s1.getProfitPercentage()));
-        
-        return allSeeds;
-    }
-
-    // Get seeds suitable for beginners (cheap and profitable)
-    public static List<seed> getBeginnerSeeds(GamePanel gp) {
-        List<seed> beginnerSeeds = new ArrayList<>();
-        List<seed> allSeeds = getAllSeeds(gp);
-        
-        for (seed s : allSeeds) {
-            // Criteria: cheap (under 100g), profitable, and fast growing
-            if (s.getHargabeli() < 100 && s.getEstimatedProfit() > 0 && s.getGrowthTime() <= 6) {
-                beginnerSeeds.add(s);
-            }
-        }
-        
-        return beginnerSeeds;
     }
 }

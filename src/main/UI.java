@@ -130,7 +130,7 @@ public class UI {
         if(gp.gameState == gp.sleepState) {
             drawSleepScreen();
         }
-
+        
         if(gp.gameState == gp.shippingBinState){
             drawShippingBin();
         }
