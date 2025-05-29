@@ -27,6 +27,7 @@ public class UI {
     private Font pixelify22;
     private Font pixelify36;
     private Font pixelify80;
+    private Font pixelify120;
     private Font pixelify15;
     private Font pixelify50;
     private Font pixelify30;
@@ -59,6 +60,9 @@ public class UI {
             pixelify26 = pixelify.deriveFont(Font.PLAIN, 26f);
             pixelify22 = pixelify.deriveFont(Font.PLAIN, 22f);
             pixelify36 = pixelify.deriveFont(Font.BOLD, 36f);
+            pixelify80 = pixelify.deriveFont(Font.BOLD, 80f);
+            pixelify120 = pixelify.deriveFont(Font.BOLD, 120f);
+            pixelify15 = pixelify.deriveFont(Font.PLAIN, 15f);
             pixelify50 = pixelify.deriveFont(Font.PLAIN, 50f);
             pixelify30 = pixelify.deriveFont(Font.PLAIN, 30f);
             pixelify18 = pixelify.deriveFont(Font.PLAIN, 18f);
@@ -71,6 +75,7 @@ public class UI {
             pixelify22 = new Font("Arial", Font.PLAIN, 22);
             pixelify36 = new Font("Arial", Font.BOLD, 36);
             pixelify80 = new Font("Arial", Font.BOLD, 80);
+            pixelify120 = new Font("Arial", Font.BOLD, 120);
             pixelify15 = new Font("Arial", Font.PLAIN, 15);
             pixelify50 = new Font("Arial", Font.PLAIN, 50);
             pixelify30 = new Font("Arial", Font.PLAIN, 30);
@@ -159,14 +164,22 @@ public class UI {
         if (gp.keyH.showDebug) {
             g2.setFont(pixelify22);
             g2.setColor(Color.WHITE);
-            g2.drawString("Player World X: " + gp.player.worldX, 10, 400);
-            g2.drawString("Player World Y: " + gp.player.worldY, 10, 420);
-            g2.drawString("Col: " + gp.player.worldX / gp.tileSize, 10, 440);
-            g2.drawString("Row: " + gp.player.worldY / gp.tileSize, 10, 460);
-            g2.drawString("Energy: " + gp.player.getEnergy(), 10, 480);
-            g2.drawString("Gold: " + gp.player.getGold(), 10, 500);
+            int init = 360;
+            int adder = 20;
+            g2.drawString("Player World X: " + gp.player.worldX, 10, init);
+            init += adder;
+            g2.drawString("Player World Y: " + gp.player.worldY, 10, init);
+            init += adder;
+            g2.drawString("Col: " + gp.player.worldX / gp.tileSize, 10, init);
+            init += adder;
+            g2.drawString("Row: " + gp.player.worldY / gp.tileSize, 10, init);
+            init += adder;
+            g2.drawString("Energy: " + gp.player.getEnergy(), 10, init);  // Add energy display
+            init += adder;
+            g2.drawString("Gold: " + gp.player.getGold(), 10, init);      // Add gold display
+            init += adder;
             String interactState = gp.keyH.interactPressed ? "true" : "false";
-            g2.drawString("Interact Pressed: " + interactState, 10, 520);
+            g2.drawString("Interact Pressed: " + interactState, 10, 520); // Move down
 
             String selectedItem = "Selected Item: None";
             if (gp.player.getOnhandItem() != null) {
@@ -221,9 +234,9 @@ public class UI {
         textX = getXforCenteredText(text);
         textY = frameY + gp.tileSize ;
         g2.drawString(text, textX, textY);
-
-        textX = frameY + 4 * gp.tileSize - 25;
-
+        
+        textX = frameY + 5 * gp.tileSize + 10;
+        
         g2.setFont(pixelify30);
 
         textY += gp.tileSize * 7 / 8;
@@ -287,8 +300,9 @@ public class UI {
                 gp.keyH.enterPressed = false;
             }
         }
-
-        textX = frameY + 8 * gp.tileSize ;
+        
+        
+        textX = frameY + 9 * gp.tileSize ;
         textY = frameY + gp.tileSize * 15/8 ;
 
         if (gp.fullScreenOn) {
@@ -439,6 +453,7 @@ public class UI {
         }
 
         g2.setFont(pixelify80);
+        g2.setFont(pixelify120);
         String text = "SPAKBOR HILLS";
         int x = getXforCenteredText(text);
         int y = gp.tileSize * 3;
@@ -459,8 +474,8 @@ public class UI {
 
         text = "START GAME";
         x = getXforCenteredText(text);
-        y += gp.tileSize * 4;
-
+        y += gp.tileSize * 2;
+        
         if (gp.keyH.menuOption == 0) {
             g2.setColor(new Color(255, 255, 0, 100));
             g2.fillRoundRect(x - 20, y - 35, g2.getFontMetrics().stringWidth(text) + 40, 45, 10, 10);
@@ -590,7 +605,8 @@ public class UI {
         int boxX = gp.screenWidth / 2 - boxWidth / 2;
         int boxY = gp.screenHeight / 2 - boxHeight / 2;
 
-        g2.setColor(new Color(30, 30, 60, 230));
+        // Background box
+        g2.setColor(new Color(0, 0, 0, 120));
         g2.fillRoundRect(boxX, boxY, boxWidth, boxHeight, 36, 36);
 
         g2.setColor(Color.WHITE);
@@ -626,7 +642,8 @@ public class UI {
         int inputBoxX = boxX + (boxWidth - inputBoxWidth) / 2;
         int inputBoxY = boxY + 210;
 
-        g2.setColor(new Color(60, 60, 100, 180));
+        // Box input
+        g2.setColor(new Color(0, 0, 0, 120));
         g2.fillRoundRect(inputBoxX, inputBoxY, inputBoxWidth, inputBoxHeight, 18, 18);
         g2.setColor(Color.WHITE);
         g2.setStroke(new java.awt.BasicStroke(2));
@@ -642,7 +659,7 @@ public class UI {
         items.Item onhand = gp.player.getOnhandItem();
         if (onhand == null) return;
 
-        int popupWidth = 160;
+        int popupWidth = 240;
         int popupHeight = 54;
         int marginX = 18;
         int marginY = 18;

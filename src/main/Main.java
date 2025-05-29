@@ -23,7 +23,7 @@ public class Main{
         window = new JFrame();
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setResizable(false);
-        window.setTitle("Spakbor si Petani");
+        window.setTitle("Spakbor Hills");
         window.setIconImage(logo.getImage());
 
         GamePanel gamePanel = new GamePanel();
