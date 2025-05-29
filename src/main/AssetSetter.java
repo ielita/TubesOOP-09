@@ -4,6 +4,7 @@ import java.util.List;
 
 import entity.NPC;
 import entity.NPCdata;
+import object.OBJ_ShippingBin;
 // import main.GamePanel;
 import object.*;
 
@@ -54,6 +55,10 @@ public class AssetSetter {
             gp.obj[2] = new OBJ_DoorOpen(gp, "town", 3, 22);
             gp.obj[2].worldX = 31 * gp.tileSize;
             gp.obj[2].worldY = 16 * gp.tileSize;
+
+            gp.obj[3] = new OBJ_ShippingBin(gp);
+            gp.obj[3].worldX = 7 * gp.tileSize;
+            gp.obj[3].worldY = 6 * gp.tileSize;
         }
 
         else if (mapName.equals("town")) {

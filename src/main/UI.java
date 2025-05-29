@@ -6,8 +6,8 @@ import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.image.BufferedImage;
 import java.util.Map.Entry;
-import java.awt.Font;
 import java.awt.FontFormatException;
+import java.awt.BasicStroke;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO; // Tambahkan ini
@@ -145,6 +145,10 @@ public class UI {
 
         if (gp.gameState == gp.fishingResultState) {
             drawFishingResult();
+        }
+
+        if(gp.gameState == gp.shippingBinState){
+            drawShippingBin();
         }
 
         if (gp.keyH.showDebug) {
@@ -827,6 +831,142 @@ public class UI {
         int instrY = boxY + boxHeight - 28;
         g2.setColor(new Color(255,255,255,180));
         g2.drawString(instr, instrX, instrY);
+    }
+
+    public void drawShippingBin(){
+        int cols = 8;
+        int rows = 4;
+        int slotSize = 60;
+        int slotGapX = 48;
+        int slotGapY = 32;
+
+        int invWidth = cols * slotSize + (cols - 1) * slotGapX + 120;
+        int invHeight = rows * slotSize + (rows - 1) * (slotGapY + 12) - 40;
+        int invX = gp.screenWidth / 2 - invWidth / 2;
+        int invY = gp.screenHeight / 2 - invHeight / 2 + 120;
+
+        int binWidth = 8 * slotSize + (1) * slotGapX;
+        int binHeight = rows * slotSize + (rows - 1) * (slotGapY + 12) - 120;
+        int binX = gp.screenWidth/2 - binWidth / 2;
+        int binY = gp.screenHeight/2 - binHeight / 2 - 200;
+
+        g2.setColor(new Color(30, 30, 30, 230));
+        g2.fillRoundRect(invX, invY, invWidth, invHeight, 30, 30);
+        g2.fillRoundRect(binX, binY, binWidth, binHeight, 30, 30);
+
+        g2.setColor(Color.WHITE);
+        g2.setStroke(new java.awt.BasicStroke(4));
+        g2.drawRoundRect(invX, invY, invWidth, invHeight, 30, 30);
+        g2.drawRoundRect(binX, binY, binWidth, binHeight, 30, 30);
+
+        g2.setColor(Color.WHITE);
+        g2.setFont(pixelify40);
+        String title = "Inventory";
+        int titleX = invX + (invWidth - g2.getFontMetrics().stringWidth(title)) / 2;
+        g2.drawString(title, titleX, invY + 45);
+
+        String bintitle = "Shipping Bin";
+        int bintitleX = binX + (binWidth - g2.getFontMetrics().stringWidth(bintitle)) / 2; // Fix: use bintitle, not title
+        g2.drawString(bintitle, bintitleX, binY + 45);
+
+        g2.setColor(new Color(80, 80, 80, 210));
+        int previewSlotX = binX + binWidth / 2 - slotSize - 160;
+        int previewSlotY = binY + binHeight / 2 - slotSize + 20;
+        g2.fillRoundRect(previewSlotX, previewSlotY, slotSize * 2, slotSize * 2, 14, 14);
+
+        int totalGridWidth = cols * slotSize + (cols - 1) * slotGapX;
+        int startX = invX + (invWidth - totalGridWidth) / 2; 
+        int startY = invY + 70; 
+
+        List<Entry<items.Item, Integer>> entries = new ArrayList<>(gp.player.getInventory().entrySet());
+        entries.sort((a, b) -> {
+            boolean aEquip = a.getKey() instanceof items.equipment;
+            boolean bEquip = b.getKey() instanceof items.equipment;
+            if (aEquip && !bEquip) return -1;
+            if (!aEquip && bEquip) return 1;
+            return a.getKey().getName().compareToIgnoreCase(b.getKey().getName());
+        });
+
+        int maxSlots = cols * rows;
+
+        for (int i = 0; i < entries.size() && i < maxSlots; i++) {
+            items.Item item = entries.get(i).getKey();
+            int quantity = entries.get(i).getValue();
+            int col = i % cols;
+            int row = i / cols;
+            int x = startX + col * (slotSize + slotGapX);
+            int y = startY + row * (slotSize + slotGapY + 12);
+
+            // Slot background
+            g2.setColor(new Color(80, 80, 80, 210));
+            g2.fillRoundRect(x, y, slotSize, slotSize, 14, 14);
+
+            // Highlight if selected
+            if (i == gp.keyH.inventoryCursorIndex) {
+                g2.setColor(Color.WHITE);
+                g2.setStroke(new java.awt.BasicStroke(2));
+                g2.drawRoundRect(x-2, y-2, slotSize+4, slotSize+4, 16, 16);
+            }
+
+            if (item.getImage() != null) {
+                g2.drawImage(item.getImage(), x + 12, y + 12, slotSize - 24, slotSize - 24, null);
+            }
+
+            g2.setColor(Color.WHITE);
+            g2.setFont(pixelify15);
+            String itemName = item.getName();
+            int nameWidth = g2.getFontMetrics().stringWidth(itemName);
+            g2.drawString(itemName, x + (slotSize - nameWidth) / 2, y + slotSize + 20);
+
+            String qtyText = "x" + quantity;
+            g2.setFont(pixelify22);
+            int qtyWidth = g2.getFontMetrics().stringWidth(qtyText);
+            g2.drawString(qtyText, x + slotSize - qtyWidth - 6, y + slotSize - 6);
+        }
+        
+        items.Item selected = gp.player.getOnhandItem();
+
+
+
+        if(gp.player.getOnhandItem() == null) {
+            g2.setColor(Color.WHITE);
+            g2.setFont(pixelify26);
+
+            String binitem = "Select an Item";
+            int binitemX = binX + (binWidth - g2.getFontMetrics().stringWidth(title)) / 2 ; 
+            g2.drawString(binitem, binitemX, binY + 90 + 10);
+        }
+
+        else if (gp.player.getOnhandItem() != null && gp.player.getOnhandItem() instanceof items.buysellable ) {   
+            g2.setFont(pixelify22);
+            String binitem = "nama : " + gp.player.getOnhandItem().getName();
+            int binitemX = binX + (binWidth - g2.getFontMetrics().stringWidth(title)) / 2 ; 
+            g2.drawString(binitem, binitemX, binY + 90 + 10);
+
+            String binprice = "harga : " + ((items.buysellable)gp.player.getOnhandItem()).getHargaJual();
+            int binpriceX = binX + (binWidth - g2.getFontMetrics().stringWidth(title)) / 2 ;
+            g2.drawString(binprice, binpriceX, binY + 135 + 10);
+
+            String binoption = "apakah anda yakin";
+            int binoptionX = binX + (binWidth - g2.getFontMetrics().stringWidth(title)) / 2 ;
+            g2.drawString(binoption, binoptionX, binY + 180 + 10);
+
+            String binoption2 = "ingin menjual item ini? (Y/N)";
+            int binoption2X = binX + (binWidth - g2.getFontMetrics().stringWidth(title)) / 2 ;
+            g2.drawString(binoption2, binoption2X, binY + 210 + 10);
+        }
+
+        else if (gp.player.getOnhandItem() != null && !(gp.player.getOnhandItem() instanceof items.buysellable) ) {  
+            g2.setFont(pixelify22);
+            String binitem = "nama : " + gp.player.getOnhandItem().getName();
+            int binitemX = binX + (binWidth - g2.getFontMetrics().stringWidth(title)) / 2 ; 
+            g2.drawString(binitem, binitemX, binY + 90 + 10);
+
+            String binprice = "item ini tidak bisa dijual!";
+            int binpriceX = binX + (binWidth - g2.getFontMetrics().stringWidth(title)) / 2 ;
+            g2.drawString(binprice, binpriceX, binY + 135 + 10);
+
+        }
     }
 
     public int getXforCenteredText(String text) {

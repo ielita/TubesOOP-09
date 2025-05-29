@@ -443,15 +443,27 @@ public class Player extends Entity {
         // Start sleep animation
         gp.ui.startSleepAnimation();
 
+
+        if (object.OBJ_ShippingBin.goldEarned > 0) {
+            int goldFromShipping = object.OBJ_ShippingBin.goldEarned;
+            addGold(goldFromShipping);
+            System.out.println("=== END OF DAY SUMMARY ===");
+            System.out.println("Shipping bin delivered " + goldFromShipping + " gold overnight!");
+            System.out.println("Your total gold is now: " + getGold());
+            object.OBJ_ShippingBin.goldEarned = 0; // Reset for next day
+        }
+
         // Restore energy based on current energy level
         if (getEnergy() > 10) {
             setEnergy(100);  // Full energy if above 10
+            setEnergy(100);
         } else if (getEnergy() > 0 && getEnergy() <= 10) {
             setEnergy(50);   // Half energy if very low but not exhausted
+            setEnergy(50);
         } else if (getEnergy() <= 0) {
             setEnergy(10);   // Minimal energy if exhausted
+            setEnergy(10);
         }
-
         // Skip to next day
         gp.timeM.skipDay();
 
@@ -461,6 +473,14 @@ public class Player extends Entity {
     // Add this new method for forced collapse
     private void forceCollapse() {
         System.out.println("You collapsed from exhaustion! Waking up at home...");
+
+        // Process shipping bin gold even when collapsing
+        if (object.OBJ_ShippingBin.goldEarned > 0) {
+            int goldFromShipping = object.OBJ_ShippingBin.goldEarned;
+            addGold(goldFromShipping);
+            System.out.println("Despite collapsing, shipping bin delivered " + goldFromShipping + " gold overnight!");
+            object.OBJ_ShippingBin.goldEarned = 0;
+        }
 
         // Start sleep animation for forced collapse
         gp.ui.startSleepAnimation();

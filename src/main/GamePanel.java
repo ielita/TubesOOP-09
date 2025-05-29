@@ -12,6 +12,7 @@ import java.awt.image.BufferedImage;
 import javax.swing.JPanel;
 import object.SuperObject;
 import tile.MapManager;
+import object.OBJ_ShippingBin;
 import tile.TileManager;
 
 public class GamePanel extends JPanel implements Runnable{
@@ -72,6 +73,7 @@ public class GamePanel extends JPanel implements Runnable{
     public final int givingGiftState = 8;
     public final int sleepState = 9;
     public final int fishingResultState = 10;
+    public final int shippingBinState = 11;
     public minigame.FishingMiniGame fishingMiniGame = new minigame.FishingMiniGame();
     public String currentMap = tileM.mapManager.getCurrentMap(); 
     public boolean fullScreenOn = false; 
@@ -189,8 +191,17 @@ public class GamePanel extends JPanel implements Runnable{
 
             // Auto sleep at 02:00 - only trigger once
             if(timeM.getTimeString().equals("02:00") && !autoSleepTriggered){
+                if (OBJ_ShippingBin.goldEarned > 0) {
+                    int goldFromShipping = OBJ_ShippingBin.goldEarned;
+                    player.addGold(goldFromShipping);
+                    System.out.println("You passed out from exhaustion!");
+                    System.out.println("Shipping bin delivered " + goldFromShipping + " gold overnight!");
+                    object.OBJ_ShippingBin.goldEarned = 0;
+                }
+
                 player.sleep();
                 autoSleepTriggered = true; // Prevent multiple calls
+                autoSleepTriggered = true;
             }  
         }
 
