@@ -319,8 +319,7 @@ public class Player extends Entity {
         }
     }
 
-    public boolean isFacingWater() {
-        // Use same calculation method as plantSeed for consistency
+    public int getFacingTile() {
         int playerCenterX = worldX + solidArea.x + solidArea.width / 2;
         int playerCenterY = worldY + solidArea.y + solidArea.height / 2;
         
@@ -337,10 +336,10 @@ public class Player extends Entity {
         int col = facingX / gp.tileSize;
         int row = facingY / gp.tileSize;
         
-        if (col < 0 || row < 0 || col >= gp.tileM.mapManager.maxWorldCol || row >= gp.tileM.mapManager.maxWorldRow) return false;
+        if (col < 0 || row < 0 || col >= gp.tileM.mapManager.maxWorldCol || row >= gp.tileM.mapManager.maxWorldRow) return -1;
         int tileNum = gp.tileM.mapManager.mapTileNum[col][row];
 
-        return tileNum == 6;
+        return tileNum;
     }
 
     public void draw(Graphics2D g2){

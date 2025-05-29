@@ -21,7 +21,7 @@ public class FishingMiniGame {
         this.max = max;
         this.tries = tries;
         this.input = 0;
-        this.answer = 1;
+        this.answer = new Random().nextInt((max - min) + 1) + min; 
         this.active = true;
         this.resultItem = null;
         this.resultMessage = "";

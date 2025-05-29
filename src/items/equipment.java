@@ -236,7 +236,7 @@ public class equipment extends Item{
         }
         
         if (getName().equals("Fishing Rod")) {
-            if (player.isFacingWater()) {
+            if (player.getFacingTile() == 6) {
                 // Kurangi energi
                 player.setEnergy(player.getEnergy() - 5);
 

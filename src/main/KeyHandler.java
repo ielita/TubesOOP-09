@@ -155,9 +155,14 @@ public class KeyHandler implements KeyListener{
                     if (!aEquip && bEquip) return 1;
                     return a.getKey().getName().compareToIgnoreCase(b.getKey().getName());
                 });
+
                 if (!entries.isEmpty() && inventoryCursorIndex < entries.size() && inventoryCursorIndex < maxSlots) {
                     Item selected = entries.get(inventoryCursorIndex).getKey();
-                    gp.player.setOnhandItem(selected);
+                    if (selected == gp.player.getOnhandItem()) {
+                        gp.player.setOnhandItem(null); // Unset if already selected
+                    } else {
+                        gp.player.setOnhandItem(selected);
+                    }
                 }
                 gp.gameState = gp.playState;
             }

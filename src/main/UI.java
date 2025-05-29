@@ -774,10 +774,6 @@ public class UI {
         g2.setColor(new Color(40, 70, 40, 230));
         g2.fillRoundRect(boxX, boxY, boxWidth, boxHeight, 36, 36);
 
-        // Glossy effect
-        g2.setColor(new Color(255, 255, 255, 30));
-        g2.fillRoundRect(boxX + 8, boxY + 8, boxWidth - 16, boxHeight / 3, 24, 18);
-
         // Outline putih
         g2.setColor(Color.WHITE);
         g2.setStroke(new java.awt.BasicStroke(4));
