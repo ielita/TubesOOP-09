@@ -23,7 +23,7 @@ public class GamePanel extends JPanel implements Runnable{
 
     public final int tileSize = originalTileSize * scale; 
     public final int maxScreenCol = 16;    // horizontal 
-    public final int maxScreenRow = 12;    // vertikal 
+    public final int maxScreenRow = 9;    // vertikal 
     public final int screenWidth = tileSize * maxScreenCol;    
     public final int screenHeight = tileSize * maxScreenRow;   
     
@@ -107,7 +107,6 @@ public class GamePanel extends JPanel implements Runnable{
         GraphicsDevice gd = ge.getDefaultScreenDevice();
 
         if (fullScreenOn) {
-            // Hanya lakukan ini jika belum fullscreen
             if (!Main.window.isUndecorated()) {
                 Main.window.dispose();
                 Main.window.setUndecorated(true);
@@ -115,14 +114,10 @@ public class GamePanel extends JPanel implements Runnable{
                 Main.window.setVisible(true);
             }
             gd.setFullScreenWindow(Main.window);
-
-            // Ambil ukuran layar sebenarnya
             screenWidth2 = Main.window.getWidth();
             screenHeight2 = Main.window.getHeight();
         } else {
             gd.setFullScreenWindow(null);
-
-            // Hanya lakukan ini jika sudah fullscreen
             if (Main.window.isUndecorated()) {
                 Main.window.dispose();
                 Main.window.setUndecorated(false);
@@ -131,11 +126,11 @@ public class GamePanel extends JPanel implements Runnable{
             }
             Main.window.setSize(screenWidth, screenHeight);
             Main.window.setLocationRelativeTo(null);
-
             screenWidth2 = screenWidth;
             screenHeight2 = screenHeight;
         }
     }
+
 
     public void startGameThread(){
         gameThread = new Thread(this);
@@ -246,39 +241,30 @@ public class GamePanel extends JPanel implements Runnable{
     // }
 
     public void drawToTempScreen() {
-        Graphics2D g2Temp = (Graphics2D) tempScreen.getGraphics();
+        g2.setColor(Color.black);
+        g2.fillRect(0, 0, screenWidth, screenHeight);
+        
+        tileM.draw(g2);
 
-        // Clear screen (optional but helps with artifacts)
-        g2Temp.setColor(Color.black);
-        g2Temp.fillRect(0, 0, screenWidth, screenHeight);
-
-        // TILE
-        tileM.draw(g2Temp);
-
-        // OBJECT
         for (int i = 0; i < obj.length; i++) {
             if (obj[i] != null) {
-                obj[i].draw(g2Temp, this);
+                obj[i].draw(g2, this);
             }
         }
 
-        // NPC
         for (int i = 0; i < npc.length; i++) {
             if (npc[i] != null) {
-                npc[i].draw(g2Temp);
+                npc[i].draw(g2);
             }
         }
 
-        // PLAYER
-        player.draw(g2Temp);
+        player.draw(g2);
+        ui.draw(g2);
 
-        // UI
-        ui.draw(g2Temp);
-
-        // Brightness Overlay (e.g. for day/night effect)
-        tileM.mapManager.drawBrightnessOverlay(g2Temp);
-
+        // Optional overlay
+        tileM.mapManager.drawBrightnessOverlay(g2);
     }
+
 
 
     public void drawToScreen() {
