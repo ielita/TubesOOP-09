@@ -23,7 +23,7 @@ public class GamePanel extends JPanel implements Runnable{
 
     public final int tileSize = originalTileSize * scale; 
     public final int maxScreenCol = 16;    // horizontal 
-    public final int maxScreenRow = 12;    // vertikal 
+    public final int maxScreenRow = 9;    // vertikal 
     public final int screenWidth = tileSize * maxScreenCol;    
     public final int screenHeight = tileSize * maxScreenRow;   
     
@@ -37,7 +37,7 @@ public class GamePanel extends JPanel implements Runnable{
     BufferedImage tempScreen; 
     Graphics2D g2;
 
-// Default starting map
+    // Default starting map
 
     //FPS
     int FPS = 60;
@@ -107,7 +107,6 @@ public class GamePanel extends JPanel implements Runnable{
         GraphicsDevice gd = ge.getDefaultScreenDevice();
 
         if (fullScreenOn) {
-            // Hanya lakukan ini jika belum fullscreen
             if (!Main.window.isUndecorated()) {
                 Main.window.dispose();
                 Main.window.setUndecorated(true);
@@ -115,14 +114,10 @@ public class GamePanel extends JPanel implements Runnable{
                 Main.window.setVisible(true);
             }
             gd.setFullScreenWindow(Main.window);
-
-            // Ambil ukuran layar sebenarnya
             screenWidth2 = Main.window.getWidth();
             screenHeight2 = Main.window.getHeight();
         } else {
             gd.setFullScreenWindow(null);
-
-            // Hanya lakukan ini jika sudah fullscreen
             if (Main.window.isUndecorated()) {
                 Main.window.dispose();
                 Main.window.setUndecorated(false);
@@ -131,11 +126,11 @@ public class GamePanel extends JPanel implements Runnable{
             }
             Main.window.setSize(screenWidth, screenHeight);
             Main.window.setLocationRelativeTo(null);
-
             screenWidth2 = screenWidth;
             screenHeight2 = screenHeight;
         }
     }
+
 
     public void startGameThread(){
         gameThread = new Thread(this);
@@ -160,8 +155,8 @@ public class GamePanel extends JPanel implements Runnable{
 
             if (delta >= 1){
                 update();
+                drawToTempScreen();
                 drawToScreen();
-                repaint();
                 // repaint();
                 delta --;
             }
@@ -211,44 +206,38 @@ public class GamePanel extends JPanel implements Runnable{
         }
     }
 
-    public void paintComponent(Graphics g){
-        
-        super.paintComponent(g);
 
-        Graphics2D g2 = (Graphics2D)g;
+    public void drawToTempScreen() {
+        g2.setColor(Color.black);
+        g2.fillRect(0, 0, screenWidth, screenHeight);
         
-        //TILE
         tileM.draw(g2);
 
-        //OBJECT
-        for(int i = 0; i < obj.length; i++){
-            if (obj[i] != null){
-                obj[i].draw(g2,this);
+        for (int i = 0; i < obj.length; i++) {
+            if (obj[i] != null) {
+                obj[i].draw(g2, this);
             }
         }
 
-        //NPC
-        for(int i = 0; i < npc.length; i++){
-            if (npc[i] != null){
+        for (int i = 0; i < npc.length; i++) {
+            if (npc[i] != null) {
                 npc[i].draw(g2);
             }
         }
 
-        //PLAYER
         player.draw(g2);
-        
         ui.draw(g2);
-        
-        // Draw brightness overlay at the end
+
+        // Optional overlay
         tileM.mapManager.drawBrightnessOverlay(g2);
-        
-        g2.dispose(); 
     }
+
+
 
     public void drawToScreen() {
         Graphics g = this.getGraphics();
         // Gambar ke ukuran panel yang sebenarnya
-        g.drawImage(tempScreen, 0, 0, getWidth(), getHeight(), null);
+        g.drawImage(tempScreen, 0, 0, screenWidth2, screenHeight2, null);
         g.dispose();
     }
 
