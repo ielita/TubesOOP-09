@@ -97,8 +97,6 @@ public class NPC extends Entity{
     }
 
     public void chatting() {
-        // Implement chatting logic here
-        System.out.println(name + " says: Hello!");
     }       
     public void giveGift(String item) {
         if (lovedItems.contains(item)) {

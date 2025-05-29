@@ -20,12 +20,9 @@ public class TileManager {
     }
 
     public void getTileImage() {
-        // Initialize all array elements first
         for (int i = 0; i < tile.length; i++) {
             tile[i] = new Tile();
         }
-
-        // Then setup the tiles we need
         setup(0, "grass", false);
         setup(1, "land", false);
         setup(2, "tree", true);
@@ -33,11 +30,11 @@ public class TileManager {
         setup(4, "wall", true);
         setup(5, "wall2", true);
         setup(6, "water", true);
-        setup(7, "tilted", false); // 7 = ID untuk tanah tercangkul
+        setup(7, "tilted", false); 
         setup(8, "planted", false);
-        setup(9, "tilted_w", false);   // ID 9: tilled soil (watered)
-        setup(10, "planted_w", false); // ID 10: planted (watered)
-        setup(11, "harvest", false); // ID 11: ready to harvest
+        setup(9, "tilted_w", false);  
+        setup(10, "planted_w", false); 
+        setup(11, "harvest", false); 
 }
 
     public void setup(int index, String imagePath, boolean collision) {

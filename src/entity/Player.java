@@ -18,8 +18,8 @@ public class Player extends Entity {
     private int defaultSpeed = 10;
     private int sprintSpeed = 15;
     private int energy = 100;
-    private int gold = 500;  // Change this line - start with 500 gold
-    public InventoryManager inventoryManager; // Add this line
+    private int gold = 500;
+    public InventoryManager inventoryManager;
 
     public Player(GamePanel gp, KeyHandler keyH){
         super(gp);
@@ -28,7 +28,6 @@ public class Player extends Entity {
         screenX = gp.screenWidth/2 - (gp.tileSize/2);
         screenY = gp.screenHeight/2 - (gp.tileSize/2);
         
-        // Add this line
         inventoryManager = new InventoryManager();
         
         solidArea = new Rectangle();
@@ -40,57 +39,41 @@ public class Player extends Entity {
         solidArea.height = 32;
         getImage();
         setDefaultValues();
-        initializeStartingItems(); // Add this line
+        initializeStartingItems();
     }
 
-    // Add this method to Player class
     private void initializeStartingItems() {
-        // Add starting equipment
         equipment hoe = new equipment("Hoe", gp);
         addItemToInventory(hoe, 1);
-        System.out.println("Added Hoe");
         
         equipment pickaxe = new equipment("Pickaxe", gp);
         addItemToInventory(pickaxe, 1);
-        System.out.println("Added Pickaxe");
         
         equipment wateringCan = new equipment("Watering Can", gp);
         addItemToInventory(wateringCan, 1);
-        System.out.println("Added Watering Can");
         
         equipment sickle = new equipment("Sickle", gp);
         addItemToInventory(sickle, 1);
-        System.out.println("Added Sickle");
 
         equipment FishingRod = new equipment("Fishing Rod", gp);
         addItemToInventory(FishingRod, 1);
         
-        // Add starting seeds
         seed parsnipSeed = SeedData.getSeedByName(gp, "Parsnip Seeds");
         if (parsnipSeed != null) {
             addItemToInventory(parsnipSeed, 10);
-            System.out.println("Added 10 Parsnip Seeds");
         }
         
         seed potatoSeed = SeedData.getSeedByName(gp, "Potato Seeds");
         if (potatoSeed != null) {
             addItemToInventory(potatoSeed, 5);
-            System.out.println("Added 5 Potato Seeds");
         }
 
         seed wheatSeed = SeedData.getSeedByName(gp, "Wheat Seeds");
         if (wheatSeed != null) {
             addItemToInventory(wheatSeed, 3);
-            System.out.println("Added 3 Wheat Seeds");
         }
-        
-
-        
-        System.out.println("Starting gold: " + getGold() + "g");
-        System.out.println("Starting items initialized!");
     }
 
-    // Add these methods to Player class
     public int getGold() {
         return gold;
     }
@@ -127,11 +110,8 @@ public class Player extends Entity {
         inventoryManager.setOnhandItem(item);
     }
 
-    // Plant seed method
     public void plantSeed() {
-        // Hanya bisa plant di farm
         if (!"farm".equals(gp.tileM.mapManager.getCurrentMap())) {
-            System.out.println("You can only plant seeds on your farm!");
             return;
         }
         
@@ -139,86 +119,53 @@ public class Player extends Entity {
         if (onhand instanceof seed) {
             seed seedToPlant = (seed) onhand;
             
-            // Calculate tile position
-            int playerCenterX = worldX + solidArea.x + solidArea.width / 2;
-            int playerCenterY = worldY + solidArea.y + solidArea.height / 2;
-            
-            int facingX = playerCenterX;
-            int facingY = playerCenterY;
-            
-            switch (direction) {
-                case "up":    facingY -= gp.tileSize; break;
-                case "down":  facingY += gp.tileSize; break;
-                case "left":  facingX -= gp.tileSize; break;
-                case "right": facingX += gp.tileSize; break;
-            }
-            
-            int col = facingX / gp.tileSize;
-            int row = facingY / gp.tileSize;
 
-            // Check bounds
-            if (!gp.tileM.mapManager.isValidPosition(col, row)) {
-                System.out.println("Cannot plant here - out of bounds!");
-                return;
-            }
+            int currentTile = getFacingTile();
 
-            int currentTile = gp.tileM.mapManager.mapTileNum[col][row];
-
-            // Check if tile is tilled
             if (currentTile == 7 || currentTile == 9) {
-                // Initialize plant tracking if not done yet
                 gp.tileM.mapManager.initializePlantTracking();
                 
-                // Plant the seed
+                int[] coordinates = getFacingTileCoordinates();
+                int col = coordinates[0];
+                int row = coordinates[1];
+                
                 if (currentTile == 7) {
                     gp.tileM.mapManager.mapTileNum[col][row] = 8;
                 } else if (currentTile == 9) {
                     gp.tileM.mapManager.mapTileNum[col][row] = 10;
                 }
                 
-                // Store seed info
                 gp.tileM.mapManager.plantedSeeds[col][row] = seedToPlant;
                 gp.tileM.mapManager.plantGrowth[col][row] = seedToPlant.getGrowthTime();
                 
-                // Remove seed from inventory
                 removeItemFromInventory(seedToPlant, 1);
                 
-                System.out.println("Planted " + seedToPlant.getName() + "!");
-                System.out.println("Will be ready in " + seedToPlant.getGrowthTime() + " days.");
-                
-                // Clear onhand if no more seeds
                 if (!getInventory().containsKey(seedToPlant) || getInventory().get(seedToPlant) <= 0) {
                     setOnhandItem(null);
                 }
-            } else {
-                System.out.println("You need to till the soil first!");
+                
+                reduceEnergy(5);
+
             }
-        } else {
-            System.out.println("You need to select seeds first!");
         }
     }
 
     public void setDefaultValues(){
-        // Default spawn position can be overridden by map changes
         worldX = gp.tileSize * 2;
         worldY = gp.tileSize * 2;
-        speed = defaultSpeed;  // Use default speed initially
+        speed = defaultSpeed;
         direction = "down";
         spriteNum = 1;
     }
 
-    // Add a new method to set position explicitly
     public void setPosition(int x, int y) {
         worldX = gp.tileSize * x;
         worldY = gp.tileSize * y;
     }
 
-    // Replace existing inventory methods with these delegate methods
     public Map<Item, Integer> getInventory() {
         return inventoryManager.getInventory();
     }
-
-
 
     public void getImage() {
 
@@ -238,12 +185,9 @@ public class Player extends Entity {
     }
 
     public void update() {
-        // Update speed based on sprint key
         speed = keyH.sprintPressed ? sprintSpeed : defaultSpeed;
 
-        // Separate interaction check from movement
         if (keyH.interactPressed == true) {
-            // Check all objects for possible interactions
             for(int i = 0; i < gp.obj.length; i++) {
                 if(gp.obj[i] != null) {
                     gp.obj[i].interact(gp, keyH);
@@ -251,7 +195,6 @@ public class Player extends Entity {
             }
         }
 
-        // Movement checks
         if (keyH.upPressed == true || keyH.downPressed == true || 
             keyH.leftPressed == true || keyH.rightPressed == true) {
 
@@ -268,15 +211,12 @@ public class Player extends Entity {
                 direction = "right";
             }
 
-            // CHECK TILE COLLISION
             collisionOn = false;
             gp.cChecker.checkTile(this);
-            gp.cChecker.checkEntity(this, gp.npc); // Check collision with NPCs
+            gp.cChecker.checkEntity(this, gp.npc);
 
-            // CHECK OBJECT COLLISION
             int objIndex = gp.cChecker.checkObject(this, true);
 
-            // IF COLLISION IS FALSE, PLAYER CAN MOVE
             if(collisionOn == false) {
                 switch(direction){
                     case "up":
@@ -294,11 +234,9 @@ public class Player extends Entity {
                 }
             }
 
-            // Faster animation when sprinting
             int animationSpeed = keyH.sprintPressed ? 4 : 8;
             spriteCounter++;
             if (spriteCounter > animationSpeed) {
-                // spriteNum = 1+ (spriteNum + 1) % 4; 
                 if (spriteNum == 1) {
                     spriteNum = 2;
                 }
@@ -341,12 +279,28 @@ public class Player extends Entity {
 
         return tileNum;
     }
+    
+    public int[] getFacingTileCoordinates() {
+    int playerCenterX = worldX + solidArea.x + solidArea.width / 2;
+    int playerCenterY = worldY + solidArea.y + solidArea.height / 2;
+    
+    int facingX = playerCenterX;
+    int facingY = playerCenterY;
+    
+    switch (direction) {
+        case "up":    facingY -= gp.tileSize; break;
+        case "down":  facingY += gp.tileSize; break;
+        case "left":  facingX -= gp.tileSize; break;
+        case "right": facingX += gp.tileSize; break;
+    }
+    
+    int col = facingX / gp.tileSize;
+    int row = facingY / gp.tileSize;
+    
+    return new int[]{col, row};
+}
 
     public void draw(Graphics2D g2){
-        // g2.setColor(Color.white);
-
-        // g2.fillRect(worldX, worldY, gp.tileSize, gp.tileSize);
-
         BufferedImage image = null;
 
         switch(direction){
@@ -363,8 +317,6 @@ public class Player extends Entity {
                 if (spriteNum == 4){
                     image = upidle;
                 }
-
-                
                 break;
             case "down":
                 if (spriteNum == 1){
@@ -414,15 +366,13 @@ public class Player extends Entity {
 
     }
 
-    // Add these energy methods to Player class
     public int getEnergy() {
         return energy;
     }
 
     public void setEnergy(int energy) {
-        this.energy = Math.max(-20, Math.min(100, energy)); // Keep energy between -20 to 100
+        this.energy = Math.max(-20, Math.min(100, energy));
         
-        // Auto sleep when energy reaches -20
         if (this.energy <= -20) {
             forceCollapse();
         }
@@ -436,22 +386,15 @@ public class Player extends Entity {
         setEnergy(energy - amount);
     }
 
-    // Modify the sleep method
     public void sleep() {
-        // Start sleep animation
         gp.ui.startSleepAnimation();
         
-        // Process shipping bin gold BEFORE skipping day
         if (object.OBJ_ShippingBin.goldEarned > 0) {
             int goldFromShipping = object.OBJ_ShippingBin.goldEarned;
             addGold(goldFromShipping);
-            System.out.println("=== END OF DAY SUMMARY ===");
-            System.out.println("Shipping bin delivered " + goldFromShipping + " gold overnight!");
-            System.out.println("Your total gold is now: " + getGold());
-            object.OBJ_ShippingBin.goldEarned = 0; // Reset for next day
+            object.OBJ_ShippingBin.goldEarned = 0;
         }
         
-        // Restore energy based on current energy level
         if (getEnergy() > 10) {
             setEnergy(100);
         } else if (getEnergy() > 0 && getEnergy() <= 10) {
@@ -460,33 +403,20 @@ public class Player extends Entity {
             setEnergy(10);
         }
         
-        // Skip to next day
         gp.timeM.skipDay();
-        
-        System.out.println("You slept well! Energy restored and new day begins.");
     }
 
-    // Add this new method for forced collapse
     private void forceCollapse() {
-        System.out.println("You collapsed from exhaustion! Waking up at home...");
-        
-        // Process shipping bin gold even when collapsing
         if (object.OBJ_ShippingBin.goldEarned > 0) {
             int goldFromShipping = object.OBJ_ShippingBin.goldEarned;
             addGold(goldFromShipping);
-            System.out.println("Despite collapsing, shipping bin delivered " + goldFromShipping + " gold overnight!");
             object.OBJ_ShippingBin.goldEarned = 0;
         }
         
-        // Start sleep animation for forced collapse
         gp.ui.startSleepAnimation();
         
-        // Set minimal energy recovery for collapsing
-        this.energy = 10;  // Very low energy as penalty for collapsing
+        this.energy = 10;
         
-        // Skip to next day
         gp.timeM.skipDay();
-        
-        System.out.println("You woke up exhausted in your bed. Take better care of yourself!");
     }
 }

@@ -17,18 +17,15 @@ import tile.TileManager;
 
 public class GamePanel extends JPanel implements Runnable{
 
-    // Screen settings
-    final int originalTileSize = 32; // 32x32 tile
+    final int originalTileSize = 32;
     final int scale = 2;
 
     public final int tileSize = originalTileSize * scale; 
-    public final int maxScreenCol = 16;    // horizontal 
-    public final int maxScreenRow = 12;    // vertikal 
+    public final int maxScreenCol = 16;
+    public final int maxScreenRow = 12;
     public final int screenWidth = tileSize * maxScreenCol;    
     public final int screenHeight = tileSize * maxScreenRow;   
     
-    //WORLD SETTINGS
-
     public final int maxWorldCol = 50;
     public final int maxWorldRow = 50;
     int screenHeight2 = screenHeight;
@@ -37,30 +34,24 @@ public class GamePanel extends JPanel implements Runnable{
     BufferedImage tempScreen; 
     Graphics2D g2;
 
-// Default starting map
-
-    //FPS
     int FPS = 60;
 
     public TileManager tileM = new TileManager(this);
-    
     public KeyHandler keyH = new KeyHandler(this);
-
     public UI ui = new UI(this);
     Thread gameThread;
     Sound music = new Sound();
     Sound soundEffect = new Sound();
 
-    // ENTITY AND OBJECT
     public CollisionChecker cChecker = new CollisionChecker(this);
     public AssetSetter aSetter = new AssetSetter(this);
     public Player player = new Player(this,keyH);
     public TimeManager timeM = new TimeManager(this);
+    public Store store; 
 
     public SuperObject obj[] = new SuperObject[10];
     public Entity npc[] = new Entity[10];
 
-    // GAME STATE
     public int gameState;
     public final int menuState = 0;
     public final int playState = 1;
@@ -74,6 +65,7 @@ public class GamePanel extends JPanel implements Runnable{
     public final int sleepState = 9;
     public final int fishingResultState = 10;
     public final int shippingBinState = 11;
+    public final int storeState = 12;
     public minigame.FishingMiniGame fishingMiniGame = new minigame.FishingMiniGame();
     public String currentMap = tileM.mapManager.getCurrentMap(); 
     public boolean fullScreenOn = false; 
@@ -90,16 +82,12 @@ public class GamePanel extends JPanel implements Runnable{
     }
 
     public void setupGame(){
-
         aSetter.setNPC(tileM.mapManager.currentMap);
         aSetter.setObject(tileM.mapManager.currentMap);
         gameState = menuState;
-
         tempScreen = new BufferedImage(screenWidth, screenHeight, BufferedImage.TYPE_INT_ARGB);
         g2 = (Graphics2D) tempScreen.getGraphics();
-
         setFullScreen();
-
     }
 
     public void setFullScreen() {
@@ -107,7 +95,6 @@ public class GamePanel extends JPanel implements Runnable{
         GraphicsDevice gd = ge.getDefaultScreenDevice();
 
         if (fullScreenOn) {
-            // Hanya lakukan ini jika belum fullscreen
             if (!Main.window.isUndecorated()) {
                 Main.window.dispose();
                 Main.window.setUndecorated(true);
@@ -115,14 +102,10 @@ public class GamePanel extends JPanel implements Runnable{
                 Main.window.setVisible(true);
             }
             gd.setFullScreenWindow(Main.window);
-
-            // Ambil ukuran layar sebenarnya
             screenWidth2 = Main.window.getWidth();
             screenHeight2 = Main.window.getHeight();
         } else {
             gd.setFullScreenWindow(null);
-
-            // Hanya lakukan ini jika sudah fullscreen
             if (Main.window.isUndecorated()) {
                 Main.window.dispose();
                 Main.window.setUndecorated(false);
@@ -131,7 +114,6 @@ public class GamePanel extends JPanel implements Runnable{
             }
             Main.window.setSize(screenWidth, screenHeight);
             Main.window.setLocationRelativeTo(null);
-
             screenWidth2 = screenWidth;
             screenHeight2 = screenHeight;
         }
@@ -144,25 +126,19 @@ public class GamePanel extends JPanel implements Runnable{
 
     @Override
     public void run(){
-
-            double drawInterval = 1000000000.0/FPS;
-            double delta = 0;
-            long lastTime = System.nanoTime();
-            long currentTime;
+        double drawInterval = 1000000000.0/FPS;
+        double delta = 0;
+        long lastTime = System.nanoTime();
+        long currentTime;
 
         while(gameThread != null){
-
             currentTime = System.nanoTime();
-
             delta += (currentTime-lastTime)/drawInterval;
-
             lastTime = currentTime;
-
             if (delta >= 1){
                 update();
                 drawToScreen();
                 repaint();
-                // repaint();
                 delta --;
             }
         }
@@ -172,102 +148,68 @@ public class GamePanel extends JPanel implements Runnable{
         if(gameState == playState) {
             timeM.update();
             player.update();
-
-            // Check for new day and update plants
             if (timeM.isNewDay()) {
-                System.out.println("New day detected - updating all plant growth");
                 tileM.mapManager.updatePlantGrowth();
-                // Reset the auto sleep flag for new day
                 autoSleepTriggered = false;
             }
-            
-            // Update all objects
             for(int i = 0; i < obj.length; i++) {
                 if(obj[i] != null) {
                     obj[i].update();
                 }
             }
-        
-            // Auto sleep at 02:00 - process shipping bin gold
             if(timeM.getTimeString().equals("02:00") && !autoSleepTriggered){
-                // Process shipping bin gold before auto-sleep
                 if (object.OBJ_ShippingBin.goldEarned > 0) {
                     int goldFromShipping = object.OBJ_ShippingBin.goldEarned;
                     player.addGold(goldFromShipping);
-                    System.out.println("You passed out from exhaustion!");
-                    System.out.println("Shipping bin delivered " + goldFromShipping + " gold overnight!");
                     object.OBJ_ShippingBin.goldEarned = 0;
                 }
-                
                 player.sleep();
                 autoSleepTriggered = true;
             }  
         }
-        
-        // Add sleep animation update
         if(gameState == sleepState) {
             ui.updateSleepAnimation();
         }
     }
 
     public void paintComponent(Graphics g){
-        
         super.paintComponent(g);
-
         Graphics2D g2 = (Graphics2D)g;
-        
-        //TILE
         tileM.draw(g2);
-
-        //OBJECT
         for(int i = 0; i < obj.length; i++){
             if (obj[i] != null){
                 obj[i].draw(g2,this);
             }
         }
-
-        //NPC
         for(int i = 0; i < npc.length; i++){
             if (npc[i] != null){
                 npc[i].draw(g2);
             }
         }
-
-        //PLAYER
         player.draw(g2);
-        
         ui.draw(g2);
-        
-        // Draw brightness overlay at the end
         tileM.mapManager.drawBrightnessOverlay(g2);
-        
         g2.dispose(); 
     }
 
     public void drawToScreen() {
         Graphics g = this.getGraphics();
-        // Gambar ke ukuran panel yang sebenarnya
         g.drawImage(tempScreen, 0, 0, getWidth(), getHeight(), null);
         g.dispose();
     }
 
     public void playMusic(int i){
-
         music.setFile(i);
         music.play();
         music.loop();
     }
 
     public void stopMusic(){
-        
         music.stop();
     }
 
     public void playSE(int i){
-
         soundEffect.setFile(i);
         soundEffect.play();
     }
-
-    // Update this whenever loading a new map
 }

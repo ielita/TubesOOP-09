@@ -64,6 +64,10 @@ public class fish extends Item implements buysellable, consumable, cookable{
         this.rarity = rarity;
     }
 
+    public int getHargaBeli() {
+        return 0;
+    }
+
     @Override
     public int getHargaJual() {
         int seasonCount = seasons.size();
@@ -72,7 +76,6 @@ public class fish extends Item implements buysellable, consumable, cookable{
 
         int totalHours = 0;
         for (String t : time) {
-            // Format: "06.00–18.00"
             String[] parts = t.split("–");
             if (parts.length == 2) {
                 int start = Integer.parseInt(parts[0].replace(".", ""));
@@ -83,7 +86,7 @@ public class fish extends Item implements buysellable, consumable, cookable{
                 totalHours += durasi;
             }
         }
-        if (totalHours == 0) totalHours = 24; // Default 24 if 0
+        if (totalHours == 0) totalHours = 24;
 
         int C = 10;
         if ("Regular".equalsIgnoreCase(rarity)) C = 5;
@@ -94,23 +97,10 @@ public class fish extends Item implements buysellable, consumable, cookable{
         return (int) Math.round(harga);
     }
 
-    public void buy(Item item) {
-        // Implement the buy logic here
-        System.out.println("Buying " + getName());
-    }
-
-    public void sell(Item item) {
-        // Implement the sell logic here
-        System.out.println("Selling " + getName());
-    }
 
     public void consume(Player player) {
-        // Implement the consume logic here
-        System.out.println("Consuming " + getName());
     }
     
     public void cook(Item item) {
-        // Implement the cook logic here
-        System.out.println("Cooking " + getName());
     }
 }

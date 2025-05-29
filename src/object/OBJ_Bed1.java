@@ -32,10 +32,7 @@ public class OBJ_Bed1 extends SuperObject {
     protected void onInteract() {
         if (collision) {
             message = "Going to bed...";
-            
-            // Call the new sleep method from player
             gp.player.sleep();
-            
             gp.keyH.interactPressed = false;
         }
     }

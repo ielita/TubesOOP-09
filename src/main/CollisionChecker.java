@@ -70,11 +70,9 @@ public class CollisionChecker {
         for (int i = 0; i < gp.obj.length; i++) {
             if (gp.obj[i] != null) {
 
-                // get entity's solid area position
                 entity.solidArea.x = entity.worldX + entity.solidArea.x;
                 entity.solidArea.y = entity.worldY + entity.solidArea.y;
 
-                // get entity's solid area position (object)
                 gp.obj[i].solidArea.x = gp.obj[i].worldX + gp.obj[i].solidArea.x;
                 gp.obj[i].solidArea.y = gp.obj[i].worldY + gp.obj[i].solidArea.y;
 
@@ -142,11 +140,9 @@ public class CollisionChecker {
         for (int i = 0; i < target.length; i++) {
             if (target[i] != null && target[i] != entity) {
 
-                // Get entity's solid area position
                 entity.solidArea.x = entity.worldX + entity.solidArea.x;
                 entity.solidArea.y = entity.worldY + entity.solidArea.y;
 
-                // Get target's solid area position
                 target[i].solidArea.x = target[i].worldX + target[i].solidArea.x;
                 target[i].solidArea.y = target[i].worldY + target[i].solidArea.y;
 
@@ -170,7 +166,6 @@ public class CollisionChecker {
                     index = i;
                 }
 
-                // Reset solid areas
                 entity.solidArea.x = entity.solidAreaDefaultX;
                 entity.solidArea.y = entity.solidAreaDefaultY;
                 target[i].solidArea.x = target[i].solidAreaDefaultX;

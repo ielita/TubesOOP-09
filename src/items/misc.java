@@ -2,19 +2,26 @@ package items;
 import entity.Player;
 import main.GamePanel;
 
-public class food extends Item implements consumable, buysellable {
+public class misc extends Item implements buysellable {
     private int hargabeli;
     private int hargajual;
-    private int energi;
+    private String category;
 
-    public food(String name, GamePanel gp, int energi, int hargabeli, int hargajual) {
+    public misc(String name, GamePanel gp, String type, int hargabeli, int hargajual) {
         super(name, gp);
-        this.energi = energi;
+        this.category = category;
         this.hargabeli = hargabeli;
         this.hargajual = hargajual;
     }
 
+    public String getCategory() {
+        return category;
+    }
+    public void setCategory(String category) {
+        this.category = category;
+    }
 
+    @Override
     public int getHargaBeli() {
         return hargabeli;
     }
@@ -22,10 +29,6 @@ public class food extends Item implements consumable, buysellable {
     @Override
     public int getHargaJual() {
         return hargajual;
-    }
-
-    public int getEnergi() {
-        return energi;
     }
 
     public void sethargabeli(int hargabeli) {
@@ -36,24 +39,7 @@ public class food extends Item implements consumable, buysellable {
         this.hargajual = hargajual;
     }
 
-    public void setEnergi(int energi) {
-        this.energi = energi;
-    }
-
-    // Check if food can be bought from store
-    public boolean canBeBought() {
-        return hargabeli > 0;
-    }
-
-
-    @Override
-    public void consume(Player player) {
-
-    }
-
-
     @Override
     public void getinfo() {
-
-}
+    }
 }

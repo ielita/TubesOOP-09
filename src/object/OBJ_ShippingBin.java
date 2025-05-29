@@ -12,12 +12,12 @@ public class OBJ_ShippingBin extends SuperObject {
     private GamePanel gp;
     public String message = "";
     private InventoryManager inventory;
-    public static int goldEarned = 0; // Keep this to accumulate gold
+    public static int goldEarned = 0;
 
     public OBJ_ShippingBin(GamePanel gp) {
         this.gp = gp;
         this.keyH = gp.keyH;
-        name = "ShippingBin"; // Fix name
+        name = "ShippingBin"; 
         this.inventory = gp.player.inventoryManager;
 
 
@@ -35,8 +35,6 @@ public class OBJ_ShippingBin extends SuperObject {
 
     @Override
     public void update() {
-        // Remove all gold processing logic from here
-        // This now does nothing or handle other shipping bin updates
     }
 
     @Override
