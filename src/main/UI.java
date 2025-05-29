@@ -26,6 +26,7 @@ public class UI {
     private Font pixelify22;
     private Font pixelify36;
     private Font pixelify80;
+    private Font pixelify120;
     private Font pixelify15;
     private Font pixelify50;
     private Font pixelify30;
@@ -56,6 +57,7 @@ public class UI {
             pixelify22 = pixelify.deriveFont(Font.PLAIN, 22f);
             pixelify36 = pixelify.deriveFont(Font.BOLD, 36f);
             pixelify80 = pixelify.deriveFont(Font.BOLD, 80f);
+            pixelify120 = pixelify.deriveFont(Font.BOLD, 120f);
             pixelify15 = pixelify.deriveFont(Font.PLAIN, 15f);
             pixelify50 = pixelify.deriveFont(Font.PLAIN, 50f);
             pixelify30 = pixelify.deriveFont(Font.PLAIN, 30f);
@@ -64,7 +66,8 @@ public class UI {
             pixelify26 = new Font("Arial", Font.PLAIN, 26);
             pixelify22 = new Font("Arial", Font.PLAIN, 22);
             pixelify36 = new Font("Arial", Font.BOLD, 36);
-            pixelify80 = new Font("Arial", Font.BOLD, 80);  
+            pixelify80 = new Font("Arial", Font.BOLD, 80);
+            pixelify120 = new Font("Arial", Font.BOLD, 120);
             pixelify15 = new Font("Arial", Font.PLAIN, 15);
             pixelify50 = new Font("Arial", Font.PLAIN, 50);
             pixelify30 = new Font("Arial", Font.PLAIN, 30);
@@ -154,14 +157,22 @@ public class UI {
         if (gp.keyH.showDebug) {
             g2.setFont(pixelify22);
             g2.setColor(Color.WHITE);
-            g2.drawString("Player World X: " + gp.player.worldX, 10, 400);
-            g2.drawString("Player World Y: " + gp.player.worldY, 10, 420);
-            g2.drawString("Col: " + gp.player.worldX / gp.tileSize, 10, 440);
-            g2.drawString("Row: " + gp.player.worldY / gp.tileSize, 10, 460);
-            g2.drawString("Energy: " + gp.player.getEnergy(), 10, 480);  // Add energy display
-            g2.drawString("Gold: " + gp.player.getGold(), 10, 500);      // Add gold display
+            int init = 360;
+            int adder = 20;
+            g2.drawString("Player World X: " + gp.player.worldX, 10, init);
+            init += adder;
+            g2.drawString("Player World Y: " + gp.player.worldY, 10, init);
+            init += adder;
+            g2.drawString("Col: " + gp.player.worldX / gp.tileSize, 10, init);
+            init += adder;
+            g2.drawString("Row: " + gp.player.worldY / gp.tileSize, 10, init);
+            init += adder;
+            g2.drawString("Energy: " + gp.player.getEnergy(), 10, init);  // Add energy display
+            init += adder;
+            g2.drawString("Gold: " + gp.player.getGold(), 10, init);      // Add gold display
+            init += adder;
             String interactState = gp.keyH.interactPressed ? "true" : "false";
-            g2.drawString("Interact Pressed: " + interactState, 10, 520); // Move down
+            g2.drawString("Interact Pressed: " + interactState, 10, init); // Move down
 
             // Add selected item display
             String selectedItem = "Selected Item: None";
@@ -224,7 +235,7 @@ public class UI {
         textY = frameY + gp.tileSize ;
         g2.drawString(text, textX, textY);
         
-        textX = frameY + 4 * gp.tileSize - 25;
+        textX = frameY + 5 * gp.tileSize + 10;
         
         g2.setFont(pixelify30);
         
@@ -292,7 +303,7 @@ public class UI {
         }
         
         
-        textX = frameY + 8 * gp.tileSize ;
+        textX = frameY + 9 * gp.tileSize ;
         textY = frameY + gp.tileSize * 15/8 ;
 
         if (gp.fullScreenOn) {
@@ -411,7 +422,7 @@ public class UI {
         g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
 
         // Set text properties
-        g2.setFont(pixelify80);
+        g2.setFont(pixelify100);
         g2.setColor(Color.WHITE);
 
         // Build text based on animation stage
@@ -480,6 +491,7 @@ public class UI {
 
         // Title with better visibility
         g2.setFont(pixelify80);
+        g2.setFont(pixelify120);
         String text = "SPAKBOR HILLS";
         int x = getXforCenteredText(text);
         int y = gp.tileSize * 3;
@@ -505,7 +517,7 @@ public class UI {
         // START GAME
         text = "START GAME";
         x = getXforCenteredText(text);
-        y += gp.tileSize * 4;
+        y += gp.tileSize * 2;
         
         if (gp.keyH.menuOption == 0) {
             // Selected option background
