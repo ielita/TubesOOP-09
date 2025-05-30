@@ -34,6 +34,7 @@ public class OBJ_Bed1 extends SuperObject {
             message = "Going to bed...";
             gp.player.sleep();
             gp.keyH.interactPressed = false;
+            System.out.println("Player is sleeping");
         }
     }
 

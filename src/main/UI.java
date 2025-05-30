@@ -57,6 +57,8 @@ public class UI {
 
     int subState = 0;
 
+    public boolean isInteractionMenuOpen = false;
+
     public UI(GamePanel gp) {
         this.gp = gp;
         try {
@@ -99,7 +101,7 @@ public class UI {
 
         if(gp.gameState == gp.menuState) {
             drawMainMenu();
-            // drawInteractionMenu();
+            //drawChatNPC();
         }
 
         g2.setFont(pixelify40);
@@ -146,9 +148,12 @@ public class UI {
                 } else if (currentMap.equals("ocean")) {
                     displayName = "Ocean";
                 }
+                String energyTextString = "Energy: " + gp.player.getEnergy();
+                g2.setColor(Color.WHITE);
+                g2.drawString(energyTextString, 50, 100);
                 String mapText = "Location: " + displayName;
                 g2.setColor(Color.WHITE);
-                g2.drawString(mapText, 50, 100);
+                g2.drawString(mapText,  50, 200);
             }
             drawOnHandPopup();
         }
@@ -186,6 +191,9 @@ public class UI {
         }
         if (gp.gameState == gp.interactingState) {
             drawInteractionMenu();
+        }
+        if (gp.gameState == gp.chattingState) {
+            drawChatNPC();
         }
 
         if (gp.gameState == gp.setupGameInfoState) {
@@ -1191,7 +1199,7 @@ public class UI {
         int x = gp.screenWidth / 2 - length / 2;
         return x;
     }
-    // mainmenu
+
     public void drawInteractionMenu(){
         BufferedImage abigail_icon = null;
         BufferedImage talk_selected = null, talk_def = null, gift_def = null, gift_selected = null, info_def = null, info_selected = null;
@@ -1203,9 +1211,9 @@ public class UI {
             info_selected = ImageIO.read(new File("res/ui/info_selected.png"));
             info_def = ImageIO.read(new File("res/ui/info_def.png"));
             abigail_icon = ImageIO.read(new File("res/ui/abigail_icon.png"));
-
             
         } catch (IOException e) {
+            e.printStackTrace();
         }
 
         int margin = 50;
@@ -1220,12 +1228,24 @@ public class UI {
             int leftImageX = x - abigail_icon.getWidth() - gap;
             int leftImageY = y + (totalHeight - abigail_icon.getHeight()) / 2;
             g2.drawImage(abigail_icon, leftImageX, leftImageY, null);
+            //gp.keyH.menuOption = 0;
+                // menuoption 0 = talk, 1 = gift, 2 = info
+            g2.setFont(pixelify18);
+            g2.setColor(Color.RED);
+            String debugText = "menuOption: " + gp.keyH.menuOption + " | ";
+            debugText += "Talk: " + (gp.keyH.menuOption == 0 ? "selected" : "default") + ", ";
+            debugText += "Gift: " + (gp.keyH.menuOption == 1 ? "selected" : "default") + ", ";
+            debugText += "Info: " + (gp.keyH.menuOption == 2 ? "selected" : "default");
+            g2.drawString(debugText, 20, 30);
+            BufferedImage talkImg = gp.keyH.menuOption == 0 ? talk_selected : talk_def;
+            BufferedImage giftImg = gp.keyH.menuOption == 1 ? gift_selected : gift_def;
+            BufferedImage infoImg = gp.keyH.menuOption == 2 ? info_selected : info_def;
 
-            g2.drawImage(talk_selected, x, y, null);
-            y += talk_selected.getHeight() + gap;
-            g2.drawImage(gift_def, x, y, null);
-            y += gift_def.getHeight() + gap;
-            g2.drawImage(info_def, x, y, null);
+            g2.drawImage(talkImg, x, y, null);
+            y += talkImg.getHeight() + gap;
+            g2.drawImage(giftImg, x, y, null);
+            y += giftImg.getHeight() + gap;
+            g2.drawImage(infoImg, x, y, null);
         }
             // } else {
         //     g2.setColor(new Color(0, 0, 0));
@@ -1246,6 +1266,36 @@ public class UI {
         // g2.drawString(text, x + 2, y + 2);
         // g2.setColor(gp.keyH.menuOption == 0 ? SELECTED_COLOR : UNSELECTED_COLOR);
         // g2.drawString(text, x, y);
+    }
+    // mainmenu
+    public void drawChatNPC(){
+        BufferedImage abigail_icon = null;
+        BufferedImage abigail_chat = null;
+        try {
+            abigail_chat = ImageIO.read(new File("res/ui/abigail_chat.png"));
+            abigail_icon = ImageIO.read(new File("res/ui/abigail_icon.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        int margin = 50;
+        int gap = 5;
+        if (abigail_chat != null && abigail_icon != null) {
+            int chatWidth = abigail_chat.getWidth();
+            int chatHeight = abigail_chat.getHeight();
+            int iconWidth = abigail_icon.getWidth();
+            int iconHeight = abigail_icon.getHeight();
+
+            int totalWidth = iconWidth + gap + chatWidth;
+            int x = (gp.screenWidth - totalWidth) / 2;
+            int y = gp.screenHeight - Math.max(chatHeight, iconHeight) - margin;
+
+            // Vertically center the icon relative to the chat image
+            int iconY = y + (chatHeight - iconHeight) / 2;
+            int chatY = y;
+
+            g2.drawImage(abigail_icon, x, iconY, null);
+            g2.drawImage(abigail_chat, x + iconWidth + gap, chatY, null);
+        }
     }
 
     

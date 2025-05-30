@@ -421,27 +421,36 @@ public class Player extends Entity {
     }
 
     public void interactNPC() {
-
+        gp.ui.drawInteractionMenu();
         // draw UI for interaction menu
-        // for (int i = 0; i < gp.npc.length; i++) {
-        //     if (gp.npc[i] != null) {
-        //         gp.npc[i].interact(gp, keyH);
-        //     }
-        // }
+        for (int i = 0; i < gp.npc.length; i++) {
+            if (gp.npc[i] != null && gp.npc[i] instanceof NPC) {
+                ((NPC)gp.npc[i]).interact(gp, keyH);
+            }
+        }
 
         
     }
 
     public void talkWithNPC() {
         if (getEnergy() > 10) {
-            setEnergy(100);
-        } else if (getEnergy() > 0 && getEnergy() <= 10) {
-            setEnergy(50);
-        } else if (getEnergy() <= 0) {
-            setEnergy(10);
+            setEnergy(getEnergy() - 10);
+            //gp.timeM.updateTime(0, 10); // Update time by 10 minutes
+            System.out.println("You start talking with the NPC.");
+            
+        } else {
+            System.out.println("You are too tired to talk right now.");
         }
+        // for (int i = 0; i < gp.npc.length; i++) {
+        //     if (gp.npc[i] != null && gp.npc[i] instanceof NPC) {
+        //         ((NPC)gp.npc[i]).setHeartPoints(
+        //             ((NPC)gp.npc[i]).getHeartPoints() + 10);
+                
+        //     }
+        // }
         // This method can be used to initiate a conversation with an NPC
         // It can be expanded to include dialogue options, quests, etc.
+        System.out.println("Heartpoints" + ((NPC)gp.npc[0]).getHeartPoints());
         System.out.println("Talking to NPC...");
     }
 }

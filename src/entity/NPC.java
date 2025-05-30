@@ -168,18 +168,28 @@ public class NPC extends Entity{
             int interactionRange = (int)(gp.tileSize * 1.5);
             boolean inRange = isPlayerInRange(gp, interactionRange);
             
-            if (inRange && keyH.interactPressed) {
+            if (inRange && keyH.NPCInteractPressed) {
                 onInteract();
             }
             
             message = String.format("Range: %b, Interact: %b", 
-                inRange, keyH.interactPressed);
+                inRange, keyH.NPCInteractPressed);
         } else {
             message = "Error: handlers not initialized";
+        }
+
+        if (collisionOn) {
+            // if (gp.keyH.NPCInteractPressed) {
+            //     System.out.println("Player is trying to interact with NPC: " + name);
+            // }
+            gp.player.interactNPC();
+            gp.keyH.NPCInteractPressed = false;
+            System.out.println("Player is interacting with NPC: " + name);
         }
     }
     
     public void talk(){
-        
+        setHeartPoints(heartPoints+10);
+        System.out.println("Talking to " + name + ". Heart points increased to " + heartPoints);
     }
 }

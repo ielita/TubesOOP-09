@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import entity.NPC;
 import items.*;
 
 public class KeyHandler implements KeyListener{
@@ -118,6 +119,14 @@ public class KeyHandler implements KeyListener{
             return;
         }
 
+        if (gp.gameState == gp.playState && code == KeyEvent.VK_F){
+            NPCInteractPressed = true;
+            gp.gameState = gp.interactingState;
+        } else if (gp.gameState == gp.interactingState && code == KeyEvent.VK_F) {
+            gp.gameState = gp.playState;
+            return;
+        }
+
         if (gp.gameState == gp.interactingState) {
             if(code == KeyEvent.VK_W || code == KeyEvent.VK_UP) {
                 menuOption--;
@@ -135,6 +144,8 @@ public class KeyHandler implements KeyListener{
                 switch(menuOption) {
                     case 0:
                         gp.gameState = gp.chattingState;
+                        gp.player.talkWithNPC();
+                        ((NPC)gp.npc[0]).talk();
                         break;
                     case 1:
                         gp.gameState = gp.givingGiftState;
@@ -144,6 +155,17 @@ public class KeyHandler implements KeyListener{
                         break;
                 }
             }
+            return;
+        }
+
+        if (gp.gameState == gp.chattingState) {
+            if (code == KeyEvent.VK_ENTER) {
+                gp.gameState = gp.playState;
+                return;
+            }
+            // if (code == KeyEvent.VK_ESCAPE) {
+            //     gp.gameState = gp.playState;
+            // }
             return;
         }
 
