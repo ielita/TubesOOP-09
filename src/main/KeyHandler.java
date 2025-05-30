@@ -141,6 +141,12 @@ public class KeyHandler implements KeyListener{
                     enterPressed = true;
                     gp.gameState = gp.playState;
                 }
+                if (gp.ui.setupGameInfoNum == 1) {
+                    enterPressed = true;
+                    gp.ui.isMale = !gp.ui.isMale;
+                    System.out.println(gp.ui.isMale);
+
+                }
             }
 
             if (gp.setupGame.isNameInputActive()) {

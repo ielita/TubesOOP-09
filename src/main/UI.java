@@ -57,6 +57,8 @@ public class UI {
 
     int subState = 0;
 
+    public boolean isMale = false; //System.out
+
     public UI(GamePanel gp) {
         this.gp = gp;
         try {
@@ -475,7 +477,7 @@ public class UI {
             gp.setupGame.setName(nameInput); 
             g2.drawString(inputText, inputX, inputY);
             
-            System.out.println("Input Text: " + inputText);
+            // System.out.println("Input Text: " + inputText);
         }
         
         int inputX1 = textX + 10;
@@ -499,9 +501,11 @@ public class UI {
             g2.fillRect(textX, textY, width, height);
             
         }
+
+        String texture = isMale ? "Male" : "Female";
         textX -= 148;
         g2.setColor(new Color(255, 255, 255));
-        g2.drawString(text5, textX + 160, textY + 35);
+        g2.drawString(texture, textX + 160, textY + 35);
         textX += 148;
 
         
@@ -530,11 +534,11 @@ public class UI {
             gp.setupGame.setFarmName(nameInput2); 
             g2.drawString(inputText2, inputX, inputY);
             
-            System.out.println("Input Text: " + inputText);
+            // System.out.println("Input Text: " + inputText);
         }
         
-        System.out.println("Input Text1: " + gp.setupGame.getName());
-        System.out.println("Input Text2: " + gp.setupGame.getFarmName());
+        // System.out.println("Input Text1: " + gp.setupGame.getName());
+        // System.out.println("Input Text2: " + gp.setupGame.getFarmName());
         
         int inputX = textX + 10;
         int inputY = textY + 35;
