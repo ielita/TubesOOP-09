@@ -8,7 +8,8 @@ import java.awt.Shape;
 import java.awt.image.BufferedImage;
 import java.util.Map.Entry;
 import java.awt.FontFormatException;
-import java.awt.AlphaComposite; 
+import java.awt.AlphaComposite;
+import java.awt.BasicStroke;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
@@ -52,6 +53,7 @@ public class UI {
     public int commandNum = 0;
     public int keyBindNum = 0;
     public int setupGameInfoNum = 0;
+    public boolean isMale = false;
 
     int subState = 0;
 
@@ -101,44 +103,7 @@ public class UI {
         g2.setColor(Color.WHITE);
 
         if (gp.gameState == gp.playState) {
-            
-            g2.setFont(pixelify40);
-            g2.setColor(Color.WHITE);
-            String time = gp.timeM.getTimeString();
-            g2.drawString(time, gp.screenWidth - 150, 50);
-
-            
-            String season = gp.timeM.getSeason();
-            int day = gp.timeM.getDay();
-            String dateText = season + " - Day " + day;
-            g2.drawString(dateText, 50, 50);   
-
-            
-            String currentMap = gp.tileM.mapManager.getCurrentMap();
-            if (currentMap != null && !currentMap.isEmpty()) {
-                
-                String displayName = currentMap;
-                if (currentMap.equals("insideHouse")) {
-                    displayName = "Inside House";
-                } else if (currentMap.equals("farm")) {
-                    displayName = "Farm";
-                } else if (currentMap.equals("town")) {
-                    displayName = "Town";
-                } else if (currentMap.equals("mountainlake")) {
-                    displayName = "Mountain Lake";
-                } else if (currentMap.equals("forestriver")) {
-                    displayName = "Forest River";
-                } else if (currentMap.equals("ocean")) {
-                    displayName = "Ocean";
-                }
-                
-                String mapText = "Location: " + displayName;
-                
-                
-                g2.setColor(Color.WHITE);
-                g2.drawString(mapText, 50, 100);
-                
-            }
+            drawTopRightInfoPanel();
             drawOnHandPopup();
         }
 
@@ -187,6 +152,10 @@ public class UI {
             g2.setColor(Color.WHITE);
             int init = 360;
             int adder = 20;
+            g2.drawString("Player Name: " + gp.setupGame.getName(), 10, init);
+            init += adder;
+            g2.drawString("Player Farm Name: " + gp.setupGame.getFarmName(), 10, init);
+            init += adder;
             g2.drawString("Player World X: " + gp.player.worldX, 10, init);
             init += adder;
             g2.drawString("Player World Y: " + gp.player.worldY, 10, init);
@@ -407,8 +376,8 @@ public class UI {
         }
 
         
-        textX = frameX +  5 * gp.tileSize;
-        textY = frameY + gp.tileSize + gp.tileSize * 7 / 8;
+        textX = frameX +  5 * gp.tileSize + 10;
+        textY = frameY + gp.tileSize + 20 + gp.tileSize * 7 / 8;
         g2.drawString("w", textX, textY);
 
         textY += gp.tileSize * 6 / 10;
@@ -494,7 +463,7 @@ public class UI {
         try {
             backgroundImage = ImageIO.read(new File("res/menu/menuScreen.png")); 
         } catch (IOException e) {
-            System.out.println("Background image not found, using solid color");
+            e.printStackTrace();
         }
         
         if (backgroundImage != null) {
@@ -597,12 +566,12 @@ public class UI {
         int invX = gp.screenWidth / 2 - invWidth / 2;
         int invY = gp.screenHeight / 2 - invHeight / 2;
 
-        
-        g2.setColor(new Color(30, 30, 30, 230));
+    
+        g2.setColor(new Color(139, 69, 19, 240)); 
         g2.fillRoundRect(invX, invY, invWidth, invHeight, 30, 30);
 
         
-        g2.setColor(Color.WHITE);
+        g2.setColor(new Color(205, 133, 63, 255)); 
         g2.setStroke(new java.awt.BasicStroke(4));
         g2.drawRoundRect(invX, invY, invWidth, invHeight, 30, 30);
 
@@ -640,7 +609,7 @@ public class UI {
             int y = startY + row * (slotSize + slotGapY + 12);
 
             
-            g2.setColor(new Color(80, 80, 80, 210));
+            g2.setColor(new Color(90, 58, 42, 200)); 
             g2.fillRoundRect(x, y, slotSize, slotSize, 14, 14);
 
             
@@ -672,62 +641,57 @@ public class UI {
         
         g2.setClip(oldClip);
     }
-       
+  
     public void drawFishingMiniGame() {
         int boxWidth = 600;
         int boxHeight = 340;
         int boxX = (gp.screenWidth - boxWidth) / 2;
         int boxY = (gp.screenHeight - boxHeight) / 2 ;
-        
-        g2.setColor(new Color(0, 0, 0, 120));
+
+        g2.setColor(new Color(139, 69, 19, 240));
         g2.fillRoundRect(boxX, boxY, boxWidth, boxHeight, 36, 36);
 
-        
-        g2.setColor(Color.WHITE);
+        g2.setColor(new Color(205, 133, 63, 255));
         g2.setStroke(new java.awt.BasicStroke(4));
         g2.drawRoundRect(boxX, boxY, boxWidth, boxHeight, 36, 36);
 
-        
         g2.setColor(Color.WHITE);
         g2.setFont(pixelify40);
         String title = "Mini Game: Fishing!";
         int titleX = getXforCenteredText(title);
         g2.drawString(title, titleX, boxY + 60);
 
-        
         g2.setFont(pixelify26);
         String instr = "Tebak angka " + gp.fishingMiniGame.getMin() + "-" + gp.fishingMiniGame.getMax() + " untuk dapat ikan!";
         int instrX = getXforCenteredText(instr);
         g2.drawString(instr, instrX, boxY + 110);
 
-        
         g2.setFont(pixelify22);
         String triesText = "Sisa kesempatan: " + gp.fishingMiniGame.getTries();
         int triesX = getXforCenteredText(triesText);
         g2.drawString(triesText, triesX, boxY + 170);
 
-        
         g2.setFont(pixelify36);
         String inputText = "Input: ";
         int inputVal = gp.fishingMiniGame.getInput();
-        if (inputVal != 0) {
-            inputText += inputVal;
-        } else {
+        if (inputVal == 0) {
             inputText += "_";
+        } else {
+            inputText += inputVal;
         }
+
         int inputBoxWidth = 320;
         int inputBoxHeight = 60;
         int inputBoxX = boxX + (boxWidth - inputBoxWidth) / 2;
         int inputBoxY = boxY + 210;
 
-        
-        g2.setColor(new Color(0, 0, 0, 120));
+        g2.setColor(new Color(139, 69, 19, 240)); 
         g2.fillRoundRect(inputBoxX, inputBoxY, inputBoxWidth, inputBoxHeight, 18, 18);
-        g2.setColor(Color.WHITE);
-        g2.setStroke(new java.awt.BasicStroke(2));
+
+        g2.setColor(new Color(205, 133, 63, 255));
         g2.drawRoundRect(inputBoxX, inputBoxY, inputBoxWidth, inputBoxHeight, 18, 18);
 
-        
+        g2.setColor(Color.WHITE);
         int inputTextWidth = g2.getFontMetrics().stringWidth(inputText);
         int inputTextX = inputBoxX + (inputBoxWidth - inputTextWidth) / 2;
         int inputTextY = inputBoxY + inputBoxHeight / 2 + g2.getFontMetrics().getAscent() / 2 - 6;
@@ -746,19 +710,14 @@ public class UI {
         int y = gp.getHeight() - popupHeight - marginY;
 
         
-        g2.setColor(new Color(0, 0, 0, 100));
+        g2.setColor(new Color(139, 69, 19, 240)); 
         g2.fillRoundRect(x + 4, y + 4, popupWidth, popupHeight, 18, 18);
 
         
-        g2.setColor(new Color(40, 40, 60, 200));
+        g2.setColor(new Color(139, 69, 19, 240)); 
         g2.fillRoundRect(x, y, popupWidth, popupHeight, 18, 18);
-
         
-        g2.setColor(new Color(255, 255, 255, 40));
-        g2.fillRoundRect(x + 2, y + 2, popupWidth - 4, popupHeight / 2, 16, 12);
-
-        
-        g2.setColor(new Color(255, 255, 255, 180));
+        g2.setColor(new Color(205, 133, 63, 255));
         g2.setStroke(new java.awt.BasicStroke(2));
         g2.drawRoundRect(x, y, popupWidth, popupHeight, 18, 18);
 
@@ -766,7 +725,7 @@ public class UI {
         int iconX = x + 10;
         int iconY = y + 6;
         int iconSize = 40;
-        g2.setColor(new Color(255,255,255,60));
+        g2.setColor(new Color(90, 58, 42, 200)); 
         g2.fillOval(iconX-2, iconY-2, iconSize+4, iconSize+4);
         if (onhand.getImage() != null) {
             g2.setClip(iconX, iconY, iconSize, iconSize);
@@ -791,8 +750,8 @@ public class UI {
 
         int boxWidth = 500;
         int boxHeight = 220;
-        int boxX = gp.getWidth() / 2 - boxWidth / 2;
-        int boxY = gp.getHeight() / 2 - boxHeight / 2;
+        int boxX = (gp.screenWidth - boxWidth) / 2;
+        int boxY = (gp.screenHeight - boxHeight) / 2 ;
 
         
         g2.setColor(new Color(0, 0, 0, 120));
@@ -873,12 +832,12 @@ public class UI {
         int binHeight = rows * slotSize + (rows - 1) * (slotGapY + 12) - 120;
         int binX = gp.screenWidth/2 - binWidth / 2;
         int binY = gp.screenHeight/2 - binHeight / 2 - 200;
-
-        g2.setColor(new Color(30, 30, 30, 230));
+        
+        g2.setColor(new Color(139, 69, 19, 240));
         g2.fillRoundRect(invX, invY, invWidth, invHeight, 30, 30);
         g2.fillRoundRect(binX, binY, binWidth, binHeight, 30, 30);
 
-        g2.setColor(Color.WHITE);
+        g2.setColor(new Color(205, 133, 63, 255)); 
         g2.setStroke(new java.awt.BasicStroke(4));
         g2.drawRoundRect(invX, invY, invWidth, invHeight, 30, 30);
         g2.drawRoundRect(binX, binY, binWidth, binHeight, 30, 30);
@@ -893,7 +852,7 @@ public class UI {
         int bintitleX = binX + (binWidth - g2.getFontMetrics().stringWidth(bintitle)) / 2; 
         g2.drawString(bintitle, bintitleX, binY + 45);
 
-        g2.setColor(new Color(80, 80, 80, 210));
+        g2.setColor(new Color(90, 58, 42, 200));
         int previewSlotX = binX + binWidth / 2 - slotSize - 160;
         int previewSlotY = binY + binHeight / 2 - slotSize + 20;
         g2.fillRoundRect(previewSlotX, previewSlotY, slotSize * 2, slotSize * 2, 14, 14);
@@ -922,7 +881,7 @@ public class UI {
             int y = startY + row * (slotSize + slotGapY + 12);
 
             
-            g2.setColor(new Color(80, 80, 80, 210));
+            g2.setColor(new Color(90, 58, 42, 200));
             g2.fillRoundRect(x, y, slotSize, slotSize, 14, 14);
 
             
@@ -1006,10 +965,10 @@ public class UI {
         int storeX = gp.screenWidth / 2 - 60;
         int storeY = gp.screenHeight / 2 - storeHeight / 2 - 30;
 
-        g2.setColor(new Color(30, 30, 30, 230));
+        g2.setColor(new Color(139, 69, 19, 240)); 
         g2.fillRoundRect(storeX, storeY, storeWidth, storeHeight, 30, 30);
 
-        g2.setColor(Color.WHITE);
+        g2.setColor(new Color(205, 133, 63, 255));
         g2.setStroke(new java.awt.BasicStroke(4));
         g2.drawRoundRect(storeX, storeY, storeWidth, storeHeight, 30, 30);
 
@@ -1041,7 +1000,7 @@ public class UI {
                 int x = startX + col * (slotSize + slotGapX);
                 int y = startY + row * (slotSize + slotGapY + 12);
 
-                g2.setColor(new Color(80, 80, 80, 210));
+                g2.setColor(new Color(90, 58, 42, 200)); 
                 g2.fillRoundRect(x, y, slotSize, slotSize, 14, 14);
 
                 if (gp.store != null && i == gp.store.getCurrentItemIndex()) {
@@ -1079,9 +1038,10 @@ public class UI {
         int descX = gp.screenWidth  /2 - descWidth - 90;
         int descY = storeY ;
 
-        g2.setColor(new Color(30, 30, 30, 230));
+        g2.setColor(new Color(139, 69, 19, 240));
         g2.fillRoundRect(descX, descY, descWidth, descHeight, 30, 30);
-        g2.setColor(Color.WHITE);
+
+        g2.setColor(new Color(205, 133, 63, 255)); 
         g2.setStroke(new java.awt.BasicStroke(4));
         g2.drawRoundRect(descX, descY, descWidth, descHeight, 30, 30);
 
@@ -1113,9 +1073,9 @@ public class UI {
             int helpX = descX;
             int helpY = descY + descHeight + 20;
 
-            g2.setColor(new Color(30, 30, 30, 230));
+            g2.setColor(new Color(139, 69, 19, 240)); 
             g2.fillRoundRect(helpX, helpY, helpWidth, helpHeight, 30, 30);
-            g2.setColor(Color.WHITE);
+            g2.setColor(new Color(205, 133, 63, 255));
             g2.setStroke(new java.awt.BasicStroke(4));
             g2.drawRoundRect(helpX, helpY, helpWidth, helpHeight, 30, 30);
 
@@ -1152,8 +1112,12 @@ public class UI {
         int boxX = (gp.screenWidth - boxWidth) / 2;
         int boxY = (gp.screenHeight - boxHeight) / 2;
 
-        g2.setColor(new Color(30, 30, 30, 230));
+        // Background utama (wood)
+        g2.setColor(new Color(139, 69, 19, 240));
         g2.fillRoundRect(boxX, boxY, boxWidth, boxHeight, 32, 32);
+        g2.setColor(new Color(205, 133, 63, 255)); // Outline terang
+        g2.setStroke(new BasicStroke(4));
+        g2.drawRoundRect(boxX, boxY, boxWidth, boxHeight, 32, 32);
 
         if (gp.gameState == gp.cookingState) {
             g2.setFont(g2.getFont().deriveFont(Font.BOLD, 32f));
@@ -1166,7 +1130,8 @@ public class UI {
                 Recipe r = recipes.get(i);
                 int y = startY + i * 40;
                 boolean canCook = oven.canCook(r);
-                if (r.getImage() != null) g2.drawImage(r.getImage(), boxX + 12, y - 28, 32, 32, null);
+                if (r.getImage() != null)
+                    g2.drawImage(r.getImage(), boxX + 12, y - 28, 32, 32, null);
 
                 g2.setColor(gp.keyH.cursorIndex == i ? Color.YELLOW : (canCook ? Color.WHITE : Color.GRAY));
                 g2.setFont(g2.getFont().deriveFont(Font.BOLD, 24f));
@@ -1186,8 +1151,12 @@ public class UI {
                 int detailX = boxX + boxWidth / 2 + 10;
                 int detailY = boxY + 80;
 
-                g2.setColor(new Color(60, 60, 60, 200));
+                // Background detail item
+                g2.setColor(new Color(90, 58, 42, 200));
                 g2.fillRoundRect(detailX - 10, detailY - 10, 260, 200, 16, 16);
+                g2.setColor(new Color(205, 133, 63, 255));
+                g2.setStroke(new BasicStroke(2));
+                g2.drawRoundRect(detailX - 10, detailY - 10, 260, 200, 16, 16);
 
                 if (hasil != null && hasil.getImage() != null) {
                     int imageX = detailX + (260 - 48) / 2;
@@ -1201,7 +1170,7 @@ public class UI {
                     int qty = entry.getValue();
                     int invQty = name.equals("Any Fish") ? gp.player.getTotalFishCaught() : gp.player.inventoryManager.getItemQuantity(name);
 
-                    g2.setColor(invQty >= qty ? new Color(80, 255, 80) : new Color(255, 80, 80));
+                    g2.setColor(invQty >= qty ? Color.WHITE : Color.GRAY);
                     g2.drawString(name + ": " + invQty + " / " + qty, detailX + 20, bahanY);
                     bahanY += 26;
                 }
@@ -1212,8 +1181,12 @@ public class UI {
                 int fuelBoxWidth = 260;
                 int fuelBoxHeight = 90;
 
-                g2.setColor(new Color(60, 60, 60, 200));
+                // Fuel box
+                g2.setColor(new Color(90, 58, 42, 200));
                 g2.fillRoundRect(fuelBoxX, fuelBoxY, fuelBoxWidth, fuelBoxHeight, 12, 12);
+                g2.setColor(new Color(205, 133, 63, 255));
+                g2.setStroke(new BasicStroke(2));
+                g2.drawRoundRect(fuelBoxX, fuelBoxY, fuelBoxWidth, fuelBoxHeight, 12, 12);
 
                 g2.setColor(Color.WHITE);
                 g2.setFont(g2.getFont().deriveFont(Font.BOLD, 20f));
@@ -1227,17 +1200,130 @@ public class UI {
                     g2.drawString(fuel, fuelBoxX + 10, fuelY);
                 }
 
-                // Petunjuk navigasi P dan O
                 g2.setFont(g2.getFont().deriveFont(14f));
                 g2.setColor(Color.LIGHT_GRAY);
-                g2.drawString("[P][O] Ubah Bahan Bakar  [ENTER] Masak  [ESC] Batal", boxX + boxWidth - 390, boxY + boxHeight - 16);
+                g2.drawString("[O] Ubah Bahan Bakar  [ENTER] Masak  [ESC] Batal", boxX + boxWidth - 360, boxY + boxHeight - 16);
             }
+        }
+    }
+        
+    private void drawTopRightInfoPanel() {
+        int panelWidth = 280;
+        int panelHeight = 160;
+        int panelX = gp.screenWidth - panelWidth - 40;
+        int panelY = 20;
+
+        g2.setColor(new Color(139, 69, 19, 240)); 
+        g2.fillRoundRect(panelX, panelY, panelWidth, panelHeight, 20, 20);
+
+        g2.setColor(new Color(205, 133, 63, 255)); 
+        g2.setStroke(new BasicStroke(4));
+        g2.drawRoundRect(panelX, panelY, panelWidth, panelHeight, 20, 20);
+
+        g2.setColor(new Color(101, 67, 33, 255));
+        g2.setStroke(new BasicStroke(2));
+        g2.drawRoundRect(panelX + 6, panelY + 6, panelWidth - 12, panelHeight - 12, 14, 14);
+
+        g2.setColor(new Color(255, 255, 255, 30));
+        g2.fillRoundRect(panelX + 8, panelY + 8, panelWidth - 16, panelHeight / 3, 12, 12);
+
+        g2.setFont(pixelify32);
+        g2.setColor(Color.WHITE);
+        String time = gp.timeM.getTimeString();
+        int timeX = panelX + (panelWidth - g2.getFontMetrics().stringWidth(time)) / 2;
+        g2.drawString(time, timeX, panelY + 33);
+
+        g2.setFont(pixelify22);
+        String season = gp.timeM.getSeason();
+        int day = gp.timeM.getDay();
+        String dateText = season + " - Day " + day;
+        int dateX = panelX + (panelWidth - g2.getFontMetrics().stringWidth(dateText)) / 2;
+        g2.drawString(dateText, dateX, panelY + 53);
+
+        int goldSectionY = panelY + 75;
+        int goldSectionHeight = 40;
+        g2.setColor(new Color(184, 134, 11, 200)); 
+        g2.fillRoundRect(panelX + 10, goldSectionY, panelWidth - 20, goldSectionHeight, 12, 12);
+
+        g2.setColor(new Color(255, 215, 0, 150)); 
+        g2.setStroke(new BasicStroke(2));
+        g2.drawRoundRect(panelX + 10, goldSectionY, panelWidth - 20, goldSectionHeight, 12, 12);
+
+        BufferedImage goldImage = null;
+        try {
+            goldImage = ImageIO.read(new File("res/ui/gold.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if (goldImage != null) {
+            int goldIconSize = 32;
+            int goldIconX = panelX + 20;
+            int goldIconY = goldSectionY + (goldSectionHeight - goldIconSize) / 2;
+            g2.drawImage(goldImage, goldIconX, goldIconY, goldIconSize, goldIconSize, null);
+
+
+            g2.setFont(pixelify26);
+            g2.setColor(new Color(255, 255, 255, 255)); 
+            String goldText = "" + gp.player.getGold() + "g";
+            int goldTextX = goldIconX + goldIconSize + 10;
+            int goldTextY = goldIconY + goldIconSize / 2 + 8;
+
+            g2.setColor(new Color(0, 0, 0, 100));
+            g2.drawString(goldText, goldTextX + 1, goldTextY + 1);
+
+            g2.setColor(Color.WHITE);
+            g2.drawString(goldText, goldTextX, goldTextY);
+        }
+
+        g2.setFont(pixelify18);
+        g2.setColor(new Color(255, 255, 255, 200)); 
+        String currentMap = gp.tileM.mapManager.getCurrentMap();
+        if (currentMap != null && !currentMap.isEmpty()) {
+            String displayName = getFormattedLocationName(currentMap);
+            String mapText = "📍 " + displayName;
+            int mapX = panelX + (panelWidth - g2.getFontMetrics().stringWidth(mapText)) / 2;
+
+            int locBgWidth = g2.getFontMetrics().stringWidth(mapText) + 16;
+            int locBgX = panelX + (panelWidth - locBgWidth) / 2;
+            int locBgY = panelY + 125;
+
+            g2.setColor(new Color(0, 0, 0, 80));
+            g2.fillRoundRect(locBgX, locBgY, locBgWidth, 25, 8, 8);
+
+            g2.setColor(Color.WHITE);
+            g2.drawString(mapText, mapX, locBgY + 18);
+        }
+    }
+
+    private String getFormattedLocationName(String currentMap) {
+        switch (currentMap) {
+            case "insideHouse": return "Inside House";
+            case "farm": return "Farm";
+            case "town": return "Town";
+            case "mountainlake": return "Mountain Lake";
+            case "forestriver": return "Forest River";
+            case "ocean": return "Ocean";
+            default: return currentMap;
         }
     }
 
     public void drawSetupGameInfo(){
+        switch (subState) {
+            case 0: setupGameInfo_top(); break;
+            case 1: break;
+            case 2: break;
+        }
+    }
+    
+    public void setupGameInfo_top() {
         BufferedImage backgroundImage = null;
         BufferedImage userImage = null;
+
+        int frameWidth = gp.tileSize * 10;
+        int frameHeight = gp.tileSize * 9;
+        int frameX = (gp.screenWidth - frameWidth) / 2;
+        int frameY = (gp.screenHeight - frameHeight) / 2 + 40;
 
         try {
             backgroundImage = ImageIO.read(new File("res/menu/menuScreen.png"));
@@ -1253,53 +1339,148 @@ public class UI {
             g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
         }
 
-
-
-        int frameWidth = gp.tileSize * 10;
-        int frameHeight = gp.tileSize * 9;
-
-        int frameX = (gp.screenWidth - frameWidth) / 2;
-        int frameY = (gp.screenHeight - frameHeight) / 2 + 40;
-
         drawSubWindow(g2, frameX, frameY, frameWidth, frameHeight, 1f);
-
 
         g2.setFont(pixelify50);
         String text = "WELCOME TO";
-        int textX = getXforCenteredText(text); 
-        int textY = gp.tileSize  ;
+        int textX = getXforCenteredText(text);
+        int textY = gp.tileSize;
         g2.drawString(text, textX, textY);
 
         if (userImage != null) {
-            g2.drawImage(userImage, textX - 2 * gp.tileSize , textY + 2 *gp.tileSize, 2 * gp.tileSize, 2 * gp.tileSize, null);
+            g2.drawImage(userImage, textX - 2 * gp.tileSize, textY + 2 * gp.tileSize, 2 * gp.tileSize, 2 * gp.tileSize, null);
         }
 
         g2.setFont(pixelify80);
-        textY += gp.tileSize  ;
+        textY += gp.tileSize;
         String text2 = "SPAKBOR HILLS";
-        textX = getXforCenteredText(text2); 
+        textX = getXforCenteredText(text2);
         g2.drawString(text2, textX, textY);
 
-        g2.setFont(pixelify30);
-        textY += gp.tileSize ;
+        g2.setFont(pixelify32);
+        textY += gp.tileSize + 10;
         String text3 = "Name";
-        textX = getXforCenteredText(text3) - 1 * gp.tileSize; 
+        textX = getXforCenteredText(text3) - gp.tileSize - 15;
         g2.drawString(text3, textX, textY);
 
-        g2.setFont(pixelify30);
-        textY += gp.tileSize /2 +5 ;
+        textY += gp.tileSize / 2 + 25;
         String text6 = "Gender";
         g2.drawString(text6, textX, textY);
 
-        g2.setFont(pixelify30);
-        textY += gp.tileSize /2 +5;
+        textY += gp.tileSize / 2 + 15;
         String text4 = "Farm";
-        textX = getXforCenteredText(text4) - 1 * gp.tileSize; 
         g2.drawString(text4, textX, textY);
         textY += gp.tileSize - 42;
         String text5 = "Name";
-        textX = getXforCenteredText(text5) - 1 * gp.tileSize; 
         g2.drawString(text5, textX, textY);
+
+        textX += 2 * gp.tileSize;
+        textY = 3 * gp.tileSize - 25;
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+        int width = 250;
+        int height = 50;
+        text5 = "Ucok";
+
+        g2.setColor(new Color(146, 102, 37));
+        g2.fillRect(textX, textY, width, height);
+
+        String inputText = "";
+
+        if (setupGameInfoNum == 0) {
+            String nameInput = gp.setupGame.getInput();
+            inputText = nameInput.isEmpty() ? "_" : nameInput;
+
+            g2.setColor(new Color(134, 52, 19));
+            g2.fillRect(textX, textY, width, height);
+            int inputX = textX + 10;
+            int inputY = textY + 35;
+
+            g2.setColor(Color.WHITE);
+            gp.setupGame.setName(nameInput);
+            g2.drawString(inputText, inputX, inputY);
+        }
+
+        int inputX1 = textX + 10;
+        int inputY1 = textY + 35;
+        textX -= 148;
+        g2.setColor(new Color(255, 255, 255));
+        g2.drawString(gp.setupGame.getName(), inputX1, inputY1);
+        textX += 148;
+
+        g2.setColor(new Color(0, 0, 0));
+        g2.setStroke(new BasicStroke(3));
+        g2.drawRect(textX, textY, width, height);
+
+        textY += 58;
+        g2.setColor(new Color(146, 102, 37));
+        g2.fillRect(textX, textY, width, height);
+
+        if (setupGameInfoNum == 1) {
+            g2.setColor(new Color(134, 52, 19));
+            g2.fillRect(textX, textY, width, height);
+        }
+
+        String texture = isMale ? "Male" : "Female";
+        textX -= 148;
+        g2.setColor(new Color(255, 255, 255));
+        g2.drawString(texture, textX + 160, textY + 35);
+        textX += 148;
+
+        g2.setColor(new Color(0, 0, 0));
+        g2.setStroke(new BasicStroke(3));
+        g2.drawRect(textX, textY, width, height);
+
+        textY += 57;
+        g2.setColor(new Color(146, 102, 37));
+        g2.fillRect(textX, textY, width, height);
+
+        String inputText2 = "";
+
+        if (setupGameInfoNum == 2) {
+            String nameInput2 = gp.setupGame.getInput2();
+            inputText2 = nameInput2.isEmpty() ? "_" : nameInput2;
+
+            g2.setColor(new Color(134, 52, 19));
+            g2.fillRect(textX, textY, width, height);
+            int inputX = textX + 10;
+            int inputY = textY + 35;
+
+            g2.setColor(Color.WHITE);
+            gp.setupGame.setFarmName(nameInput2);
+            g2.drawString(inputText2, inputX, inputY);
+        }
+
+        int inputX = textX + 10;
+        int inputY = textY + 35;
+        textX -= 148;
+        g2.setColor(new Color(255, 255, 255));
+        g2.drawString(gp.setupGame.getFarmName(), inputX, inputY);
+        textX += 148;
+
+        g2.setColor(new Color(0, 0, 0));
+        g2.setStroke(new BasicStroke(3));
+        g2.drawRect(textX, textY, width, height);
+
+        textY += 80;
+        width += 200;
+        height += 50;
+        int xis = (gp.screenWidth - width) / 2;
+        g2.setColor(new Color(146, 102, 37));
+        g2.fillRect(xis, textY, width, height);
+
+        if (setupGameInfoNum == 3) {
+            g2.setColor(new Color(134, 52, 19));
+            g2.fillRect(xis, textY, width, height);
+        }
+
+        textX -= 148;
+        g2.setColor(new Color(255, 255, 255));
+        g2.setFont(pixelify50);
+        g2.drawString("START THE GAME", xis + 37, textY + 70);
+        textX += 148;
+
+        g2.setColor(new Color(0, 0, 0));
+        g2.drawRect(xis, textY, width, height);
     }
 
     public int getXforCenteredText(String text) {

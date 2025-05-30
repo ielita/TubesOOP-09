@@ -27,8 +27,8 @@ public class food extends Item implements consumable, buysellable {
             String fileName = name + ".png";
             return ImageIO.read(new File("res/items/" + fileName));
         } catch (IOException e) {
-            System.out.println("Image for food " + name + " not found!");
-            return null;
+            e.printStackTrace();
+            return null; 
         }
     }
 
@@ -42,7 +42,7 @@ public class food extends Item implements consumable, buysellable {
     @Override
     public void consume(Player player) {
         player.setEnergy(player.getEnergy() + energy);
-        // Remove item from inventory handled elsewhere
+        player.inventoryManager.removeItem(player.getOnhandItem(), 1);
     }
 
     public void getinfo() {

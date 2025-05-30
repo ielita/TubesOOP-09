@@ -39,10 +39,10 @@ public class Recipe extends Item implements buysellable {
 
     private BufferedImage loadImage(String name) {
         try {
-            String fileName = name + ".png";
+            String fileName = id + ".png";
             return ImageIO.read(new File("res/recipe/" + fileName));
         } catch (IOException e) {
-            System.out.println("Image for recipe " + name + " not found!");
+            e.printStackTrace();
             return null;
         }
     }

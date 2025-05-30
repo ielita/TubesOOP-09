@@ -100,7 +100,7 @@ public class fish extends Item implements buysellable, consumable {
     }
 
     public void consume(Player player) {
-        // Implement the consume logic here
-        System.out.println("Consuming " + getName());
+        player.setEnergy(player.getEnergy() + 1);
+        player.inventoryManager.removeItem(player.getOnhandItem(), 1);
     }
 }

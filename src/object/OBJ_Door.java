@@ -4,12 +4,9 @@ import java.awt.Rectangle;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
-import main.CollisionChecker;
 import main.GamePanel;
-import main.KeyHandler;
 
 public class OBJ_Door extends SuperObject {
-    private CollisionChecker cChecker;
 
     private GamePanel gp;
     public String message = "";
@@ -20,7 +17,6 @@ public class OBJ_Door extends SuperObject {
     public OBJ_Door(GamePanel gp, String destMap, int destX, int destY) {
         this.gp = gp;
         this.keyH = gp.keyH;
-        this.cChecker = gp.cChecker;
         this.destinationMap = destMap;
         this.destinationX = destX;
         this.destinationY = destY;
@@ -42,11 +38,11 @@ public class OBJ_Door extends SuperObject {
     protected void onInteract() {
         if (collision) {
             message = "Going to " + destinationMap + "...";
-            gp.tileM.mapManager.changeMap(destinationMap, destinationX, destinationY);
             if (!gp.tileM.mapManager.getCurrentMap().equals("insideHouse")){
-            gp.player.setEnergy(gp.player.getEnergy()-10);
-            gp.timeM.setMinute(gp.timeM.getMinute() + 15);
+                gp.player.setEnergy(gp.player.getEnergy()-10);
+                gp.timeM.setMinute(gp.timeM.getMinute() + 15);
             }
+            gp.tileM.mapManager.changeMap(destinationMap, destinationX, destinationY);
             collision = false;
         }
     }

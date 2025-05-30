@@ -1,5 +1,7 @@
 package main;
 
+import java.util.Random;
+
 public class TimeManager {
     GamePanel gp;
     private int hour;
@@ -18,8 +20,41 @@ public class TimeManager {
     private final int DUSK_HOUR = 18;
     private final int TRANSITION_DURATION = 2;
     private boolean newDay = false;
+    public Weather weather;
+
+    public class Weather{
+        private final int SUNNY = 0;
+        private final int RAINY = 1;
+        private int[] weatherPattern;
+        public Weather() {
+            weatherPattern = new int[DAYS_PER_SEASON];
+            generateWeatherPattern();
+        }
+        private void generateWeatherPattern() {
+            Random random = new Random();
+            int rainyDays = 2 + random.nextInt(3); 
+            int sunnyDays = DAYS_PER_SEASON - rainyDays;
+            
+            for (int i = 0; i < sunnyDays; i++) {
+                weatherPattern[i] = SUNNY;
+            }
+
+            for (int i = 0; i < rainyDays; i++) {
+                int index;
+                do {
+                    index = random.nextInt(DAYS_PER_SEASON);
+                } while (weatherPattern[index] != SUNNY);
+                weatherPattern[index] = RAINY;
+            }
+        }
+
+        public int getWeatherForDay(int day) {
+            return weatherPattern[day - 1];
+        }
+    }
 
     public TimeManager(GamePanel gp) {
+        this.weather = new Weather();
         this.gp = gp;
         hour = 8;
         minute = 0;
@@ -46,6 +81,12 @@ public class TimeManager {
                             day = 1;
                             currentSeasonIndex = (currentSeasonIndex + 1) % 4;
                             season = SEASONS[currentSeasonIndex];
+                            weather = new Weather();
+                        }
+
+                        if (gp.tileM != null && gp.tileM.mapManager != null) {
+                            gp.tileM.mapManager.rainyDay();
+                            gp.tileM.mapManager.updatePlantGrowth();
                         }
                     }
                 }
@@ -81,6 +122,11 @@ public class TimeManager {
         } else {
             brightness = NIGHT_BRIGHTNESS;
         }
+
+        if (isRainyDay()) {
+            brightness *= 0.7f; 
+        }
+
         gp.tileM.mapManager.setBrightness(brightness);
     }
 
@@ -117,7 +163,9 @@ public class TimeManager {
                 int minute = Integer.parseInt(parts[1]);
                 setTime(hour, minute);
             }
-        } catch (NumberFormatException e) {}
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
     }
 
     public String getTimeString() {
@@ -161,10 +209,16 @@ public class TimeManager {
             day = 1;
             currentSeasonIndex = (currentSeasonIndex + 1) % 4;
             season = SEASONS[currentSeasonIndex];
+            weather = new Weather();
         }
         updateBrightness();
         if (gp != null && gp.tileM != null && gp.tileM.mapManager != null) {
+            gp.tileM.mapManager.rainyDay();
             gp.tileM.mapManager.updatePlantGrowth();
         }
+    }
+
+    public boolean isRainyDay() {
+        return weather.getWeatherForDay(day) == 1;
     }
 }

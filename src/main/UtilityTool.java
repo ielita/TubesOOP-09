@@ -33,6 +33,7 @@ public class UtilityTool {
                 return now >= start || now < end;
             }
         } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
     }

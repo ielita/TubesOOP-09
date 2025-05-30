@@ -69,37 +69,8 @@ public class crop extends Item implements consumable, buysellable{
     // Implement abstract methods
     @Override
     public void consume(Player player) {
-        // Add energy or health to player based on crop type
-        int energyGain = calculateEnergyGain();
-        // player.addEnergy(energyGain); // Uncomment when Player has energy system
-        
-        System.out.println("Consumed " + getName() + "!");
-        System.out.println("Gained " + energyGain + " energy!");
-        
-        // Reduce quantity after consumption
-        if (jumlahCropPanen > 0) {
-            jumlahCropPanen--;
-        }
-    }
-
-    private int calculateEnergyGain() {
-        String cropName = getName().toLowerCase();
-        
-        // Energy gain based on crop type
-        switch (cropName) {
-            case "parsnip": return 25;
-            case "cauliflower": return 35;
-            case "potato": return 30;
-            case "wheat": return 15;
-            case "blueberry": return 20;
-            case "tomato": return 25;
-            case "hot pepper": return 40; // Spicy gives more energy
-            case "melon": return 45; // Large fruit gives more energy
-            case "cranberry": return 15;
-            case "pumpkin": return 50; // Large vegetable
-            case "grape": return 10;
-            default: return 20;
-        }
+        player.setEnergy(player.getEnergy() + 3);
+        player.inventoryManager.removeItem(player.getOnhandItem(), 1);
     }
 
     @Override

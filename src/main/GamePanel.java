@@ -53,6 +53,7 @@ public class GamePanel extends JPanel implements Runnable {
     public boolean fullScreenOn = false;
     public boolean backsoundOn = true;
     private boolean autoSleepTriggered = false;
+    public setupGame setupGame = new setupGame();
 
     public int gameState;
     public final int menuState = 0;
@@ -80,7 +81,6 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void setupGame() {
-        aSetter.setNPC(tileM.mapManager.currentMap);
         aSetter.setObject(tileM.mapManager.currentMap);
         gameState = menuState;
         tempScreen = new BufferedImage(screenWidth, screenHeight, BufferedImage.TYPE_INT_ARGB);
@@ -145,8 +145,8 @@ public class GamePanel extends JPanel implements Runnable {
             timeM.update();
             player.update();
             if (timeM.isNewDay()) {
-                System.out.println("New day detected - updating all plant growth");
                 tileM.mapManager.updatePlantGrowth();
+                tileM.mapManager.rainyDay();
                 autoSleepTriggered = false;
             }
             for (int i = 0; i < obj.length; i++) {
@@ -158,8 +158,6 @@ public class GamePanel extends JPanel implements Runnable {
                 if (OBJ_ShippingBin.goldEarned > 0) {
                     int goldFromShipping = object.OBJ_ShippingBin.goldEarned;
                     player.addGold(goldFromShipping);
-                    System.out.println("You passed out from exhaustion!");
-                    System.out.println("Shipping bin delivered " + goldFromShipping + " gold overnight!");
                     object.OBJ_ShippingBin.goldEarned = 0;
                 }
                 player.sleep();

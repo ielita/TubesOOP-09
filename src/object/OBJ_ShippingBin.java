@@ -17,7 +17,7 @@ public class OBJ_ShippingBin extends SuperObject {
         this.keyH = gp.keyH;
         name = "ShippingBin"; 
         try {
-            image = ImageIO.read(new File("res/objects/shippingbin.png"));
+            image = ImageIO.read(new File(""));
             uTool.scaleImage(image, gp.tileSize, gp.tileSize);
         }
         catch (IOException e) {
@@ -40,6 +40,7 @@ public class OBJ_ShippingBin extends SuperObject {
             message = "Opening shipping bin...";
             gp.gameState = gp.shippingBinState;
             gp.keyH.cursorIndex = 0; 
+            gp.player.setOnhandItem(null);
             return;
         }
     }

@@ -18,6 +18,7 @@ public class KeyHandler implements KeyListener{
     public boolean enterPressed = false;
     public boolean escPressed = false;
     public boolean bPressed = false; 
+    public boolean rPressed = false;
     public int menuOption = 0;
     public int cursorIndex = 0;
     public int cursorIndex2 = 0;
@@ -37,6 +38,7 @@ public class KeyHandler implements KeyListener{
     @Override
     public void keyPressed(KeyEvent e){
         int code = e.getKeyCode();
+        char keyChar = e.getKeyChar();
 
         if(gp.gameState == gp.menuState) {
             if(code == KeyEvent.VK_W || code == KeyEvent.VK_UP) {
@@ -78,9 +80,38 @@ public class KeyHandler implements KeyListener{
             return;
         }
 
-        if(gp.gameState == gp.setupGameInfoState) {
-            if(code == KeyEvent.VK_ENTER) {
-                gp.gameState = gp.playState;
+        if (gp.gameState == gp.setupGameInfoState) {
+            if (code == KeyEvent.VK_UP) gp.ui.setupGameInfoNum = (gp.ui.setupGameInfoNum - 1 + 4) % 4;
+            if (code == KeyEvent.VK_DOWN) gp.ui.setupGameInfoNum = (gp.ui.setupGameInfoNum + 1) % 4;
+
+            if (code == KeyEvent.VK_ENTER) {
+                if (gp.ui.setupGameInfoNum == 3) {
+                    enterPressed = true;
+                    gp.gameState = gp.playState;
+                }
+                if (gp.ui.setupGameInfoNum == 1) {
+                    enterPressed = true;
+                    gp.ui.isMale = !gp.ui.isMale;
+                }
+            }
+
+            if (gp.setupGame.isNameInputActive()) {
+                if (code == KeyEvent.VK_BACK_SPACE) {
+                    if (gp.ui.setupGameInfoNum == 0) {
+                        String current = gp.setupGame.getInput();
+                        if (!current.isEmpty()) gp.setupGame.setInput(current.substring(0, current.length() - 1));
+                    }
+                    if (gp.ui.setupGameInfoNum == 2) {
+                        String current = gp.setupGame.getInput2();
+                        if (!current.isEmpty()) gp.setupGame.setInput2(current.substring(0, current.length() - 1));
+                    }
+                } else if (Character.isLetterOrDigit(keyChar) || keyChar == ' ') {
+                    if (gp.ui.setupGameInfoNum == 0 && gp.setupGame.getInput().length() < 12)
+                        gp.setupGame.setInput(gp.setupGame.getInput() + keyChar);
+                    if (gp.ui.setupGameInfoNum == 2 && gp.setupGame.getInput2().length() < 12)
+                        gp.setupGame.setInput2(gp.setupGame.getInput2() + keyChar);
+                }
+                return;
             }
             return;
         }
@@ -173,10 +204,6 @@ public class KeyHandler implements KeyListener{
 
             List<String> fuels = oven.getAvailableFuels();
 
-            if (code == KeyEvent.VK_P) {
-                // P untuk geser fuel ke kiri
-                cursorIndex2 = (cursorIndex2 - 1 + fuels.size()) % fuels.size();
-            }
             if (code == KeyEvent.VK_O) {
                 // O untuk geser fuel ke kanan
                 cursorIndex2 = (cursorIndex2 + 1) % fuels.size();
@@ -235,7 +262,7 @@ public class KeyHandler implements KeyListener{
                 if (!entries.isEmpty() && cursorIndex < entries.size() && cursorIndex < maxSlots) {
                     Item selected = entries.get(cursorIndex).getKey();
                     if (selected == gp.player.getOnhandItem()) {
-                        gp.player.setOnhandItem(null); // Unset if already selected
+                        gp.player.setOnhandItem(null); 
                     } else {
                         gp.player.setOnhandItem(selected);
                     }
@@ -247,24 +274,17 @@ public class KeyHandler implements KeyListener{
                 
         if (gp.gameState == gp.fishingMiniGameState && gp.fishingMiniGame.isActive()) {
             if (code >= KeyEvent.VK_0 && code <= KeyEvent.VK_9) {
-                int num = code - KeyEvent.VK_0;
-                if (gp.fishingMiniGame.getMax() > 10) {
-                    int current = gp.fishingMiniGame.getInput();
-                    if (current < 1000) { 
-                        gp.fishingMiniGame.setInput(current * 10 + num);
-                    }
-                } else {
-                    gp.fishingMiniGame.setInput(num);
-                }
+                int digit = code - KeyEvent.VK_0;
+                gp.fishingMiniGame.addDigit(digit);
             } else if (code == KeyEvent.VK_BACK_SPACE || code == KeyEvent.VK_DELETE) {
-                gp.fishingMiniGame.setInput(0);
-            }
-
-            if (code == KeyEvent.VK_ENTER && gp.fishingMiniGame.getInput() != 0) {
-                int guess = gp.fishingMiniGame.getInput();
-                gp.fishingMiniGame.processGuess(guess, gp.player);
-                if (!gp.fishingMiniGame.isActive()) {
-                    gp.gameState = gp.fishingResultState;
+                gp.fishingMiniGame.backspace();
+            } else if (code == KeyEvent.VK_ENTER) {
+                int input = gp.fishingMiniGame.getInput();
+                if (input >= gp.fishingMiniGame.getMin() && input <= gp.fishingMiniGame.getMax()) {
+                    gp.fishingMiniGame.processGuess(input, gp.player);
+                    if (!gp.fishingMiniGame.isActive()) {
+                        gp.gameState = gp.fishingResultState;
+                    }
                 }
             }
             return;
@@ -304,7 +324,7 @@ public class KeyHandler implements KeyListener{
                 entries.sort((a, b) -> {
                     boolean aEquip = a.getKey() instanceof items.equipment;
                     boolean bEquip = b.getKey() instanceof items.equipment;
-                    if (aEquip && !bEquip) return -1;
+                    if (aEquip && !bEquip) return -1; 
                     if (!aEquip && bEquip) return 1;
                     return a.getKey().getName().compareToIgnoreCase(b.getKey().getName());
                 });
@@ -383,6 +403,7 @@ public class KeyHandler implements KeyListener{
                                 gp.store.buyItem(currentItem);
                             }
                         } catch (ClassCastException ex) {
+                            System.out.println("Item tidak dapat dibeli: " + currentItem.getName());
                         }
                     }
                 }
@@ -425,10 +446,16 @@ public class KeyHandler implements KeyListener{
             }
         }
 
+        if (code == KeyEvent.VK_R) {
+            rPressed = true;
+            if (gp.player.getOnhandItem() != null && gp.player.getOnhandItem() instanceof consumable) {
+                ((consumable) gp.player.getOnhandItem()).consume(gp.player);
+            }
+        }
+
         if (code == KeyEvent.VK_SHIFT){
             sprintPressed = true;
         }
-
 
         if (code == KeyEvent.VK_I) {
             Item onhand = gp.player.getOnhandItem();
@@ -447,12 +474,10 @@ public class KeyHandler implements KeyListener{
         
         if (code == KeyEvent.VK_1) {
             gp.timeM.skipDay();
-            System.out.println("Day skipped! New date: " + gp.timeM.getDateString());
         }
 
         if (code == KeyEvent.VK_2) {
             gp.player.addGold(100);
-            System.out.println("Added 100 gold! Total: " + gp.player.getGold() + "g");
         }
         
         
@@ -494,6 +519,10 @@ public class KeyHandler implements KeyListener{
 
         if (code == KeyEvent.VK_ESCAPE) {
             escPressed = false;
+        }
+
+        if (code == KeyEvent.VK_R) {
+            rPressed = false;
         }
     }
 

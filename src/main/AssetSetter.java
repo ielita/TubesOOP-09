@@ -2,8 +2,6 @@ package main;
 
 import java.util.List;
 
-import entity.NPC;
-import entity.NPCdata;
 import object.*;
 
 public class AssetSetter {
@@ -50,8 +48,8 @@ public class AssetSetter {
             gp.obj[2].worldY = 16 * gp.tileSize;
 
             gp.obj[3] = new OBJ_ShippingBin(gp);
-            gp.obj[3].worldX = 7 * gp.tileSize;
-            gp.obj[3].worldY = 6 * gp.tileSize;
+            gp.obj[3].worldX = 10 * gp.tileSize;
+            gp.obj[3].worldY = 7 * gp.tileSize;
         }
 
         else if (mapName.equals("town")) {
@@ -96,24 +94,6 @@ public class AssetSetter {
             gp.obj[0] = new OBJ_DoorOpen(gp, "town", 24, 47);
             gp.obj[0].worldX = 7 * gp.tileSize;
             gp.obj[0].worldY = 1 * gp.tileSize;
-        }
-    }
-
-    public void setNPC(String mapName) {
-        for (int i = 0; i < gp.npc.length; i++) {
-            gp.npc[i] = null;
-        }
-
-        List<NPC> allNPCs = NPCdata.getAllNPC(gp);
-
-        int npcIndex = 0;
-        for (NPC npc : allNPCs) {
-            if (mapName.equals("insideHouse") && npcIndex < gp.npc.length) {
-                gp.npc[npcIndex] = npc;
-                npcIndex++;
-                gp.npc[0].worldX = 4 * gp.tileSize;
-                gp.npc[0].worldY = 4 * gp.tileSize;
-            }
         }
     }
 }

@@ -4,12 +4,10 @@ import items.*;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import main.GamePanel;
 import main.InventoryManager;
-import items.Recipe;
 import main.KeyHandler;
 
 public class Player extends Entity {
@@ -171,7 +169,6 @@ public class Player extends Entity {
 
     // Plant seed method
     public void plantSeed() {
-        // Hanya bisa plant di farm
         if (!"farm".equals(gp.tileM.mapManager.getCurrentMap())) {
             return;
         }
@@ -179,37 +176,35 @@ public class Player extends Entity {
         Item onhand = getOnhandItem();
         if (onhand instanceof seed) {
             seed seedToPlant = (seed) onhand;
+            
 
             int currentTile = getFacingTile();
 
-            // Check if tile is tilled
             if (currentTile == 7 || currentTile == 9) {
-                // Initialize plant tracking if not done yet
                 gp.tileM.mapManager.initializePlantTracking();
-
+                
                 int[] coordinates = getFacingTileCoordinates();
                 int col = coordinates[0];
                 int row = coordinates[1];
                 
-                // Plant the seed
                 if (currentTile == 7) {
                     gp.tileM.mapManager.mapTileNum[col][row] = 8;
                 } else if (currentTile == 9) {
                     gp.tileM.mapManager.mapTileNum[col][row] = 10;
                 }
-
+                
                 gp.tileM.mapManager.plantedSeeds[col][row] = seedToPlant;
                 gp.tileM.mapManager.plantGrowth[col][row] = seedToPlant.getGrowthTime();
-
+                
                 removeItemFromInventory(seedToPlant, 1);
-
+                
                 if (!getInventory().containsKey(seedToPlant) || getInventory().get(seedToPlant) <= 0) {
                     setOnhandItem(null);
                 }
-            } else {
+                
                 reduceEnergy(5);
+
             }
-        } else {
         }
     }
 
@@ -439,9 +434,8 @@ public class Player extends Entity {
     }
 
     public void setEnergy(int energy) {
-        this.energy = Math.max(-20, Math.min(100, energy)); // Keep energy between -20 to 100
+        this.energy = Math.max(-20, Math.min(100, energy)); 
 
-        // Auto sleep when energy reaches -20
         if (this.energy <= -20) {
             forceCollapse();
         }
