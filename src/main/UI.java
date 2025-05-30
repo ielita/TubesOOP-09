@@ -449,6 +449,8 @@ public class UI {
         int width = 250;
         int height = 50;
         text5 = "Ucok";
+        g2.setColor(new Color(146, 102, 37));
+        g2.fillRect(textX, textY, width, height);
         if (setupGameInfoNum == 0) {
             
             g2.setColor(new Color(134, 52, 19));
@@ -465,6 +467,8 @@ public class UI {
         g2.drawRect(textX, textY, width, height);
         
         textY +=58;
+        g2.setColor(new Color(146, 102, 37));
+        g2.fillRect(textX, textY, width, height);
         if (setupGameInfoNum == 1) {
             
             g2.setColor(new Color(134, 52, 19));
@@ -482,6 +486,8 @@ public class UI {
         g2.drawRect(textX, textY, width, height);
         
         textY += 57;
+        g2.setColor(new Color(146, 102, 37));
+        g2.fillRect(textX, textY, width, height);
         if (setupGameInfoNum == 2) {
             g2.setColor(new Color(134, 52, 19));
             g2.fillRect(textX, textY, width, height);
@@ -500,6 +506,8 @@ public class UI {
         width+= 200;
         height += 50;
         int xis = (gp.screenWidth - width ) / 2;
+        g2.setColor(new Color(146, 102, 37));
+        g2.fillRect(xis, textY, width, height);
         if (setupGameInfoNum == 3) {
             g2.setColor(new Color(134, 52, 19));
             g2.fillRect(xis, textY, width, height);
