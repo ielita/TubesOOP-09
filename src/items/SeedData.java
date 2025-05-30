@@ -4,145 +4,47 @@ import main.GamePanel;
 import java.util.*;
 
 public class SeedData {
+
+    private static seed createSeed(GamePanel gp, String name, String cropType, 
+                                  int growthTime, int buyPrice, int sellPrice, String season) {
+        return new seed(name, gp, cropType, growthTime, buyPrice, sellPrice, season);
+    }
+
     public static List<seed> getAllSeeds(GamePanel gp) {
         List<seed> list = new ArrayList<>();
 
-        // 1. Parsnip Seeds - 4 days growth
-        seed parsnipSeeds = new seed(
-            "Parsnip Seeds",
-            gp,
-            "A common root vegetable. Takes 1 days to mature.",
-            "Parsnip",
-            1
-        );
-        parsnipSeeds.setHargabeli(20);
-        parsnipSeeds.setHargajual(10);
-        list.add(parsnipSeeds);
+        list.add(createSeed(gp, "Parsnip Seeds", "Parsnip", 1, 20, 0, "Spring"));
+        list.add(createSeed(gp, "Cauliflower Seeds", "Cauliflower", 5, 80, 0, "Spring"));
+        list.add(createSeed(gp, "Potato Seeds", "Potato", 3, 50, 0, "Spring"));
+        list.add(createSeed(gp, "Wheat Seeds", "Wheat", 1, 60, 0, "Spring"));
 
-        // 2. Cauliflower Seeds - 12 days growth
-        seed cauliflowerSeeds = new seed(
-            "Cauliflower Seeds",
-            gp,
-            "A valuable vegetable. Takes 5 days to mature.",
-            "Cauliflower",
-            5
-        );
-        cauliflowerSeeds.setHargabeli(80);
-        cauliflowerSeeds.setHargajual(40);
-        list.add(cauliflowerSeeds);
+        list.add(createSeed(gp, "Blueberry Seeds", "Blueberry", 7, 80, 0, "Summer"));
+        list.add(createSeed(gp, "Tomato Seeds", "Tomato", 3, 50, 0, "Summer"));
+        list.add(createSeed(gp, "Hot Pepper Seeds", "Hot Pepper", 1, 40, 0, "Summer"));
+        list.add(createSeed(gp, "Melon Seeds", "Melon", 4, 80, 0, "Summer"));
 
-        // 3. Potato Seeds - 6 days growth
-        seed potatoSeeds = new seed(
-            "Potato Seeds",
-            gp,
-            "A versatile tuber. Takes 3 days to mature.",
-            "Potato",
-            3
-        );
-        potatoSeeds.setHargabeli(50);
-        potatoSeeds.setHargajual(25);
-        list.add(potatoSeeds);
-
-        // 4. Wheat Seeds - 4 days growth, yields 3
-        seed wheatSeeds = new seed(
-            "Wheat Seeds",
-            gp,
-            "A grain crop. Takes 1 days to mature. Yields 3 crops per harvest.",
-            "Wheat",
-            1
-        );
-        wheatSeeds.setHargabeli(50);
-        wheatSeeds.setHargajual(25);
-        list.add(wheatSeeds);
-
-        // 5. Blueberry Seeds - 13 days growth, yields 3
-        seed blueberrySeeds = new seed(
-            "Blueberry Seeds",
-            gp,
-            "A fruit bush. Takes 7 days to mature. Yields 3 berries per harvest.",
-            "Blueberry",
-            7
-        );
-        blueberrySeeds.setHargabeli(80);
-        blueberrySeeds.setHargajual(40);
-        list.add(blueberrySeeds);
-
-        // 6. Tomato Seeds - 11 days growth
-        seed tomatoSeeds = new seed(
-            "Tomato Seeds",
-            gp,
-            "A popular vegetable. Takes 3 days to mature.",
-            "Tomato",
-            3
-        );
-        tomatoSeeds.setHargabeli(50);
-        tomatoSeeds.setHargajual(25);
-        list.add(tomatoSeeds);
-
-        // 7. Hot Pepper Seeds - 5 days growth
-        seed hotPepperSeeds = new seed(
-            "Hot Pepper Seeds",
-            gp,
-            "A spicy pepper. Takes 1 days to mature.",
-            "Hot Pepper",
-            1
-        );
-        hotPepperSeeds.setHargabeli(40);
-        hotPepperSeeds.setHargajual(20);
-        list.add(hotPepperSeeds);
-
-        // 8. Melon Seeds - 12 days growth
-        seed melonSeeds = new seed(
-            "Melon Seeds",
-            gp,
-            "A large, sweet fruit. Takes 4 days to mature.",
-            "Melon",
-            4
-        );
-        melonSeeds.setHargabeli(80);
-        melonSeeds.setHargajual(40);
-        list.add(melonSeeds);
-
-        // 9. Cranberry Seeds - 7 days growth, yields 10
-        seed cranberrySeeds = new seed(
-            "Cranberry Seeds",
-            gp,
-            "A tart berry bush. Takes 2 days to mature. Yields 10 cranberries per harvest.",
-            "Cranberry",
-            2
-        );
-        cranberrySeeds.setHargabeli(100);
-        cranberrySeeds.setHargajual(50);
-        list.add(cranberrySeeds);
-
-        // 10. Pumpkin Seeds - 13 days growth
-        seed pumpkinSeeds = new seed(
-            "Pumpkin Seeds",
-            gp,
-            "A large orange gourd. Takes 7 days to mature.",
-            "Pumpkin",
-            7
-        );
-        pumpkinSeeds.setHargabeli(150);
-        pumpkinSeeds.setHargajual(75);
-        list.add(pumpkinSeeds);
-
-        // 11. Grape Seeds - 10 days growth, yields 20
-        seed grapeSeeds = new seed(
-            "Grape Seeds",
-            gp,
-            "A vine fruit. Takes 3 days to mature. Yields 20 grapes per harvest.",
-            "Grape",
-            3
-        );
-        grapeSeeds.setHargabeli(60);
-        grapeSeeds.setHargajual(30);
-        list.add(grapeSeeds);
+        list.add(createSeed(gp, "Cranberry Seeds", "Cranberry", 2, 100, 0, "Fall"));
+        list.add(createSeed(gp, "Pumpkin Seeds", "Pumpkin", 7, 150, 0, "Fall"));
+        list.add(createSeed(gp, "Wheat Seeds (Fall)", "Wheat", 1, 60, 0, "Fall"));
+        list.add(createSeed(gp, "Grape Seeds", "Grape", 3, 60, 0, "Fall"));
 
         return list;
     }
 
-    // Get individual seed by name
+    public static List<seed> getSeedsBySeason(GamePanel gp, String season) {
+        List<seed> allSeeds = getAllSeeds(gp);
+        List<seed> seasonSeeds = new ArrayList<>();
+        
+        for (seed s : allSeeds) {
+            if (s.getSeason().equalsIgnoreCase(season)) {
+                seasonSeeds.add(s);
+            }
+        }
+
+        return seasonSeeds;
+    }
+
+
     public static seed getSeedByName(GamePanel gp, String seedName) {
         List<seed> allSeeds = getAllSeeds(gp);
         
@@ -152,10 +54,9 @@ public class SeedData {
             }
         }
         
-        return null; // Seed not found
+        return null; 
     }
     
-    // Get individual seed by crop type
     public static seed getSeedByCropType(GamePanel gp, String cropType) {
         List<seed> allSeeds = getAllSeeds(gp);
         
@@ -165,10 +66,10 @@ public class SeedData {
             }
         }
         
-        return null; // Seed not found
+        return null;
     }
     
-    // Get seed by index (0-10 based on your data)
+
     public static seed getSeedByIndex(GamePanel gp, int index) {
         List<seed> allSeeds = getAllSeeds(gp);
         
@@ -176,52 +77,23 @@ public class SeedData {
             return allSeeds.get(index);
         }
         
-        return null; // Invalid index
+        return null; 
     }
 
-    // Get seeds by crop yield (high yield vs single crop)
-    public static List<seed> getHighYieldSeeds(GamePanel gp) {
-        List<seed> allSeeds = getAllSeeds(gp);
-        List<seed> highYieldSeeds = new ArrayList<>();
-        
-        for (seed s : allSeeds) {
-            if (s.getCropYield() > 1) {
-                highYieldSeeds.add(s);
-            }
-        }
-        
-        return highYieldSeeds;
+
+    public static List<String> getAvailableSeasons() {
+        return Arrays.asList("Spring", "Summer", "Fall");
     }
 
-    // Get seeds by profitability
-    public static List<seed> getProfitableSeeds(GamePanel gp) {
+    public static Map<String, Integer> getSeedCountBySeason(GamePanel gp) {
+        Map<String, Integer> seasonCount = new HashMap<>();
         List<seed> allSeeds = getAllSeeds(gp);
-        List<seed> profitableSeeds = new ArrayList<>();
         
         for (seed s : allSeeds) {
-            if (s.getEstimatedProfit() > 0) {
-                profitableSeeds.add(s);
-            }
+            String season = s.getSeason();
+            seasonCount.put(season, seasonCount.getOrDefault(season, 0) + 1);
         }
         
-        // Sort by profitability (highest first)
-        profitableSeeds.sort((s1, s2) -> 
-            Integer.compare(s2.getEstimatedProfit(), s1.getEstimatedProfit()));
-        
-        return profitableSeeds;
-    }
-
-    // Get seeds by growth time range
-    public static List<seed> getSeedsByGrowthTime(GamePanel gp, int minDays, int maxDays) {
-        List<seed> allSeeds = getAllSeeds(gp);
-        List<seed> filteredSeeds = new ArrayList<>();
-        
-        for (seed s : allSeeds) {
-            if (s.getGrowthTime() >= minDays && s.getGrowthTime() <= maxDays) {
-                filteredSeeds.add(s);
-            }
-        }
-        
-        return filteredSeeds;
+        return seasonCount;
     }
 }

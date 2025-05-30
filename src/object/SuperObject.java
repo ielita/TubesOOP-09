@@ -52,25 +52,6 @@ public class SuperObject{
         return distance < range;
     }
 
-    protected boolean isPlayerFacingMe(GamePanel gp) {
-        String direction = gp.player.direction;
-        int playerX = gp.player.worldX;
-        int playerY = gp.player.worldY;
-
-        // Check the tile in front of the player
-        switch (direction) {
-            case "up":
-                return (playerX == worldX && playerY - gp.tileSize == worldY);
-            case "down":
-                return (playerX == worldX && playerY + gp.tileSize == worldY);
-            case "left":
-                return (playerY == worldY && playerX - gp.tileSize == worldX);
-            case "right":
-                return (playerY == worldY && playerX + gp.tileSize == worldX);
-            default:
-                return false;
-        }
-    }
     
     public void interact(GamePanel gp, KeyHandler keyH) {
         if (keyH != null) {
@@ -88,7 +69,6 @@ public class SuperObject{
         }
     }
     
-    // Override this in subclasses
     protected void onInteract() {}
 
     public void update() {}

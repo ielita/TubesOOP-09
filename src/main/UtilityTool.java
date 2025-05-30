@@ -16,7 +16,7 @@ public class UtilityTool {
     }
 
     public boolean timeInRange(String current, String range) {
-        // Format: "06.00–18.00" atau "23.00–03.00"
+
         try {
             String[] parts = range.split("–");
             if (parts.length != 2) return false;
@@ -25,11 +25,10 @@ public class UtilityTool {
             int end = Integer.parseInt(parts[1].replace(".", ""));
             int now = Integer.parseInt(current.replace(":", ""));
 
-            // Jika range normal (misal 06.00–18.00)
             if (start < end) {
                 return now >= start && now < end;
             } else {
-                // Range lewat tengah malam (misal 23.00–03.00)
+
                 return now >= start || now < end;
             }
         } catch (Exception e) {

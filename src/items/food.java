@@ -3,18 +3,19 @@ import entity.Player;
 import main.GamePanel;
 
 public class food extends Item implements consumable, buysellable {
-    int hargabeli;
-    int hargajual;
-    int energi;
+    private int hargabeli;
+    private int hargajual;
+    private int energi;
 
-    public food(String name, GamePanel gp ,int energi) {
+    public food(String name, GamePanel gp, int energi, int hargabeli, int hargajual) {
         super(name, gp);
         this.energi = energi;
-        this.hargabeli = 0; // Default value
-        this.hargajual = 0; // Default value
+        this.hargabeli = hargabeli;
+        this.hargajual = hargajual;
     }
 
-    public int gethargabeli() {
+
+    public int getHargaBeli() {
         return hargabeli;
     }
 
@@ -39,24 +40,19 @@ public class food extends Item implements consumable, buysellable {
         this.energi = energi;
     }
 
+    public boolean canBeBought() {
+        return hargabeli > 0;
+    }
+
+
+    @Override
+    public void consume(Player player) {
+
+    }
+
+
     @Override
     public void getinfo() {
-        // Provide a suitable implementation for getinfo()
-        System.out.println( "Food [hargabeli=" + hargabeli + ", hargajual=" + hargajual + ", energi=" + energi + "]");
-    }
-    public void consume(Player player) {
-        // Implement the consume logic here
-        System.out.println("Consuming " + getName());
-    }
 
-    public void buy(Item item) {
-        // Implement the buy logic here
-        System.out.println("Buying " + getName());
-    }
-
-    public void sell(Item item) {
-        // Implement the sell logic here
-        System.out.println("Selling " + getName());
-    }
-
+}
 }
