@@ -4,9 +4,20 @@ public class setupGame {
 
     private String name = "Bambang";
     private String[] gender = {"male", "female"};
-    private String farmName = "Bambang Farm";
+    private String farmName = " Farm";
     private String input = "Bambang";
 
+    private String input2 = "Farm";
+
+    public String getInput() { return input; }
+    public String getInput2() { return input2; }
+    public void setInput2(String input2) { 
+        this.input2 = input2; 
+    }
+    public void setInput(String input) {
+        this.input = input;
+    }
+    
     public setupGame() {
     }
 
@@ -18,7 +29,6 @@ public class setupGame {
         this.farmName = farmName;
     }
 
-    public String getInput() { return input; }
     
     private boolean nameInputActive = true;
 
@@ -30,11 +40,12 @@ public class setupGame {
         this.nameInputActive = active;
     }
 
-    public void setInput(String input) {
-        this.input = input;
-    }
     
     public String getName() {
         return name;
+    }
+
+    public String getFarmName() {
+        return farmName;
     }
 }

@@ -145,14 +145,33 @@ public class KeyHandler implements KeyListener{
 
             if (gp.setupGame.isNameInputActive()) {
                 if (code == KeyEvent.VK_BACK_SPACE) {
-                    String current = gp.setupGame.getInput();
-                    if (current.length() > 0) {
-                        gp.setupGame.setInput(current.substring(0, current.length() - 1));
+                    if (gp.ui.setupGameInfoNum == 0){
+                        String current = gp.setupGame.getInput();
+                        if (current.length() > 0) {
+                            gp.setupGame.setInput(current.substring(0, current.length() - 1));
+                        }
                     }
+                    if (gp.ui.setupGameInfoNum == 2){
+                        String current = gp.setupGame.getInput2();
+                        if (current.length() > 0) {
+                            gp.setupGame.setInput2(current.substring(0, current.length() - 1));
+                            }
+                    }
+
                 } else if (Character.isLetterOrDigit(keyChar) || keyChar == ' ') {
-                    String current = gp.setupGame.getInput();
-                    if (current.length() < 12) { // Limit input length
-                        gp.setupGame.setInput(current + keyChar);
+                    
+                    if (gp.ui.setupGameInfoNum == 0){
+                        String current = gp.setupGame.getInput();
+                        if (current.length() < 12) { 
+                            gp.setupGame.setInput(current + keyChar);
+                        }
+
+                    }
+                    if (gp.ui.setupGameInfoNum == 2){
+                        String current = gp.setupGame.getInput2();
+                        if (current.length() < 12) { 
+                            gp.setupGame.setInput2(current + keyChar);
+                        }
                     }
                 } 
 

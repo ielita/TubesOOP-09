@@ -453,41 +453,38 @@ public class UI {
         
         g2.setColor(new Color(146, 102, 37));
         g2.fillRect(textX, textY, width, height);
-        if (setupGameInfoNum == 0) {
 
-            // Always draw name input
-            String inputText = "";
+        // Declare inputText outside
+        String inputText = "";  
+
+        if (setupGameInfoNum == 0) {
             String nameInput = gp.setupGame.getInput();
-            if (!nameInput.isEmpty()) {
-                inputText += nameInput;
-            } else {
-                inputText += "_";
-            }
+            inputText = nameInput.isEmpty() ? "_" : nameInput;
 
             int inputBoxWidth = 400;
             int inputBoxHeight = 60;
             int inputBoxX = (gp.screenWidth - inputBoxWidth) / 2;
             int inputBoxY = gp.tileSize * 5;
 
-            // Draw text
             int textWidth = g2.getFontMetrics().stringWidth(inputText);
 
             g2.setColor(new Color(134, 52, 19));
             g2.fillRect(textX, textY, width, height);
-            int inputX = textX ;
+            int inputX = textX;
             int inputY = textY + 35;
 
             g2.setColor(Color.WHITE);
-            gp.setupGame.setName("haha");
+            gp.setupGame.setName(nameInput); 
             g2.drawString(inputText, inputX, inputY);
 
             System.out.println("Input Text: " + inputText);
-
         }
+
+
+
         
-        System.out.println("Input Text: " + gp.getName());
-
-
+        
+        
         // textX -= 148;
         // g2.setColor(new Color(255, 255, 255));
         // g2.drawString(text5, textX + 150, textY + 35);
@@ -512,23 +509,38 @@ public class UI {
         g2.drawString(text5, textX + 150, textY + 35);
         textX += 148;
 
-
+        
         g2.setColor(new Color(0, 0, 0));
         g2.setStroke(new BasicStroke(3));
         g2.drawRect(textX, textY, width, height);
         
         textY += 57;
+
+        
         g2.setColor(new Color(146, 102, 37));
         g2.fillRect(textX, textY, width, height);
+
+        String inputText2 = "";  
+
         if (setupGameInfoNum == 2) {
+            String nameInput2 = gp.setupGame.getInput2();
+            inputText2 = nameInput2.isEmpty() ? "_" : nameInput2;
+
             g2.setColor(new Color(134, 52, 19));
             g2.fillRect(textX, textY, width, height);
+            int inputX = textX;
+            int inputY = textY + 35;
+
+            g2.setColor(Color.WHITE);
+            gp.setupGame.setFarmName(nameInput2); 
+            g2.drawString(inputText2, inputX, inputY);
             
+            System.out.println("Input Text: " + inputText);
         }
-        textX -= 148;
-        g2.setColor(new Color(255, 255, 255));
-        g2.drawString(text5, textX + 150, textY + 35);
-        textX += 148;
+
+        System.out.println("Input Text1: " + gp.setupGame.getName());
+        System.out.println("Input Text2: " + gp.setupGame.getFarmName());
+        
         
         g2.setColor(new Color(0, 0, 0));
         g2.setStroke(new BasicStroke(3));
