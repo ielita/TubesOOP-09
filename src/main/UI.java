@@ -478,10 +478,14 @@ public class UI {
             int inputY = textY + 35;
 
             g2.setColor(Color.WHITE);
+            gp.setupGame.setName("haha");
             g2.drawString(inputText, inputX, inputY);
 
             System.out.println("Input Text: " + inputText);
+
         }
+        
+        System.out.println("Input Text: " + gp.getName());
 
 
         // textX -= 148;

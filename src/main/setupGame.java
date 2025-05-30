@@ -5,7 +5,7 @@ public class setupGame {
     private String name = "Bambang";
     private String[] gender = {"male", "female"};
     private String farmName = "Bambang Farm";
-    private String input = "hoho";
+    private String input = "Bambang";
 
     public setupGame() {
     }
@@ -33,5 +33,8 @@ public class setupGame {
     public void setInput(String input) {
         this.input = input;
     }
-
+    
+    public String getName() {
+        return name;
+    }
 }
