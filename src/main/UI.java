@@ -807,8 +807,8 @@ public class UI {
 
         int boxWidth = 500;
         int boxHeight = 220;
-        int boxX = gp.getWidth() / 2 - boxWidth / 2;
-        int boxY = gp.getHeight() / 2 - boxHeight / 2;
+        int boxX = (gp.screenWidth - boxWidth) / 2;
+        int boxY = (gp.screenHeight - boxHeight) / 2 ;
 
         g2.setColor(new Color(0, 0, 0, 120));
         g2.fillRoundRect(boxX + 6, boxY + 6, boxWidth, boxHeight, 36, 36);
