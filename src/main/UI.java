@@ -469,9 +469,8 @@ public class UI {
                 gp.stopMusic();
             }
         }
-
-        textX = frameX +  5 * gp.tileSize;
-        textY = frameY + gp.tileSize + gp.tileSize * 7 / 8;
+        textX = frameX +  5 * gp.tileSize+ 10;
+        textY = frameY + gp.tileSize + 20 + gp.tileSize * 7 / 8;
         g2.drawString("w", textX, textY);
 
         textY += gp.tileSize * 6 / 10;
