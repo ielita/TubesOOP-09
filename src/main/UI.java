@@ -32,7 +32,9 @@ public class UI {
     private Font pixelify120;
     private Font pixelify15;
     private Font pixelify50;
-    private Font pixelify30;
+    private Font pixelify60;
+    private Font pixelify70;
+    private Font pixelify32;
     private Font pixelify18;
     private Font pixelify12;
     private Font pixelify20;
@@ -67,7 +69,9 @@ public class UI {
             pixelify120 = pixelify.deriveFont(Font.BOLD, 120f);
             pixelify15 = pixelify.deriveFont(Font.PLAIN, 15f);
             pixelify50 = pixelify.deriveFont(Font.PLAIN, 50f);
-            pixelify30 = pixelify.deriveFont(Font.PLAIN, 30f);
+            pixelify60 = pixelify.deriveFont(Font.PLAIN, 60f);
+            pixelify70 = pixelify.deriveFont(Font.PLAIN, 70f);
+            pixelify32 = pixelify.deriveFont(Font.PLAIN, 32f);
             pixelify18 = pixelify.deriveFont(Font.PLAIN, 18f);
             pixelify80 = pixelify.deriveFont(Font.BOLD, 80f);
             pixelify15 = pixelify.deriveFont(Font.PLAIN, 15f);
@@ -81,7 +85,9 @@ public class UI {
             pixelify120 = new Font("Arial", Font.BOLD, 120);
             pixelify15 = new Font("Arial", Font.PLAIN, 15);
             pixelify50 = new Font("Arial", Font.PLAIN, 50);
-            pixelify30 = new Font("Arial", Font.PLAIN, 30);
+            pixelify60 = new Font("Arial", Font.PLAIN, 60);
+            pixelify70 = new Font("Arial", Font.PLAIN, 70);
+            pixelify32 = new Font("Arial", Font.PLAIN, 32);
             pixelify18 = new Font("Arial", Font.PLAIN, 18);
             pixelify12 = new Font("Arial", Font.PLAIN, 12);
             pixelify20 = new Font("Arial", Font.PLAIN, 20);
@@ -232,7 +238,7 @@ public class UI {
 
 
     public void drawOptionsScreen() {
-        int frameWidth = gp.tileSize * 6;
+        int frameWidth = gp.tileSize * 7;
         int frameHeight = gp.tileSize * 7;
         int frameX = (gp.screenWidth - frameWidth) / 2;
         int frameY = (gp.screenHeight - frameHeight) / 2 ;
@@ -253,15 +259,15 @@ public class UI {
         int textX;
         int textY;
 
-        g2.setFont(pixelify50);
+        g2.setFont(pixelify70);
         String text = "OPTIONS";
         textX = getXforCenteredText(text);
-        textY = frameY + gp.tileSize ;
+        textY = frameY + gp.tileSize + 20 ;
         g2.drawString(text, textX, textY);
         
-        textX = frameX +  gp.tileSize - 25;
+        textX = frameX +  gp.tileSize +10 ;
         
-        g2.setFont(pixelify30);
+        g2.setFont(pixelify32);
 
         textY += gp.tileSize * 7 / 8;
         g2.drawString("Fullscreen", textX, textY);
@@ -327,7 +333,7 @@ public class UI {
         
         
         textX = frameY + 7 * gp.tileSize ;
-        textY = frameY + gp.tileSize * 15/8 ;
+        textY = frameY + gp.tileSize * 15/8 + 20;
 
         if (gp.fullScreenOn) {
             g2.drawString("yes", textX, textY);
@@ -389,18 +395,18 @@ public class UI {
         textX = getXforCenteredText(text2); 
         g2.drawString(text2, textX, textY);
         
-        g2.setFont(pixelify30);
+        g2.setFont(pixelify32);
         textY += gp.tileSize ;
         String text3 = "Name";
         textX = getXforCenteredText(text3) - 1 * gp.tileSize; 
         g2.drawString(text3, textX, textY);
         
-        g2.setFont(pixelify30);
+        g2.setFont(pixelify32);
         textY += gp.tileSize /2 +5 ;
         String text6 = "Gender";
         g2.drawString(text6, textX, textY);
         
-        g2.setFont(pixelify30);
+        g2.setFont(pixelify32);
         textY += gp.tileSize /2 +5;
         String text4 = "Farm";
         textX = getXforCenteredText(text4) - 1 * gp.tileSize; 
@@ -417,20 +423,20 @@ public class UI {
 
 
     public void drawKeyBindings() {
-        int frameWidth = gp.tileSize * 6;
+        int frameWidth = gp.tileSize * 7;
         int frameHeight = gp.tileSize * 7;
-        int frameX = (gp.screenWidth - frameWidth) / 2;
+        int frameX = (gp.screenWidth - frameWidth) / 2 ;
         int frameY = (gp.screenHeight - frameHeight) / 2 ;
         drawsubWindow(frameX, frameY, frameWidth, frameHeight);
 
-        g2.setFont(pixelify50);
+        g2.setFont(pixelify60);
         String text = "KEY BINDINGS";
         int textX = getXforCenteredText(text);
-        int textY = frameY + gp.tileSize;
+        int textY = frameY + gp.tileSize + 20;
         g2.drawString(text, textX, textY);
 
-        g2.setFont(pixelify30);
-        textX = frameX +  gp.tileSize - 25;
+        g2.setFont(pixelify32);
+        textX = frameX +  gp.tileSize + 10;
 
         textY += gp.tileSize * 7 / 8;
         g2.drawString("Move Up", textX, textY);
@@ -815,7 +821,7 @@ public class UI {
         g2.setStroke(new java.awt.BasicStroke(4));
         g2.drawRoundRect(boxX, boxY, boxWidth, boxHeight, 36, 36);
 
-        g2.setFont(pixelify30);
+        g2.setFont(pixelify32);
         g2.setColor(Color.WHITE);
 
         java.util.List<String> lines = new java.util.ArrayList<>();
@@ -1092,7 +1098,7 @@ public class UI {
         g2.setStroke(new java.awt.BasicStroke(4));
         g2.drawRoundRect(descX, descY, descWidth, descHeight, 30, 30);
 
-        g2.setFont(pixelify30);
+        g2.setFont(pixelify32);
         g2.setColor(Color.WHITE);
         String catTitle = "Categories";
         int catTitleX = descX + (descWidth - g2.getFontMetrics().stringWidth(catTitle)) / 2;

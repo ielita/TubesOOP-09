@@ -18,6 +18,7 @@ public class KeyHandler implements KeyListener{
     public int menuOption = 0;
     public int inventoryCursorIndex = 0;
     private final int NUM_OPTIONS = 3;
+    public boolean setupDone = false;
 
     public KeyHandler(GamePanel gp){
         this.gp = gp;
@@ -99,7 +100,12 @@ public class KeyHandler implements KeyListener{
             if(code == KeyEvent.VK_ENTER) {
                 switch(menuOption) {
                     case 0:
-                        gp.gameState = gp.setupGameInfoState;
+                        if (!setupDone) {
+                            gp.gameState = gp.setupGameInfoState;
+                            setupDone = true;
+                        } else {
+                            gp.gameState = gp.playState;
+                        }
                         gp.playMusic(0);
                         break;
                     case 1:
