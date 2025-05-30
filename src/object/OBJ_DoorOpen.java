@@ -30,10 +30,10 @@ public class OBJ_DoorOpen extends SuperObject {
             e.printStackTrace();
         }
 
-        // Completely disable collision
+        
         collision = false;
         
-        // Only use trigger area for map change
+        
         triggerArea = new Rectangle(
             0,    
             0,    
@@ -41,15 +41,15 @@ public class OBJ_DoorOpen extends SuperObject {
             gp.tileSize/2 
         );
         
-        // Set solidArea to zero size to prevent any collision
+        
         solidArea = new Rectangle(0, 0, 0, 0);
     }
 
     
     public void update() {
-        // Check if player is in trigger area
+        
         if (!hasTriggered && isPlayerInRange(gp,64)) {
-            // Instantly change map when player touches trigger area
+            
             message = "Going to " + destinationMap + "...";
             gp.tileM.mapManager.changeMap(destinationMap, destinationX, destinationY);
             if (!gp.tileM.mapManager.getCurrentMap().equals("insideHouse")){

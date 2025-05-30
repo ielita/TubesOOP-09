@@ -1,62 +1,55 @@
 package items;
+
 import entity.Player;
 import main.GamePanel;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 
 public class food extends Item implements consumable, buysellable {
-    int hargabeli;
-    int hargajual;
-    int energi;
+    private int energy;
+    private int hargaBeli;
+    private int hargaJual;
+    private BufferedImage image;
 
-    public food(String name, GamePanel gp ,int energi) {
+    public food(String name,  GamePanel gp, int energy, int hargaBeli, int hargaJual) {
         super(name, gp);
-        this.energi = energi;
-        this.hargabeli = 0; // Default value
-        this.hargajual = 0; // Default value
+        this.energy = energy;
+        this.hargaBeli = hargaBeli;
+        this.hargaJual = hargaJual;
+        this.image = loadImage(name);
     }
 
-    public int gethargabeli() {
-        return hargabeli;
+    private BufferedImage loadImage(String name) {
+        try {
+            // Nama file: res/recipe/[nama makanan].png (spasi diganti _, lowercase)
+            String fileName = name + ".png";
+            return ImageIO.read(new File("res/items/" + fileName));
+        } catch (IOException e) {
+            System.out.println("Image for food " + name + " not found!");
+            return null;
+        }
     }
+
+    public BufferedImage getImage() { return image; }
+
+    public int getEnergy() { return energy; }
+    public int getHargaBeli() { return hargaBeli; }
+    @Override
+    public int getHargaJual() { return hargaJual; }
 
     @Override
-    public int getHargaJual() {
-        return hargajual;
-    }
-
-    public int getEnergi() {
-        return energi;
-    }
-
-    public void sethargabeli(int hargabeli) {
-        this.hargabeli = hargabeli;
-    }
-
-    public void sethargajual(int hargajual) {
-        this.hargajual = hargajual;
-    }
-
-    public void setEnergi(int energi) {
-        this.energi = energi;
-    }
-
-    @Override
-    public void getinfo() {
-        // Provide a suitable implementation for getinfo()
-        System.out.println( "Food [hargabeli=" + hargabeli + ", hargajual=" + hargajual + ", energi=" + energi + "]");
-    }
     public void consume(Player player) {
-        // Implement the consume logic here
-        System.out.println("Consuming " + getName());
+        player.setEnergy(player.getEnergy() + energy);
+        // Remove item from inventory handled elsewhere
     }
 
-    public void buy(Item item) {
-        // Implement the buy logic here
-        System.out.println("Buying " + getName());
+    public void getinfo() {
+        System.out.println("Food [name=" + getName() + ", energy=" + energy + ", hargaBeli=" + hargaBeli + ", hargaJual=" + hargaJual + "]");
     }
-
-    public void sell(Item item) {
-        // Implement the sell logic here
-        System.out.println("Selling " + getName());
+    
+    public boolean canBeBought() {
+        return hargaBeli > 0;
     }
-
 }

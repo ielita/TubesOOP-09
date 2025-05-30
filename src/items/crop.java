@@ -3,7 +3,7 @@ package items;
 import entity.Player;
 import main.GamePanel;
 
-public class crop extends Item implements consumable, buysellable, cookable{
+public class crop extends Item implements consumable, buysellable{
     int hargabeli;
     int hargajual;
     int jumlahCropPanen;
@@ -22,6 +22,11 @@ public class crop extends Item implements consumable, buysellable, cookable{
     @Override
     public int getHargaJual(){
         return hargajual;
+    }
+
+    @Override
+    public int getHargaBeli(){
+        return hargabeli;
     }
     
     public int getjumlahCropPanen(){
@@ -98,65 +103,8 @@ public class crop extends Item implements consumable, buysellable, cookable{
     }
 
     @Override
-    public void sell(Item item) {
-        System.out.println("Selling " + jumlahCropPanen + " " + getName() + " for " + getTotalValue() + "g total");
-        System.out.println("(" + hargajual + "g each)");
-    }
-
-    @Override
-    public void buy(Item item) {
-        if (canBeBought()) {
-            System.out.println("Buying " + jumlahCropPanen + " " + getName() + " for " + (hargabeli * jumlahCropPanen) + "g total");
-            System.out.println("(" + hargabeli + "g each)");
-        } else {
-            System.out.println(getName() + " cannot be purchased from shops!");
-        }
-    }
-
-    @Override
-    public void cook(Item item) {
-        System.out.println("Cooking " + getName() + "...");
-        
-        // Different cooking methods based on crop type
-        String cropName = getName().toLowerCase();
-        switch (cropName) {
-            case "wheat":
-                System.out.println("Grinding wheat into flour...");
-                break;
-            case "tomato":
-                System.out.println("Making tomato sauce...");
-                break;
-            case "potato":
-                System.out.println("Baking potato...");
-                break;
-            case "pumpkin":
-                System.out.println("Making pumpkin pie...");
-                break;
-            case "grape":
-                System.out.println("Fermenting grapes into wine...");
-                break;
-            default:
-                System.out.println("Preparing " + getName() + " dish...");
-                break;
-        }
-        
-        System.out.println("Cooking completed! Nutritional value increased!");
-    }
-
-    @Override
     public void getinfo() {
-        System.out.println("=== Crop Information ===");
-        System.out.println("Name: " + getName());
-        System.out.println("Quantity: " + jumlahCropPanen);
-        System.out.println("Buy Price: " + (canBeBought() ? hargabeli + "g each" : "Cannot be bought"));
-        System.out.println("Sell Price: " + hargajual + "g each");
-        System.out.println("Total Value: " + getTotalValue() + "g");
-        System.out.println("Energy Gain: " + calculateEnergyGain() + " per crop");
-        System.out.println("Can be cooked: Yes");
-        System.out.println("Can be consumed: Yes");
-        if (canBeBought()) {
-            System.out.println("Buy-Sell Profit: " + getBuySellProfit() + "g");
-        }
-        System.out.println("========================");
+
     }
+
 }

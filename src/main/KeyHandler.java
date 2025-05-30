@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import items.*;
+import object.OBJ_Oven;
 
 public class KeyHandler implements KeyListener{
 
@@ -15,9 +16,13 @@ public class KeyHandler implements KeyListener{
     public boolean showDebug = false;
     public boolean sprintPressed = false;
     public boolean enterPressed = false;
+    public boolean escPressed = false;
+    public boolean bPressed = false; 
     public int menuOption = 0;
-    public int inventoryCursorIndex = 0;
+    public int cursorIndex = 0;
+    public int cursorIndex2 = 0;
     private final int NUM_OPTIONS = 3;
+    public boolean setupDone = false;
     
 
     public KeyHandler(GamePanel gp){
@@ -48,8 +53,13 @@ public class KeyHandler implements KeyListener{
             }
             if(code == KeyEvent.VK_ENTER) {
                 switch(menuOption) {
-                    case 0: // Start Game
-                        gp.gameState = gp.playState;
+                    case 0: 
+                        if (!setupDone) {
+                            gp.gameState = gp.setupGameInfoState;
+                            setupDone = true;
+                        } else {
+                            gp.gameState = gp.playState;
+                        }
                         gp.playMusic(0);
                         break;
                     case 1: // Options
@@ -60,6 +70,19 @@ public class KeyHandler implements KeyListener{
                         break;
                 }
             }
+
+            if (code == KeyEvent.VK_ESCAPE){
+                gp.gameState = gp.playState;
+            }
+            
+            return;
+        }
+
+        if(gp.gameState == gp.setupGameInfoState) {
+            if(code == KeyEvent.VK_ENTER) {
+                gp.gameState = gp.playState;
+            }
+            return;
         }
 
         if(gp.gameState == gp.optionsState) {
@@ -115,13 +138,66 @@ public class KeyHandler implements KeyListener{
 
         if (gp.gameState == gp.playState && code == KeyEvent.VK_J) {
             gp.gameState = gp.inventoryState;
-            inventoryCursorIndex = 0; 
+            cursorIndex = 0; 
             return;
 
         } else if (gp.gameState == gp.inventoryState && code == KeyEvent.VK_J) {
             gp.gameState = gp.playState;
             return;
         }
+
+        if (code == KeyEvent.VK_ESCAPE && escPressed == false) {
+            escPressed = true;
+            if (gp.gameState == gp.playState){
+                gp.gameState = gp.optionsState;
+            }
+            else if(gp.gameState == gp.optionsState){
+                gp.gameState = gp.playState;
+            }
+        }
+
+        if (gp.gameState == gp.cookingState) {
+            OBJ_Oven oven = (OBJ_Oven) gp.obj[0];
+            List<Recipe> recipes = oven.getUnlockedRecipes();
+
+            if (code == KeyEvent.VK_W || code == KeyEvent.VK_UP) {
+                cursorIndex = (cursorIndex - 1 + recipes.size()) % recipes.size();
+                cursorIndex2 = 0; // reset fuel index saat pindah resep
+                enterPressed = false;
+            }
+            if (code == KeyEvent.VK_S || code == KeyEvent.VK_DOWN) {
+                cursorIndex = (cursorIndex + 1) % recipes.size();
+                cursorIndex2 = 0;
+                enterPressed = false;
+            }
+
+            List<String> fuels = oven.getAvailableFuels();
+
+            if (code == KeyEvent.VK_P) {
+                // P untuk geser fuel ke kiri
+                cursorIndex2 = (cursorIndex2 - 1 + fuels.size()) % fuels.size();
+            }
+            if (code == KeyEvent.VK_O) {
+                // O untuk geser fuel ke kanan
+                cursorIndex2 = (cursorIndex2 + 1) % fuels.size();
+            }
+
+            if (code == KeyEvent.VK_ENTER && !recipes.isEmpty() && !enterPressed) {
+                enterPressed = true;
+                Recipe selected = recipes.get(cursorIndex);
+                String selectedFuel = fuels.get(cursorIndex2);
+                if (oven.canCook(selected)) {
+                    oven.cook(selected, selectedFuel);
+                    gp.gameState = gp.playState; // kembali ke game utama
+                    enterPressed = false;
+                }
+            }
+            if (code == KeyEvent.VK_ESCAPE) {
+                gp.gameState = gp.playState;
+                enterPressed = false;
+            }
+        }
+
 
         if (gp.gameState == gp.inventoryState) {
             int invSize = gp.player.getInventory().size();
@@ -130,20 +206,20 @@ public class KeyHandler implements KeyListener{
             int maxSlots = cols * rows;
             int visibleSize = Math.min(invSize, maxSlots);
 
-            if (code == KeyEvent.VK_D && inventoryCursorIndex + 1 < visibleSize && (inventoryCursorIndex + 1) % cols != 0) {
-                inventoryCursorIndex++;
+            if (code == KeyEvent.VK_D && cursorIndex + 1 < visibleSize && (cursorIndex + 1) % cols != 0) {
+                cursorIndex++;
             }
 
-            if (code == KeyEvent.VK_A && inventoryCursorIndex % cols != 0) {
-                inventoryCursorIndex--;
+            if (code == KeyEvent.VK_A && cursorIndex % cols != 0) {
+                cursorIndex--;
             }
             
-            if (code == KeyEvent.VK_W && inventoryCursorIndex - cols >= 0) {
-                inventoryCursorIndex -= cols;
+            if (code == KeyEvent.VK_W && cursorIndex - cols >= 0) {
+                cursorIndex -= cols;
             }
             
-            if (code == KeyEvent.VK_S && inventoryCursorIndex + cols < visibleSize) {
-                inventoryCursorIndex += cols;
+            if (code == KeyEvent.VK_S && cursorIndex + cols < visibleSize) {
+                cursorIndex += cols;
             }
             
             if (code == KeyEvent.VK_ENTER) {
@@ -156,8 +232,8 @@ public class KeyHandler implements KeyListener{
                     return a.getKey().getName().compareToIgnoreCase(b.getKey().getName());
                 });
 
-                if (!entries.isEmpty() && inventoryCursorIndex < entries.size() && inventoryCursorIndex < maxSlots) {
-                    Item selected = entries.get(inventoryCursorIndex).getKey();
+                if (!entries.isEmpty() && cursorIndex < entries.size() && cursorIndex < maxSlots) {
+                    Item selected = entries.get(cursorIndex).getKey();
                     if (selected == gp.player.getOnhandItem()) {
                         gp.player.setOnhandItem(null); // Unset if already selected
                     } else {
@@ -202,25 +278,25 @@ public class KeyHandler implements KeyListener{
 
         if (gp.gameState == gp.shippingBinState) {
             int invSize = gp.player.getInventory().size();
-            int cols = 8; // Sesuaikan dengan UI
+            int cols = 8;
             int rows = 4;
             int maxSlots = cols * rows;
             int visibleSize = Math.min(invSize, maxSlots);
 
-            if (code == KeyEvent.VK_D && inventoryCursorIndex + 1 < visibleSize && (inventoryCursorIndex + 1) % cols != 0) {
-                inventoryCursorIndex++;
+            if (code == KeyEvent.VK_D && cursorIndex + 1 < visibleSize && (cursorIndex + 1) % cols != 0) {
+                cursorIndex++;
             }
 
-            if (code == KeyEvent.VK_A && inventoryCursorIndex % cols != 0) {
-                inventoryCursorIndex--;
+            if (code == KeyEvent.VK_A && cursorIndex % cols != 0) {
+                cursorIndex--;
             }
 
-            if (code == KeyEvent.VK_W && inventoryCursorIndex - cols >= 0) {
-                inventoryCursorIndex -= cols;
+            if (code == KeyEvent.VK_W && cursorIndex - cols >= 0) {
+                cursorIndex -= cols;
             }
 
-            if (code == KeyEvent.VK_S && inventoryCursorIndex + cols < visibleSize) {
-                inventoryCursorIndex += cols;
+            if (code == KeyEvent.VK_S && cursorIndex + cols < visibleSize) {
+                cursorIndex += cols;
             }
 
             if (code == KeyEvent.VK_ENTER) {
@@ -232,8 +308,8 @@ public class KeyHandler implements KeyListener{
                     if (!aEquip && bEquip) return 1;
                     return a.getKey().getName().compareToIgnoreCase(b.getKey().getName());
                 });
-                if (!entries.isEmpty() && inventoryCursorIndex < entries.size() && inventoryCursorIndex < maxSlots) {
-                    Item selected = entries.get(inventoryCursorIndex).getKey();
+                if (!entries.isEmpty() && cursorIndex < entries.size() && cursorIndex < maxSlots) {
+                    Item selected = entries.get(cursorIndex).getKey();
                     gp.player.setOnhandItem(selected);
                 }
 
@@ -242,35 +318,80 @@ public class KeyHandler implements KeyListener{
                 Item onhandItem = gp.player.getOnhandItem();
 
                 if (onhandItem == null){
-                    System.out.println("No item selected to sell!");
+                    return;
+                }
+
+                if (onhandItem instanceof seed) {
                     return;
                 }
 
                 if (onhandItem instanceof buysellable){
-
                     buysellable sellableItem = (buysellable) onhandItem;
                     int sellPrice = sellableItem.getHargaJual();
                     String itemName = onhandItem.getName();
 
-                    // Remove item from inventory
                     gp.player.inventoryManager.removeItem(onhandItem, 1);
 
-                    // Add gold to shipping bin
                     object.OBJ_ShippingBin.goldEarned += sellPrice;
-
-                    System.out.println("Sold " + itemName + " for " + sellPrice + " gold");
-                    System.out.println("Total gold in shipping bin: " + object.OBJ_ShippingBin.goldEarned);
-                }
-                else {
-                    System.out.println("Item " + onhandItem.getName() + " cannot be sold!");
                 }
             }
 
             if (code == KeyEvent.VK_I){
                 gp.gameState = gp.playState;
             }
-            return; 
-        }       
+            return;
+        }
+
+        if (gp.gameState == gp.storeState) {
+            if (code == KeyEvent.VK_W) {
+                if (gp.store != null) {
+                    gp.store.nextItem();
+                }
+            }
+            if (code == KeyEvent.VK_S) {
+                if (gp.store != null) {
+                    gp.store.prevItem();
+                }
+            }
+            if (code == KeyEvent.VK_A) {
+                if (gp.store != null) {
+                    gp.store.prevItemInRow();
+                }
+            }
+            if (code == KeyEvent.VK_D) {
+                if (gp.store != null) {
+                    gp.store.nextItemInRow();
+                }
+            }
+            if (code == KeyEvent.VK_O) {
+                if (gp.store != null) {
+                    gp.store.prevCategory();
+                }
+            }
+            if (code == KeyEvent.VK_P) {
+                if (gp.store != null) {
+                    gp.store.nextCategory();
+                }
+            }
+            if (code == KeyEvent.VK_ENTER) {
+                if (gp.store != null) {
+                    Item currentItem = gp.store.getCurrentItem();
+                    if (currentItem != null) {
+                        try {
+                            int price = ((buysellable) currentItem).getHargaBeli();
+                            if (gp.player.getGold() >= price) {
+                                gp.store.buyItem(currentItem);
+                            }
+                        } catch (ClassCastException ex) {
+                        }
+                    }
+                }
+            }
+            if (code == KeyEvent.VK_B) {
+                gp.gameState = gp.playState;
+            }
+            return;
+        }
 
         if (gp.gameState != gp.playState) {
             return;
@@ -288,17 +409,20 @@ public class KeyHandler implements KeyListener{
         if (code == KeyEvent.VK_D){
             rightPressed = true;
         }
-        if (code == KeyEvent.VK_ESCAPE){
-            if (gp.gameState == gp.playState){
-                gp.gameState = gp.optionsState;
-            }
-            else if(gp.gameState == gp.optionsState){
-                gp.gameState = gp.playState;
-            }
-        }
 
         if (code == KeyEvent.VK_O){
             showDebug = !showDebug;
+        }
+
+        if (code == KeyEvent.VK_B) {
+            try {
+                if (gp.store == null) {
+                    gp.store = new Store(gp);
+                }
+                gp.gameState = gp.storeState;
+            } catch (Exception ex) {
+                gp.gameState = gp.playState;
+            }
         }
 
         if (code == KeyEvent.VK_SHIFT){
@@ -318,7 +442,7 @@ public class KeyHandler implements KeyListener{
    
         if (code == KeyEvent.VK_J) {
             gp.gameState = gp.inventoryState;
-            inventoryCursorIndex = 0;
+            cursorIndex = 0;
         }
         
         if (code == KeyEvent.VK_1) {
@@ -362,6 +486,14 @@ public class KeyHandler implements KeyListener{
         }
         if (code == KeyEvent.VK_SHIFT) {
             sprintPressed = false;
+        }
+
+        if (code == KeyEvent.VK_ENTER) {
+            enterPressed = false;
+        }
+
+        if (code == KeyEvent.VK_ESCAPE) {
+            escPressed = false;
         }
     }
 

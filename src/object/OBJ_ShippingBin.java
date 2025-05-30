@@ -5,22 +5,17 @@ import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import main.GamePanel;
-import main.InventoryManager;
 
 public class OBJ_ShippingBin extends SuperObject {
 
     private GamePanel gp;
     public String message = "";
-    private InventoryManager inventory;
-    public static int goldEarned = 0; // Keep this to accumulate gold
+    public static int goldEarned = 0; 
 
     public OBJ_ShippingBin(GamePanel gp) {
         this.gp = gp;
         this.keyH = gp.keyH;
-        name = "ShippingBin"; // Fix name
-        this.inventory = gp.player.inventoryManager;
-
-
+        name = "ShippingBin"; 
         try {
             image = ImageIO.read(new File("res/objects/shippingbin.png"));
             uTool.scaleImage(image, gp.tileSize, gp.tileSize);
@@ -35,8 +30,8 @@ public class OBJ_ShippingBin extends SuperObject {
 
     @Override
     public void update() {
-        // Remove all gold processing logic from here
-        // This now does nothing or handle other shipping bin updates
+        
+        
     }
 
     @Override
@@ -44,7 +39,7 @@ public class OBJ_ShippingBin extends SuperObject {
         if (collision) {
             message = "Opening shipping bin...";
             gp.gameState = gp.shippingBinState;
-            gp.keyH.inventoryCursorIndex = 0; 
+            gp.keyH.cursorIndex = 0; 
             return;
         }
     }
