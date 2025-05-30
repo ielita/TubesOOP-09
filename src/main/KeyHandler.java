@@ -32,6 +32,7 @@ public class KeyHandler implements KeyListener{
     @Override
     public void keyPressed(KeyEvent e){
         int code = e.getKeyCode();
+        char keyChar = e.getKeyChar();
 
         if (gp.gameState == gp.storeState) {
             if (code == KeyEvent.VK_W) {
@@ -141,6 +142,23 @@ public class KeyHandler implements KeyListener{
                     gp.gameState = gp.playState;
                 }
             }
+
+            if (gp.setupGame.isNameInputActive()) {
+                if (code == KeyEvent.VK_BACK_SPACE) {
+                    String current = gp.setupGame.getInput();
+                    if (current.length() > 0) {
+                        gp.setupGame.setInput(current.substring(0, current.length() - 1));
+                    }
+                } else if (Character.isLetterOrDigit(keyChar) || keyChar == ' ') {
+                    String current = gp.setupGame.getInput();
+                    if (current.length() < 12) { // Limit input length
+                        gp.setupGame.setInput(current + keyChar);
+                    }
+                } 
+
+                return;
+}
+
 
             return;
         }

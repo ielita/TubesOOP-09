@@ -73,6 +73,7 @@ public class GamePanel extends JPanel implements Runnable{
     public boolean backsoundOn = true; 
 
     private boolean autoSleepTriggered = false;
+    public setupGame setupGame = new setupGame();
     
     public GamePanel(){
         this.setPreferredSize(new Dimension(screenWidth,screenHeight));
