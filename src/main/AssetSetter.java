@@ -20,9 +20,14 @@ public class AssetSetter {
             gp.obj[0] = new OBJ_Oven(gp);
             gp.obj[0].worldX = 2 * gp.tileSize;
             gp.obj[0].worldY = 1 * gp.tileSize;
+<<<<<<< Updated upstream
             ((OBJ_Oven)gp.obj[0]).setCoalUseCount(gp.player.getCoalUseCount());
 
             gp.obj[1] = new OBJ_Door(gp, "farm", 3, 8);
+=======
+            
+            gp.obj[1] = new OBJ_Door(gp, "farm", 4, 8);
+>>>>>>> Stashed changes
             gp.obj[1].worldX = 12 * gp.tileSize;
             gp.obj[1].worldY = 23 * gp.tileSize;
 
@@ -36,9 +41,15 @@ public class AssetSetter {
         }
 
         else if (mapName.equals("farm")) {
+<<<<<<< Updated upstream
             gp.obj[0] = new OBJ_DoorOpen(gp, "insideHouse", 2, 3);
             gp.obj[0].worldX = 3 * gp.tileSize;
             gp.obj[0].worldY = 6 * gp.tileSize;
+=======
+            gp.obj[0] = new OBJ_DoorOpen(gp, "insideHouse", 12, 22);
+            gp.obj[0].worldX = (int)(4.5 * gp.tileSize);
+            gp.obj[0].worldY = (int)(6.3 * gp.tileSize);
+>>>>>>> Stashed changes
 
             gp.obj[1] = new OBJ_DoorOpen(gp, "town", 3, 21);
             gp.obj[1].worldX = 31 * gp.tileSize;
