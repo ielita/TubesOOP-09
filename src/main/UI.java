@@ -1132,7 +1132,7 @@ public class UI {
     private void drawTopRightInfoPanel() {
         int panelWidth = 280;
         int panelHeight = 160;
-        int panelX = gp.screenWidth - panelWidth - 20;
+        int panelX = gp.screenWidth - panelWidth - 40;
         int panelY = 20;
         
         g2.setColor(new Color(139, 69, 19, 240)); 

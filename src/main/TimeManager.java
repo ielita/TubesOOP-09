@@ -1,4 +1,5 @@
 package main;
+import java.util.Random;
 
 public class TimeManager {
     GamePanel gp;
@@ -11,6 +12,7 @@ public class TimeManager {
     private final int MINUTES_PER_UPDATE = 5;
     private final int DAYS_PER_SEASON = 10;   
     private final String[] SEASONS = {"Spring", "Summer", "Fall", "Winter"};
+
     private int currentSeasonIndex;
     
     private final float DAY_BRIGHTNESS = 1.0f;
@@ -20,8 +22,43 @@ public class TimeManager {
     private final int TRANSITION_DURATION = 2; 
 
     private boolean newDay = false; 
+    
+    public class Weather{
+        private final int SUNNY = 0;
+        private final int RAINY = 1;
+        private int[] weatherPattern;
+        public Weather() {
+            weatherPattern = new int[DAYS_PER_SEASON];
+            generateWeatherPattern();
+        }
+        private void generateWeatherPattern() {
+            Random random = new Random();
+            int rainyDays = 2; 
+            int sunnyDays = DAYS_PER_SEASON - rainyDays;
+            for (int i = 0; i < sunnyDays; i++) {
+                weatherPattern[i] = SUNNY;
+            }
+
+            for (int i = 0; i < rainyDays; i++) {
+                int index;
+                do {
+                    index = random.nextInt(DAYS_PER_SEASON);
+                } while (weatherPattern[index] != SUNNY);
+                weatherPattern[index] = RAINY;
+            }
+        }
+
+        public int getWeatherForDay(int day) {
+            return weatherPattern[day - 1];
+        }
+
+
+    }
+
+    public Weather weather;
 
     public TimeManager(GamePanel gp) {
+        this.weather = new Weather();
         this.gp = gp;
         hour = 8;      
         minute = 0;
@@ -45,12 +82,23 @@ public class TimeManager {
                     if (hour >= 24) {
                         hour = 0;
                         day++;
-                        newDay = true; 
+                        newDay = true;
+                        
+                        System.out.println("New day started: Day " + day);
 
+                        // Check for season change first
                         if (day > DAYS_PER_SEASON) {
                             day = 1;
                             currentSeasonIndex = (currentSeasonIndex + 1) % 4;
                             season = SEASONS[currentSeasonIndex];
+                            weather = new Weather(); // Generate new weather for new season
+                            System.out.println("New season: " + season);
+                        }
+
+                        // Apply weather effects and update plants
+                        if (gp != null && gp.tileM != null && gp.tileM.mapManager != null) {
+                            gp.tileM.mapManager.rainyDay(); // This will now work
+                            gp.tileM.mapManager.updatePlantGrowth();
                         }
                     }
                 }
@@ -88,6 +136,9 @@ public class TimeManager {
             brightness = NIGHT_BRIGHTNESS;
         }
         
+        if (isRainyDay()) {
+            brightness *= 0.7f; 
+        }
         gp.tileM.mapManager.setBrightness(brightness);
     }
     
@@ -165,14 +216,25 @@ public class TimeManager {
         minute = 0;
         day++;
         newDay = true;
+        
+        System.out.println("Skipping to day: " + day);
+        
         if (day > DAYS_PER_SEASON) {
             day = 1;
             currentSeasonIndex = (currentSeasonIndex + 1) % 4;
             season = SEASONS[currentSeasonIndex];
+            weather = new Weather();
+            System.out.println("New season: " + season);
         }
+        
         updateBrightness();
+        
         if (gp != null && gp.tileM != null && gp.tileM.mapManager != null) {
+            gp.tileM.mapManager.rainyDay();
             gp.tileM.mapManager.updatePlantGrowth();
         }
+    }
+    public boolean isRainyDay() {
+        return weather.getWeatherForDay(day) == 1;
     }
 }

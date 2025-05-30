@@ -84,6 +84,48 @@ public class MapManager {
         gp.aSetter.setObject(newMap);
         gp.player.setPosition(playerX, playerY);
     }
+
+    public void rainyDay() {
+        if (gp.timeM.isRainyDay()) {
+            if ("farm".equals(currentMap) && wateredToday != null) {
+                for (int col = 0; col < maxWorldCol; col++) {
+                    for (int row = 0; row < maxWorldRow; row++) {
+                        int currentTile = mapTileNum[col][row];
+
+                        if (currentTile == 7 || currentTile == 8){
+                            wateredToday[col][row] = true;
+                        }
+
+                        if (currentTile == 8) { 
+                            mapTileNum[col][row] = 10;
+                        } else if (currentTile == 7) {
+                            mapTileNum[col][row] = 9;
+                        }
+                    }
+                }
+            }
+            if (!"farm".equals(currentMap) && savedFarmWatered != null) {
+                for (int col = 0; col < savedFarmWatered.length; col++) {
+                    for (int row = 0; row < savedFarmWatered[col].length; row++) {
+                        if (savedFarmTiles != null) {
+                            int currentTile = savedFarmTiles[col][row];
+
+                        if (currentTile == 7 || currentTile == 8){
+                            savedFarmWatered[col][row] = true;
+                        }
+
+                            if (currentTile == 8) {
+                                savedFarmTiles[col][row] = 10;
+                            } else if (currentTile == 7) {
+                                savedFarmTiles[col][row] = 9;
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+        }
+    }
     
     private void saveFarmState() {
         if (mapTileNum == null) return;
@@ -110,7 +152,7 @@ public class MapManager {
     private void restoreFarmState() {
         if (savedFarmTiles == null) return;
         for (int col = 0; col < maxWorldCol; col++) {
-            for (int row = 0; row < maxWorldCol; row++) {
+            for (int row = 0; row < maxWorldRow; row++) { 
                 mapTileNum[col][row] = savedFarmTiles[col][row];
             }
         }
@@ -138,7 +180,10 @@ public class MapManager {
                     mapTileNum[col][row] = 7;
                 } else if (currentTile == 10) {
                     mapTileNum[col][row] = 8;
-                    if (wateredToday[col][row] && plantGrowth[col][row] > 0) {
+                    if (wateredToday[col][row] 
+                    && plantGrowth[col][row] > 0 
+                    && plantedSeeds[col][row] != null 
+                    && plantedSeeds[col][row].getSeason().equalsIgnoreCase(gp.timeM.getSeason())) {
                         plantGrowth[col][row]--;
                         if (plantGrowth[col][row] <= 0) {
                             mapTileNum[col][row] = 11;
@@ -158,7 +203,10 @@ public class MapManager {
                     savedFarmTiles[col][row] = 7;
                 } else if (currentTile == 10) {
                     savedFarmTiles[col][row] = 8;
-                    if (savedFarmWatered[col][row] && savedFarmGrowth[col][row] > 0) {
+                    if (savedFarmWatered[col][row] 
+                    && savedFarmGrowth[col][row] > 0 
+                    && savedFarmSeeds[col][row] != null 
+                    && savedFarmSeeds[col][row].getSeason().equalsIgnoreCase(gp.timeM.getSeason())) {
                         savedFarmGrowth[col][row]--;
                         if (savedFarmGrowth[col][row] <= 0) {
                             savedFarmTiles[col][row] = 11;

@@ -153,6 +153,7 @@ public class GamePanel extends JPanel implements Runnable{
             player.update();
             if (timeM.isNewDay()) {
                 tileM.mapManager.updatePlantGrowth();
+                tileM.mapManager.rainyDay();
                 autoSleepTriggered = false;
             }
             for(int i = 0; i < obj.length; i++) {

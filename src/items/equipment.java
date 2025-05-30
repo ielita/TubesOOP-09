@@ -54,16 +54,15 @@ public class equipment extends Item{
                     } else if (currentTile == 8) {
                         gp.tileM.mapManager.mapTileNum[col][row] = 10;
                         
-                        if (gp.tileM.mapManager.wateredToday == null) {
-                            gp.tileM.mapManager.wateredToday = new boolean[gp.tileM.mapManager.maxWorldCol][gp.tileM.mapManager.maxWorldRow];
-                        }
+                        if (gp.tileM.mapManager.wateredToday != null) {
                         gp.tileM.mapManager.wateredToday[col][row] = true;
-                    }
+                        }
                     
                     player.setEnergy(player.getEnergy() - 5);
                     gp.timeM.setMinute(gp.timeM.getMinute() + 5);
                 }
             }
+        }
         }
         
         if (getName().equals("Sickle")) {
