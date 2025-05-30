@@ -99,7 +99,7 @@ public class KeyHandler implements KeyListener{
             if(code == KeyEvent.VK_ENTER) {
                 switch(menuOption) {
                     case 0:
-                        gp.gameState = gp.playState;
+                        gp.gameState = gp.setupGameInfoState;
                         gp.playMusic(0);
                         break;
                     case 1:
@@ -108,6 +108,13 @@ public class KeyHandler implements KeyListener{
                         System.exit(0);
                         break;
                 }
+            }
+            return;
+        }
+
+        if(gp.gameState == gp.setupGameInfoState) {
+            if(code == KeyEvent.VK_ENTER) {
+                gp.gameState = gp.playState;
             }
             return;
         }

@@ -1,12 +1,14 @@
 package main;
 
 import java.awt.Color;
+import java.awt.Composite;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.image.BufferedImage;
 import java.util.Map.Entry;
 import java.awt.FontFormatException;
+import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.io.File;
 import java.io.IOException;
@@ -49,6 +51,7 @@ public class UI {
 
     public int commandNum = 0;
     public int keyBindNum = 0;
+    public int setupGameInfoNum = 0;
 
     int subState = 0;
 
@@ -204,12 +207,29 @@ public class UI {
         Color backgroundColor = new Color(0, 0, 0, 180);
         g2.setColor(backgroundColor);
         g2.fillRoundRect(frameX, frameY, frameWidth, frameHeight, 35, 35);
-
+        
         Color borderColor = new Color(255, 255, 255);
         g2.setColor(borderColor);
         g2.setStroke(new java.awt.BasicStroke(5));
         g2.drawRoundRect(frameX + 5, frameY + 5, frameWidth - 10, frameHeight - 10, 25, 25);
     }
+    
+    public void drawSubWindow(Graphics2D g2, int x, int y, int width, int height, float opacity) {
+        Composite originalComposite = g2.getComposite();
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, opacity));
+        Color backgroundColor = new Color(244, 200, 125);
+        g2.setColor(backgroundColor);
+        g2.fillRoundRect(x, y, width, height, 35, 35); 
+        
+        
+        Color borderColor = new Color(134, 52, 19);
+        g2.setColor(borderColor);
+        g2.setStroke(new java.awt.BasicStroke(10));
+        g2.drawRoundRect(x + 5, y + 5, width - 10, height - 10, 25, 25);
+
+        g2.setComposite(originalComposite);
+    }
+
 
     public void drawOptionsScreen() {
         int frameWidth = gp.tileSize * 6;
@@ -325,20 +345,73 @@ public class UI {
     }
 
     public void drawSetupGameInfo(){
-        int frameWidth = gp.tileSize * 6;
-        int frameHeight = gp.tileSize * 7;
+        BufferedImage backgroundImage = null;
+        BufferedImage userImage = null;
+
+        try {
+            backgroundImage = ImageIO.read(new File("res/menu/menuScreen.png"));
+            userImage = ImageIO.read(new File("res/player/player_down_1.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if (backgroundImage != null) {
+            g2.drawImage(backgroundImage, 0, 0, gp.screenWidth, gp.screenHeight, null);
+        } else {
+            g2.setColor(new Color(0, 0, 0));
+            g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
+        }
+
+
+
+        int frameWidth = gp.tileSize * 10;
+        int frameHeight = gp.tileSize * 9;
+
         int frameX = (gp.screenWidth - frameWidth) / 2;
-        int frameY = (gp.screenHeight - frameHeight) / 2 ;
-        drawsubWindow(frameX, frameY, frameWidth, frameHeight);
+        int frameY = (gp.screenHeight - frameHeight) / 2 + 40;
+        
+        drawSubWindow(g2, frameX, frameY, frameWidth, frameHeight, 1f);
 
+        
         g2.setFont(pixelify50);
-        String text = "SETUP GAME";
-        int textX = getXforCenteredText(text);
-        int textY = frameY + gp.tileSize;
+        String text = "WELCOME TO";
+        int textX = getXforCenteredText(text); 
+        int textY = gp.tileSize  ;
         g2.drawString(text, textX, textY);
-
+        
+        if (userImage != null) {
+            g2.drawImage(userImage, textX - 2 * gp.tileSize , textY + 2 *gp.tileSize, 2 * gp.tileSize, 2 * gp.tileSize, null);
+        }
+        
+        g2.setFont(pixelify80);
+        textY += gp.tileSize  ;
+        String text2 = "SPAKBOR HILLS";
+        textX = getXforCenteredText(text2); 
+        g2.drawString(text2, textX, textY);
+        
         g2.setFont(pixelify30);
-        textX = frameX +  gp.tileSize - 25;
+        textY += gp.tileSize ;
+        String text3 = "Name";
+        textX = getXforCenteredText(text3) - 1 * gp.tileSize; 
+        g2.drawString(text3, textX, textY);
+        
+        g2.setFont(pixelify30);
+        textY += gp.tileSize /2 +5 ;
+        String text6 = "Gender";
+        g2.drawString(text6, textX, textY);
+        
+        g2.setFont(pixelify30);
+        textY += gp.tileSize /2 +5;
+        String text4 = "Farm";
+        textX = getXforCenteredText(text4) - 1 * gp.tileSize; 
+        g2.drawString(text4, textX, textY);
+        textY += gp.tileSize - 42;
+        String text5 = "Name";
+        textX = getXforCenteredText(text5) - 1 * gp.tileSize; 
+        g2.drawString(text5, textX, textY);
+        
+
+
 
     }
 
@@ -495,7 +568,7 @@ public class UI {
 
         g2.setFont(pixelify40);
 
-        text = "START GAME";
+        text = "NEW GAME";
         x = getXforCenteredText(text);
         y += gp.tileSize * 2;
         
