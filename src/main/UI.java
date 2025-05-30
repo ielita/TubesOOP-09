@@ -193,6 +193,10 @@ public class UI {
             g2.setColor(Color.WHITE);
             int init = 360;
             int adder = 20;
+            g2.drawString("Player Name: " + gp.setupGame.getName(), 10, init);
+            init += adder;
+            g2.drawString("Player Farm Name: " + gp.setupGame.getFarmName(), 10, init);
+            init += adder;
             g2.drawString("Player World X: " + gp.player.worldX, 10, init);
             init += adder;
             g2.drawString("Player World Y: " + gp.player.worldY, 10, init);
