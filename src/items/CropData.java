@@ -5,12 +5,10 @@ import java.util.*;
 
 public class CropData {
     
-    // ========== FACTORY METHOD ==========
     private static crop createCrop(GamePanel gp, String name, int hargabeli, int hargajual, int jumlah) {
         return new crop(name, gp, hargabeli, hargajual, jumlah);
     }
     
-    // ========== MAIN DATA METHOD ==========
     public static List<crop> getAllCrops(GamePanel gp) {
         List<crop> list = new ArrayList<>();
 

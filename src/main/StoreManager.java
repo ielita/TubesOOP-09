@@ -71,7 +71,9 @@ public class StoreManager {
                 }
                 break;
             case "Misc":
-                miscStore.add(item);
+                if (item instanceof misc){
+                    miscStore.add(item);
+                }
                 break;
             default:
                 break;
