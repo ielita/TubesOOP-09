@@ -97,10 +97,6 @@ public class fish extends Item implements buysellable, consumable {
         return (int) Math.round(harga);
     }
 
-    @Override
-    public int getHargaBeli() {
-        return 0;
-    }
 
     public void consume(Player player) {
         player.setEnergy(player.getEnergy() + 1);

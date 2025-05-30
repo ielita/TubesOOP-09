@@ -18,7 +18,7 @@ public class seed extends Item implements buysellable {
     }
 
     // Getters and setters
-    public int getHargabeli() {
+    public int getHargaBeli() {
         return hargabeli;
     }
 
@@ -119,11 +119,7 @@ public class seed extends Item implements buysellable {
         return getCropSellPrice() * getCropYield();
     }
 
-    // Calculate profit percentage
-    public double getProfitPercentage() {
-        if (hargabeli == 0) return 0;
-        return ((double) getEstimatedProfit() / hargabeli) * 100;
-    }
+
 
     // Check if this is a multi-harvest crop
     public boolean isMultiHarvest() {
@@ -132,16 +128,6 @@ public class seed extends Item implements buysellable {
                cropLower.equals("cranberry") || cropLower.equals("grape");
     }
 
-    // Implement buysellable interface methods
-    @Override
-    public void sell(Item item) {
-        System.out.println("Selling " + getName() + " for " + hargajual + "g");
-    }
-
-    @Override
-    public void buy(Item item) {
-        System.out.println("Buying " + getName() + " for " + hargabeli + "g");
-    }
 
     // Implement abstract method from Item class
     @Override

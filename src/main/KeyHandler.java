@@ -77,7 +77,7 @@ public class KeyHandler implements KeyListener{
                         try {
                             int price = ((buysellable) currentItem).getHargaBeli();
                             if (gp.player.getGold() >= price) {
-                                boolean success = gp.store.buyItem(currentItem);
+                                gp.store.buyItem(currentItem);
                             }
                         } catch (ClassCastException ex) {
                         }
