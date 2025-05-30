@@ -105,6 +105,9 @@ public class UI {
         g2.setColor(Color.WHITE);
 
         if(gp.gameState == gp.playState) {
+
+            BufferedImage goldImage = null;;
+
             g2.setFont(pixelify40);
             g2.setColor(Color.WHITE);
             String time = gp.timeM.getTimeString();
@@ -114,6 +117,17 @@ public class UI {
             int day = gp.timeM.getDay();
             String dateText = season + " - Day " + day;
             g2.drawString(dateText, 50, 50);
+
+            try {
+                goldImage = ImageIO.read(new File("res/ui/gold.png"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            if (goldImage != null) {
+                g2.drawImage(goldImage,  gp.tileSize -30,  gp.tileSize + 50, gp.tileSize, gp.tileSize, null);
+            }
+            g2.drawString("" + gp.player.getGold(), gp.tileSize + 30,  gp.tileSize + 95);
 
             String currentMap = gp.tileM.mapManager.getCurrentMap();
             if (currentMap != null && !currentMap.isEmpty()) {
