@@ -461,34 +461,25 @@ public class UI {
             String nameInput = gp.setupGame.getInput();
             inputText = nameInput.isEmpty() ? "_" : nameInput;
 
-            int inputBoxWidth = 400;
-            int inputBoxHeight = 60;
-            int inputBoxX = (gp.screenWidth - inputBoxWidth) / 2;
-            int inputBoxY = gp.tileSize * 5;
-
-            int textWidth = g2.getFontMetrics().stringWidth(inputText);
-
+            
             g2.setColor(new Color(134, 52, 19));
             g2.fillRect(textX, textY, width, height);
-            int inputX = textX;
+            int inputX = textX + 10; 
             int inputY = textY + 35;
-
+            
             g2.setColor(Color.WHITE);
             gp.setupGame.setName(nameInput); 
             g2.drawString(inputText, inputX, inputY);
-
+            
             System.out.println("Input Text: " + inputText);
         }
-
-
-
         
-        
-        
-        // textX -= 148;
-        // g2.setColor(new Color(255, 255, 255));
-        // g2.drawString(text5, textX + 150, textY + 35);
-        // textX += 148;
+        int inputX1 = textX + 10;
+        int inputY1 = textY + 35;
+        textX -= 148;
+        g2.setColor(new Color(255, 255, 255));
+        g2.drawString(gp.setupGame.getName(), inputX1, inputY1);
+        textX += 148;
 
 
         g2.setColor(new Color(0, 0, 0));
@@ -506,7 +497,7 @@ public class UI {
         }
         textX -= 148;
         g2.setColor(new Color(255, 255, 255));
-        g2.drawString(text5, textX + 150, textY + 35);
+        g2.drawString(text5, textX + 160, textY + 35);
         textX += 148;
 
         
@@ -528,7 +519,7 @@ public class UI {
 
             g2.setColor(new Color(134, 52, 19));
             g2.fillRect(textX, textY, width, height);
-            int inputX = textX;
+            int inputX = textX + 10;
             int inputY = textY + 35;
 
             g2.setColor(Color.WHITE);
@@ -537,10 +528,16 @@ public class UI {
             
             System.out.println("Input Text: " + inputText);
         }
-
+        
         System.out.println("Input Text1: " + gp.setupGame.getName());
         System.out.println("Input Text2: " + gp.setupGame.getFarmName());
         
+        int inputX = textX + 10;
+        int inputY = textY + 35;
+        textX -= 148;
+        g2.setColor(new Color(255, 255, 255));
+        g2.drawString(gp.setupGame.getFarmName(), inputX, inputY);
+        textX += 148;
         
         g2.setColor(new Color(0, 0, 0));
         g2.setStroke(new BasicStroke(3));
