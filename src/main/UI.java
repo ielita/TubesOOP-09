@@ -105,50 +105,7 @@ public class UI {
         g2.setColor(Color.WHITE);
 
         if(gp.gameState == gp.playState) {
-
-            BufferedImage goldImage = null;;
-
-            g2.setFont(pixelify40);
-            g2.setColor(Color.WHITE);
-            String time = gp.timeM.getTimeString();
-            g2.drawString(time, gp.screenWidth - 150, 50);
-
-            String season = gp.timeM.getSeason();
-            int day = gp.timeM.getDay();
-            String dateText = season + " - Day " + day;
-            g2.drawString(dateText, 50, 50);
-
-            try {
-                goldImage = ImageIO.read(new File("res/ui/gold.png"));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            if (goldImage != null) {
-                g2.drawImage(goldImage,  gp.tileSize -30,  gp.tileSize + 50, gp.tileSize, gp.tileSize, null);
-            }
-            g2.drawString("" + gp.player.getGold(), gp.tileSize + 30,  gp.tileSize + 95);
-
-            String currentMap = gp.tileM.mapManager.getCurrentMap();
-            if (currentMap != null && !currentMap.isEmpty()) {
-                String displayName = currentMap;
-                if (currentMap.equals("insideHouse")) {
-                    displayName = "Inside House";
-                } else if (currentMap.equals("farm")) {
-                    displayName = "Farm";
-                } else if (currentMap.equals("town")) {
-                    displayName = "Town";
-                } else if (currentMap.equals("mountainlake")) {
-                    displayName = "Mountain Lake";
-                } else if (currentMap.equals("forestriver")) {
-                    displayName = "Forest River";
-                } else if (currentMap.equals("ocean")) {
-                    displayName = "Ocean";
-                }
-                String mapText = "Location: " + displayName;
-                g2.setColor(Color.WHITE);
-                g2.drawString(mapText, 50, 100);
-            }
+            drawTopRightInfoPanel();
             drawOnHandPopup();
         }
 
@@ -1169,6 +1126,107 @@ public class UI {
             g2.setColor(Color.YELLOW);
             String goldText = "Gold: " + gp.player.getGold() + "g";
             g2.drawString(goldText, helpX + 20, helpY + 230);
+        }
+    }
+
+    private void drawTopRightInfoPanel() {
+        int panelWidth = 280;
+        int panelHeight = 160;
+        int panelX = gp.screenWidth - panelWidth - 20;
+        int panelY = 20;
+        
+        g2.setColor(new Color(139, 69, 19, 240)); 
+        g2.fillRoundRect(panelX, panelY, panelWidth, panelHeight, 20, 20);
+        
+        g2.setColor(new Color(205, 133, 63, 255)); 
+        g2.setStroke(new BasicStroke(4));
+        g2.drawRoundRect(panelX, panelY, panelWidth, panelHeight, 20, 20);
+        
+        g2.setColor(new Color(101, 67, 33, 255));
+        g2.setStroke(new BasicStroke(2));
+        g2.drawRoundRect(panelX + 6, panelY + 6, panelWidth - 12, panelHeight - 12, 14, 14);
+        
+        g2.setColor(new Color(255, 255, 255, 30));
+        g2.fillRoundRect(panelX + 8, panelY + 8, panelWidth - 16, panelHeight / 3, 12, 12);
+
+        g2.setFont(pixelify32);
+        g2.setColor(Color.WHITE);
+        String time = gp.timeM.getTimeString();
+        int timeX = panelX + (panelWidth - g2.getFontMetrics().stringWidth(time)) / 2;
+        g2.drawString(time, timeX, panelY + 35);
+
+        g2.setFont(pixelify22);
+        String season = gp.timeM.getSeason();
+        int day = gp.timeM.getDay();
+        String dateText = season + " - Day " + day;
+        int dateX = panelX + (panelWidth - g2.getFontMetrics().stringWidth(dateText)) / 2;
+        g2.drawString(dateText, dateX, panelY + 60);
+
+        int goldSectionY = panelY + 75;
+        int goldSectionHeight = 40;
+        g2.setColor(new Color(184, 134, 11, 200)); 
+        g2.fillRoundRect(panelX + 10, goldSectionY, panelWidth - 20, goldSectionHeight, 12, 12);
+
+        g2.setColor(new Color(255, 215, 0, 150)); 
+        g2.setStroke(new BasicStroke(2));
+        g2.drawRoundRect(panelX + 10, goldSectionY, panelWidth - 20, goldSectionHeight, 12, 12);
+
+        BufferedImage goldImage = null;
+        try {
+            goldImage = ImageIO.read(new File("res/ui/gold.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+        if (goldImage != null) {
+            int goldIconSize = 32;
+            int goldIconX = panelX + 20;
+            int goldIconY = goldSectionY + (goldSectionHeight - goldIconSize) / 2;
+            g2.drawImage(goldImage, goldIconX, goldIconY, goldIconSize, goldIconSize, null);
+            
+
+            g2.setFont(pixelify26);
+            g2.setColor(new Color(255, 255, 255, 255)); 
+            String goldText = "" + gp.player.getGold() + "g";
+            int goldTextX = goldIconX + goldIconSize + 10;
+            int goldTextY = goldIconY + goldIconSize / 2 + 8;
+
+            g2.setColor(new Color(0, 0, 0, 100));
+            g2.drawString(goldText, goldTextX + 1, goldTextY + 1);
+
+            g2.setColor(Color.WHITE);
+            g2.drawString(goldText, goldTextX, goldTextY);
+        }
+
+        g2.setFont(pixelify18);
+        g2.setColor(new Color(255, 255, 255, 200)); 
+        String currentMap = gp.tileM.mapManager.getCurrentMap();
+        if (currentMap != null && !currentMap.isEmpty()) {
+            String displayName = getFormattedLocationName(currentMap);
+            String mapText = "📍 " + displayName;
+            int mapX = panelX + (panelWidth - g2.getFontMetrics().stringWidth(mapText)) / 2;
+
+            int locBgWidth = g2.getFontMetrics().stringWidth(mapText) + 16;
+            int locBgX = panelX + (panelWidth - locBgWidth) / 2;
+            int locBgY = panelY + 125;
+            
+            g2.setColor(new Color(0, 0, 0, 80));
+            g2.fillRoundRect(locBgX, locBgY, locBgWidth, 25, 8, 8);
+            
+            g2.setColor(Color.WHITE);
+            g2.drawString(mapText, mapX, locBgY + 18);
+        }
+    }
+
+    private String getFormattedLocationName(String currentMap) {
+        switch (currentMap) {
+            case "insideHouse": return "Inside House";
+            case "farm": return "Farm";
+            case "town": return "Town";
+            case "mountainlake": return "Mountain Lake";
+            case "forestriver": return "Forest River";
+            case "ocean": return "Ocean";
+            default: return currentMap;
         }
     }
 
