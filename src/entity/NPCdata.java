@@ -16,15 +16,15 @@ public class NPCdata {
 
         // 🟢 Common Fish
         // Make sure the constructor arguments match the NPC.java constructor definition
-        list.add(new NPC(
-            gp,
-            "Mayor Tadi",
-            0,
-            List.of("Legend"),
-            List.of("Angler, Crimsonfish, Glacierfish"),
-            List.of("Any"), 
-            "Single"
-        ));
+        // list.add(new NPC(
+        //     gp,
+        //     "Mayor Tadi",
+        //     0,
+        //     List.of("Legend"),
+        //     List.of("Angler, Crimsonfish, Glacierfish"),
+        //     List.of("Any"), 
+        //     "Single"
+        // ));
         // list.add(new NPC(
         //     gp,
         //     "Caroline",
@@ -61,15 +61,15 @@ public class NPCdata {
         //     List.of("Coal", "Wood"),
         //     "Single"
         // ));
-        // list.add(new NPC(
-        //     gp,
-        //     "Abigail",
-        //     0,
-        //     List.of("Blueberry", "Melon", "Pumpkin", "Grape", "Cranberry"),
-        //     List.of("Baguette", "Pumpkin Pie", "Wine"),
-        //     List.of("Hot Pepper", "Cauliflower", "Parsnip", "Wheat"),
-        //     "Single"
-        // ));
+        list.add(new NPC(
+            gp,
+            "Abigail",
+            0,
+            List.of("Blueberry", "Melon", "Pumpkin", "Grape", "Cranberry"),
+            List.of("Baguette", "Pumpkin Pie", "Wine"),
+            List.of("Hot Pepper", "Cauliflower", "Parsnip", "Wheat"),
+            "Single"
+        ));
         return list;
     }
 }

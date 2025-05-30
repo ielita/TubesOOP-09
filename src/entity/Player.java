@@ -31,11 +31,11 @@ public class Player extends Entity {
         inventoryManager = new InventoryManager();
         
         solidArea = new Rectangle();
-        solidArea.x = 8;
-        solidArea.y = 16;
+        solidArea.x = 32;
+        solidArea.y = 20;
         solidAreaDefaultX = solidArea.x;
         solidAreaDefaultY = solidArea.y;
-        solidArea.width = 32;
+        solidArea.width = 16;
         solidArea.height = 32;
         getImage();
         setDefaultValues();

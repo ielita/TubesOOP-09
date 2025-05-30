@@ -83,7 +83,8 @@ public class GamePanel extends JPanel implements Runnable{
     }
 
     public void setupGame(){
-        aSetter.setNPC(tileM.mapManager.currentMap);
+
+        aSetter.setNPC("farm");
         aSetter.setObject(tileM.mapManager.currentMap);
         gameState = menuState;
         tempScreen = new BufferedImage(screenWidth, screenHeight, BufferedImage.TYPE_INT_ARGB);

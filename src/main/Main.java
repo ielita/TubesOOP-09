@@ -14,7 +14,7 @@ public class Main{
         ImageIcon logo = null;
         try {
 
-            logo = new ImageIcon(ImageIO.read(new File("res/icon/champion.png")));
+            logo = new ImageIcon(ImageIO.read(new File("res/icon/clover_logo.png")));
         } catch (IOException e) {
             System.out.println("Error loading image: " + e.getMessage());
             e.printStackTrace(); 

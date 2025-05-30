@@ -4,6 +4,7 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import java.io.File;
+import javax.sound.sampled.FloatControl;
 
 public class Sound{
     
@@ -26,6 +27,14 @@ public class Sound{
         catch (Exception e){
 
         }
+
+        // // Set volume using FloatControl
+        // FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+        // float volume = 0.5f; // range: 0.0 (mute) to 1.0 (max)
+        // float min = gainControl.getMinimum();
+        // float max = gainControl.getMaximum();
+        // float dB = min + (max - min) * volume;
+        // gainControl.setValue(dB);s
 
     }
 

@@ -126,12 +126,12 @@ public class AssetSetter {
         
         int npcIndex = 0;
         for (NPC npc : allNPCs) {
-
+            // Suppose you have a getMapName() or similar method/property
             if (mapName.equals("insideHouse") && npcIndex < gp.npc.length) {
                 gp.npc[npcIndex] = npc;
                 npcIndex++;
-                gp.npc[0].worldX = 4 * gp.tileSize;
-                gp.npc[0].worldY = 4 * gp.tileSize;
+                gp.npc[0].worldX = 7 * gp.tileSize;
+                gp.npc[0].worldY = 7* gp.tileSize;
             }
         }
     }
