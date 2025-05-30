@@ -119,12 +119,32 @@ public class KeyHandler implements KeyListener{
         }
 
         if(gp.gameState == gp.setupGameInfoState) {
-            if(code == KeyEvent.VK_ENTER) {
-                gp.gameState = gp.playState;
+            int maxsetupGameInfoNum = 0;
+            switch(gp.ui.subState){
+                case 0: maxsetupGameInfoNum = 3; break;
             }
+            if(code == KeyEvent.VK_W || code == KeyEvent.VK_UP) {
+                gp.ui.setupGameInfoNum--;
+                if(gp.ui.setupGameInfoNum < 0) {
+                    gp.ui.setupGameInfoNum = maxsetupGameInfoNum;
+                }
+            }
+            if(code == KeyEvent.VK_S || code == KeyEvent.VK_DOWN) {
+                gp.ui.setupGameInfoNum++;
+                if(gp.ui.setupGameInfoNum > maxsetupGameInfoNum) {
+                    gp.ui.setupGameInfoNum = 0;
+                }
+            }
+            if(code == KeyEvent.VK_ENTER) {
+                if (gp.ui.setupGameInfoNum == 3) {
+                    enterPressed = true;
+                    gp.gameState = gp.playState;
+                }
+            }
+
             return;
         }
-
+        
         if(gp.gameState == gp.optionsState) {
             int maxCommandNum = 0;
             switch(gp.ui.subState){

@@ -365,33 +365,49 @@ public class UI {
     }
 
     public void drawSetupGameInfo(){
+        
+        
+        switch (subState) {
+            case 0: setupGameInfo_top(); break;
+            case 1: break;
+            case 2: break;
+        }
+        
+
+        gp.keyH.enterPressed = false;       
+        
+    }
+    
+    public void setupGameInfo_top(){
         BufferedImage backgroundImage = null;
         BufferedImage userImage = null;
-
-        try {
-            backgroundImage = ImageIO.read(new File("res/menu/menuScreen.png"));
-            userImage = ImageIO.read(new File("res/player/player_down_1.png"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        if (backgroundImage != null) {
-            g2.drawImage(backgroundImage, 0, 0, gp.screenWidth, gp.screenHeight, null);
-        } else {
-            g2.setColor(new Color(0, 0, 0));
-            g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
-        }
-
-
-
+    
         int frameWidth = gp.tileSize * 10;
         int frameHeight = gp.tileSize * 9;
 
         int frameX = (gp.screenWidth - frameWidth) / 2;
         int frameY = (gp.screenHeight - frameHeight) / 2 + 40;
         
+        
+        
+        try {
+            backgroundImage = ImageIO.read(new File("res/menu/menuScreen.png"));
+            userImage = ImageIO.read(new File("res/player/player_down_1.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    
+        if (backgroundImage != null) {
+            g2.drawImage(backgroundImage, 0, 0, gp.screenWidth, gp.screenHeight, null);
+        } else {
+            g2.setColor(new Color(0, 0, 0));
+            g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
+        }
+        
         drawSubWindow(g2, frameX, frameY, frameWidth, frameHeight, 1f);
-
+    
+    
+    
         
         g2.setFont(pixelify50);
         String text = "WELCOME TO";
@@ -410,28 +426,96 @@ public class UI {
         g2.drawString(text2, textX, textY);
         
         g2.setFont(pixelify32);
-        textY += gp.tileSize ;
+        textY += gp.tileSize + 10 ;
         String text3 = "Name";
-        textX = getXforCenteredText(text3) - 1 * gp.tileSize; 
+        textX = getXforCenteredText(text3) - 1 * gp.tileSize - 15; 
         g2.drawString(text3, textX, textY);
         
-        g2.setFont(pixelify32);
-        textY += gp.tileSize /2 +5 ;
+        textY += gp.tileSize /2 + 25 ;
         String text6 = "Gender";
         g2.drawString(text6, textX, textY);
         
-        g2.setFont(pixelify32);
-        textY += gp.tileSize /2 +5;
+        textY += gp.tileSize /2 + 15 ;
         String text4 = "Farm";
-        textX = getXforCenteredText(text4) - 1 * gp.tileSize; 
         g2.drawString(text4, textX, textY);
         textY += gp.tileSize - 42;
         String text5 = "Name";
-        textX = getXforCenteredText(text5) - 1 * gp.tileSize; 
         g2.drawString(text5, textX, textY);
         
+        
+        textX += 2 * gp.tileSize;
+        textY = 3 * gp.tileSize -25 ;
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+        int width = 250;
+        int height = 50;
+        text5 = "Ucok";
+        if (setupGameInfoNum == 0) {
+            
+            g2.setColor(new Color(134, 52, 19));
+            g2.fillRect(textX, textY, width, height);
+        }
+        textX -= 148;
+        g2.setColor(new Color(255, 255, 255));
+        g2.drawString(text5, textX + 150, textY + 35);
+        textX += 148;
 
 
+        g2.setColor(new Color(0, 0, 0));
+        g2.setStroke(new BasicStroke(3));
+        g2.drawRect(textX, textY, width, height);
+        
+        textY +=58;
+        if (setupGameInfoNum == 1) {
+            
+            g2.setColor(new Color(134, 52, 19));
+            g2.fillRect(textX, textY, width, height);
+            
+        }
+        textX -= 148;
+        g2.setColor(new Color(255, 255, 255));
+        g2.drawString(text5, textX + 150, textY + 35);
+        textX += 148;
+
+
+        g2.setColor(new Color(0, 0, 0));
+        g2.setStroke(new BasicStroke(3));
+        g2.drawRect(textX, textY, width, height);
+        
+        textY += 57;
+        if (setupGameInfoNum == 2) {
+            g2.setColor(new Color(134, 52, 19));
+            g2.fillRect(textX, textY, width, height);
+            
+        }
+        textX -= 148;
+        g2.setColor(new Color(255, 255, 255));
+        g2.drawString(text5, textX + 150, textY + 35);
+        textX += 148;
+        
+        g2.setColor(new Color(0, 0, 0));
+        g2.setStroke(new BasicStroke(3));
+        g2.drawRect(textX, textY, width, height);
+        
+        textY += 80;
+        width+= 200;
+        height += 50;
+        int xis = (gp.screenWidth - width ) / 2;
+        if (setupGameInfoNum == 3) {
+            g2.setColor(new Color(134, 52, 19));
+            g2.fillRect(xis, textY, width, height);
+            
+        }
+        textX -= 148;
+        g2.setColor(new Color(255, 255, 255));
+        g2.setFont(pixelify50);
+        g2.drawString("START THE GAME", xis + 37, textY + 70);
+        textX += 148;
+        
+        
+        g2.setColor(new Color(0, 0, 0));
+        g2.drawRect(xis, textY, width, height);    
+            
+        
 
     }
 
@@ -448,13 +532,13 @@ public class UI {
         int textX = getXforCenteredText(text);
         int textY = frameY + gp.tileSize + 20;
         g2.drawString(text, textX, textY);
-
+        
         g2.setFont(pixelify32);
         textX = frameX +  gp.tileSize + 10;
 
         textY += gp.tileSize * 7 / 8;
         g2.drawString("Move Up", textX, textY);
-
+        
         textY += gp.tileSize * 6 / 10;
         g2.drawString("Move Down", textX, textY);
 
