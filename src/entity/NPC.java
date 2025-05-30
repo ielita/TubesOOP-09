@@ -1,6 +1,8 @@
 package entity;
 
 import main.GamePanel;
+import main.KeyHandler;
+
 import java.awt.image.BufferedImage;
 import java.awt.Graphics2D;
 import java.util.List;
@@ -16,6 +18,7 @@ public class NPC extends Entity{
     private List<String> likedItems;
     private List<String> hatedItems;
     private String relationshipStatus;
+    protected String message;
 
     public NPC(GamePanel gp, String name, int heartPoints, 
                List<String> lovedItems, List<String> likedItems, 
@@ -26,11 +29,11 @@ public class NPC extends Entity{
         speed = 1; 
         getImage();
         solidArea = new Rectangle();
-        solidArea.x = 19;   
-        solidArea.y = 25;
+        solidArea.x = 32;   
+        solidArea.y =32;
         solidAreaDefaultX = solidArea.x;
         solidAreaDefaultY = solidArea.y;
-        solidArea.width = 20;
+        solidArea.width = 32;
         solidArea.height = 32;
         collisionOn = true;
         this.name = name;
@@ -141,5 +144,42 @@ public class NPC extends Entity{
             }
         }
         
+    protected boolean isPlayerInRange(GamePanel gp, int range) {
+        int playerX = gp.player.worldX + gp.player.solidArea.x;
+        int playerY = gp.player.worldY + gp.player.solidArea.y;
+        int objectX = worldX + solidArea.x;
+        int objectY = worldY + solidArea.y;
+        
+        int distance = (int)Math.sqrt(
+            Math.pow(playerX - objectX, 2) + 
+            Math.pow(playerY - objectY, 2)
+        );
+        
+        return distance < range;
+    }
+
+    public void onInteract() {
+        System.out.println("Interacting with " + name);
+        displayInfo();
+    }
+
+    public void interact(GamePanel gp, KeyHandler keyH) {
+        if (keyH != null) {
+            int interactionRange = (int)(gp.tileSize * 1.5);
+            boolean inRange = isPlayerInRange(gp, interactionRange);
+            
+            if (inRange && keyH.interactPressed) {
+                onInteract();
+            }
+            
+            message = String.format("Range: %b, Interact: %b", 
+                inRange, keyH.interactPressed);
+        } else {
+            message = "Error: handlers not initialized";
+        }
+    }
     
+    public void talk(){
+        
+    }
 }

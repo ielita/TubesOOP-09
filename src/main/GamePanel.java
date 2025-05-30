@@ -67,6 +67,7 @@ public class GamePanel extends JPanel implements Runnable{
     public final int shippingBinState = 11;
     public final int storeState = 12;
     public final int setupGameInfoState = 15;
+    
     public minigame.FishingMiniGame fishingMiniGame = new minigame.FishingMiniGame();
     public String currentMap = tileM.mapManager.getCurrentMap(); 
     public boolean fullScreenOn = false; 
@@ -84,7 +85,7 @@ public class GamePanel extends JPanel implements Runnable{
 
     public void setupGame(){
 
-        aSetter.setNPC("farm");
+        aSetter.setNPC("insideHouse");
         aSetter.setObject(tileM.mapManager.currentMap);
         gameState = menuState;
         tempScreen = new BufferedImage(screenWidth, screenHeight, BufferedImage.TYPE_INT_ARGB);
@@ -142,7 +143,6 @@ public class GamePanel extends JPanel implements Runnable{
                 update();
                 drawToTempScreen();
                 drawToScreen();
-                // repaint();
                 delta --;
             }
         }
@@ -173,6 +173,10 @@ public class GamePanel extends JPanel implements Runnable{
         }
         if(gameState == sleepState) {
             ui.updateSleepAnimation();
+        }
+
+        if (gameState == interactingState){
+            ui.interactionNPCMenu();
         }
     }
 

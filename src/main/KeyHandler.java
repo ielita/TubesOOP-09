@@ -11,7 +11,7 @@ import items.*;
 public class KeyHandler implements KeyListener{
 
     GamePanel gp;
-    public boolean upPressed, downPressed, leftPressed, rightPressed, interactPressed;
+    public boolean upPressed, downPressed, leftPressed, rightPressed, interactPressed, NPCInteractPressed;
     public boolean showDebug = false;
     public boolean sprintPressed = false;
     public boolean enterPressed = false;
@@ -112,6 +112,35 @@ public class KeyHandler implements KeyListener{
                         break;
                     case 2:
                         System.exit(0);
+                        break;
+                }
+            }
+            return;
+        }
+
+        if (gp.gameState == gp.interactingState) {
+            if(code == KeyEvent.VK_W || code == KeyEvent.VK_UP) {
+                menuOption--;
+                if(menuOption < 0) {
+                    menuOption = NUM_OPTIONS - 1;
+                }
+            }
+            if(code == KeyEvent.VK_S || code == KeyEvent.VK_DOWN) {
+                menuOption++;
+                if(menuOption >= NUM_OPTIONS) {
+                    menuOption = 0;
+                }
+            }
+            if(code == KeyEvent.VK_ENTER) {
+                switch(menuOption) {
+                    case 0:
+                        gp.gameState = gp.chattingState;
+                        break;
+                    case 1:
+                        gp.gameState = gp.givingGiftState;
+                        break;
+                    case 2:
+                        System.out.println("Displaying info...");
                         break;
                 }
             }
@@ -492,6 +521,9 @@ public class KeyHandler implements KeyListener{
         }
         if (code == KeyEvent.VK_SHIFT) {
             sprintPressed = false;
+        }
+        if (code == KeyEvent.VK_F){
+            NPCInteractPressed = false;
         }
     }
 

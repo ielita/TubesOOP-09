@@ -32,11 +32,11 @@ public class Player extends Entity {
         
         solidArea = new Rectangle();
         solidArea.x = 32;
-        solidArea.y = 20;
+        solidArea.y = 32;
         solidAreaDefaultX = solidArea.x;
         solidAreaDefaultY = solidArea.y;
-        solidArea.width = 16;
-        solidArea.height = 32;
+        solidArea.width = 20;
+        solidArea.height = 48;
         getImage();
         setDefaultValues();
         initializeStartingItems();
@@ -418,5 +418,30 @@ public class Player extends Entity {
         this.energy = 10;
         
         gp.timeM.skipDay();
+    }
+
+    public void interactNPC() {
+
+        // draw UI for interaction menu
+        // for (int i = 0; i < gp.npc.length; i++) {
+        //     if (gp.npc[i] != null) {
+        //         gp.npc[i].interact(gp, keyH);
+        //     }
+        // }
+
+        
+    }
+
+    public void talkWithNPC() {
+        if (getEnergy() > 10) {
+            setEnergy(100);
+        } else if (getEnergy() > 0 && getEnergy() <= 10) {
+            setEnergy(50);
+        } else if (getEnergy() <= 0) {
+            setEnergy(10);
+        }
+        // This method can be used to initiate a conversation with an NPC
+        // It can be expanded to include dialogue options, quests, etc.
+        System.out.println("Talking to NPC...");
     }
 }

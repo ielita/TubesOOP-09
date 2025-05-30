@@ -99,6 +99,7 @@ public class UI {
 
         if(gp.gameState == gp.menuState) {
             drawMainMenu();
+            // drawInteractionMenu();
         }
 
         g2.setFont(pixelify40);
@@ -106,7 +107,7 @@ public class UI {
 
         if(gp.gameState == gp.playState) {
 
-            BufferedImage goldImage = null;;
+            BufferedImage goldImage = null;
 
             g2.setFont(pixelify40);
             g2.setColor(Color.WHITE);
@@ -183,10 +184,17 @@ public class UI {
         if (gp.gameState == gp.storeState) {
             drawStore();
         }
+        if (gp.gameState == gp.interactingState) {
+            drawInteractionMenu();
+        }
 
         if (gp.gameState == gp.setupGameInfoState) {
             drawSetupGameInfo();
         }
+        if (gp.gameState == gp.setupGameInfoState) {
+            drawSetupGameInfo();
+        }
+        
 
         if (gp.keyH.showDebug) {
             g2.setFont(pixelify22);
@@ -553,6 +561,10 @@ public class UI {
         gp.tileM.mapManager.changeMap("insideHouse", 3, 3);
     }
 
+    public void interactionNPCMenu(){
+        gp.gameState = gp.interactingState;
+    }
+
     public void drawMainMenu() {
         BufferedImage backgroundImage = null;
         try {
@@ -586,7 +598,7 @@ public class UI {
         g2.drawString(text, x, y);
 
         g2.setFont(pixelify40);
-
+        // new game text
         text = "NEW GAME";
         x = getXforCenteredText(text);
         y += gp.tileSize * 2;
@@ -601,6 +613,8 @@ public class UI {
         g2.drawString(text, x + 2, y + 2);
         g2.setColor(gp.keyH.menuOption == 0 ? SELECTED_COLOR : UNSELECTED_COLOR);
         g2.drawString(text, x, y);
+
+        // sini
 
         text = "OPTIONS";
         x = getXforCenteredText(text);
@@ -1177,4 +1191,62 @@ public class UI {
         int x = gp.screenWidth / 2 - length / 2;
         return x;
     }
+    // mainmenu
+    public void drawInteractionMenu(){
+        BufferedImage abigail_icon = null;
+        BufferedImage talk_selected = null, talk_def = null, gift_def = null, gift_selected = null, info_def = null, info_selected = null;
+        try {
+            talk_selected = ImageIO.read(new File("res/ui/talk_selected.png"));
+            talk_def = ImageIO.read(new File("res/ui/talk_def.png"));
+            gift_selected = ImageIO.read(new File("res/ui/gift_selected.png"));
+            gift_def = ImageIO.read(new File("res/ui/gift_def.png"));
+            info_selected = ImageIO.read(new File("res/ui/info_selected.png"));
+            info_def = ImageIO.read(new File("res/ui/info_def.png"));
+            abigail_icon = ImageIO.read(new File("res/ui/abigail_icon.png"));
+
+            
+        } catch (IOException e) {
+        }
+
+        int margin = 50;
+        int gap = 5;
+        if (abigail_icon != null && talk_selected != null && gift_def != null && info_def != null) {
+            int maxWidth = Math.max(talk_selected.getWidth(), Math.max(gift_def.getWidth(), info_def.getWidth()));
+            int totalHeight = talk_selected.getHeight() + gift_def.getHeight() + info_def.getHeight() + 2 * gap;
+
+            int x = gp.screenWidth - maxWidth - margin;
+            int y = (gp.screenHeight - totalHeight) / 2;
+
+            int leftImageX = x - abigail_icon.getWidth() - gap;
+            int leftImageY = y + (totalHeight - abigail_icon.getHeight()) / 2;
+            g2.drawImage(abigail_icon, leftImageX, leftImageY, null);
+
+            g2.drawImage(talk_selected, x, y, null);
+            y += talk_selected.getHeight() + gap;
+            g2.drawImage(gift_def, x, y, null);
+            y += gift_def.getHeight() + gap;
+            g2.drawImage(info_def, x, y, null);
+        }
+            // } else {
+        //     g2.setColor(new Color(0, 0, 0));
+        //     g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
+        // }
+
+        // String text = "Talk";
+        // int x = getXforCenteredText(text);
+        // int y = gp.tileSize * 2;
+        
+        // if (gp.keyH.menuOption == 0) {
+        //     g2.setColor(new Color(255, 255, 0, 100));
+        //     g2.fillRoundRect(x - 20, y - 35, g2.getFontMetrics().stringWidth(text) + 40, 45, 10, 10);
+        // }
+
+        // g2.setColor(gp.keyH.menuOption == 0 ? SELECTED_COLOR : UNSELECTED_COLOR);
+        // g2.setColor(new Color(0, 0, 0, 150));
+        // g2.drawString(text, x + 2, y + 2);
+        // g2.setColor(gp.keyH.menuOption == 0 ? SELECTED_COLOR : UNSELECTED_COLOR);
+        // g2.drawString(text, x, y);
+    }
+
+    
 }
