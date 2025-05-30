@@ -123,13 +123,13 @@ public class KeyHandler implements KeyListener{
             switch(gp.ui.subState){
                 case 0: maxsetupGameInfoNum = 3; break;
             }
-            if(code == KeyEvent.VK_W || code == KeyEvent.VK_UP) {
+            if(code == KeyEvent.VK_UP) {
                 gp.ui.setupGameInfoNum--;
                 if(gp.ui.setupGameInfoNum < 0) {
                     gp.ui.setupGameInfoNum = maxsetupGameInfoNum;
                 }
             }
-            if(code == KeyEvent.VK_S || code == KeyEvent.VK_DOWN) {
+            if(code == KeyEvent.VK_DOWN) {
                 gp.ui.setupGameInfoNum++;
                 if(gp.ui.setupGameInfoNum > maxsetupGameInfoNum) {
                     gp.ui.setupGameInfoNum = 0;
