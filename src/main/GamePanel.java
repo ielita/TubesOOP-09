@@ -66,6 +66,7 @@ public class GamePanel extends JPanel implements Runnable{
     public final int fishingResultState = 10;
     public final int shippingBinState = 11;
     public final int storeState = 12;
+    public final int setupGameInfoState = 15;
     public minigame.FishingMiniGame fishingMiniGame = new minigame.FishingMiniGame();
     public String currentMap = tileM.mapManager.getCurrentMap(); 
     public boolean fullScreenOn = false; 

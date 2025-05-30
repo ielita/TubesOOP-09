@@ -161,6 +161,10 @@ public class UI {
             drawStore();
         }
 
+        if (gp.gameState == gp.setupGameInfoState) {
+            drawSetupGameInfo();
+        }
+
         if (gp.keyH.showDebug) {
             g2.setFont(pixelify22);
             g2.setColor(Color.WHITE);
@@ -319,6 +323,25 @@ public class UI {
             g2.drawString("no", textX, textY);
         }
     }
+
+    public void drawSetupGameInfo(){
+        int frameWidth = gp.tileSize * 6;
+        int frameHeight = gp.tileSize * 7;
+        int frameX = (gp.screenWidth - frameWidth) / 2;
+        int frameY = (gp.screenHeight - frameHeight) / 2 ;
+        drawsubWindow(frameX, frameY, frameWidth, frameHeight);
+
+        g2.setFont(pixelify50);
+        String text = "SETUP GAME";
+        int textX = getXforCenteredText(text);
+        int textY = frameY + gp.tileSize;
+        g2.drawString(text, textX, textY);
+
+        g2.setFont(pixelify30);
+        textX = frameX +  gp.tileSize - 25;
+
+    }
+
 
     public void drawKeyBindings() {
         int frameWidth = gp.tileSize * 6;
