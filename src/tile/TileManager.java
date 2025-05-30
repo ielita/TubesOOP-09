@@ -50,8 +50,6 @@ public class TileManager {
         setup(24, "shippingbin4", true);
         setup(25, "shippingbin5", true);
         setup(26, "shippingbin6", true);
-    }
-
         setup(31, "house1", true);
         setup(32, "house2", true);
         setup(33, "house3", true);
