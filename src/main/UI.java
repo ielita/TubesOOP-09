@@ -209,9 +209,9 @@ public class UI {
 
     public void drawOptionsScreen() {
         int frameWidth = gp.tileSize * 6;
-        int frameHeight = gp.tileSize * 6;
+        int frameHeight = gp.tileSize * 7;
         int frameX = (gp.screenWidth - frameWidth) / 2;
-        int frameY = (gp.screenHeight - frameHeight) / 2 - 1 * gp.tileSize;
+        int frameY = (gp.screenHeight - frameHeight) / 2 ;
         drawsubWindow(frameX, frameY, frameWidth, frameHeight);
 
         switch (subState) {
@@ -235,7 +235,7 @@ public class UI {
         textY = frameY + gp.tileSize ;
         g2.drawString(text, textX, textY);
         
-        textX = frameY + 5 * gp.tileSize + 10;
+        textX = frameX +  gp.tileSize - 25;
         
         g2.setFont(pixelify30);
 
@@ -302,7 +302,7 @@ public class UI {
         }
         
         
-        textX = frameY + 9 * gp.tileSize ;
+        textX = frameY + 7 * gp.tileSize ;
         textY = frameY + gp.tileSize * 15/8 ;
 
         if (gp.fullScreenOn) {
@@ -327,7 +327,7 @@ public class UI {
         int frameY = (gp.screenHeight - frameHeight) / 2 ;
         drawsubWindow(frameX, frameY, frameWidth, frameHeight);
 
-        g2.setFont(pixelify40);
+        g2.setFont(pixelify50);
         String text = "KEY BINDINGS";
         int textX = getXforCenteredText(text);
         int textY = frameY + gp.tileSize;
