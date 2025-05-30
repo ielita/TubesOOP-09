@@ -456,7 +456,7 @@ public class UI {
         g2.setFont(pixelify120);
         String text = "SPAKBOR HILLS";
         int x = getXforCenteredText(text);
-        int y = gp.tileSize * 3;
+        int y = gp.tileSize * 5;
 
         g2.setColor(new Color(0, 0, 0, 180));
         g2.drawString(text, x + 3, y + 3);
