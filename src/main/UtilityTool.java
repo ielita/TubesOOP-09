@@ -16,7 +16,7 @@ public class UtilityTool {
     }
 
     public boolean timeInRange(String current, String range) {
-
+        
         try {
             String[] parts = range.split("–");
             if (parts.length != 2) return false;
@@ -25,13 +25,15 @@ public class UtilityTool {
             int end = Integer.parseInt(parts[1].replace(".", ""));
             int now = Integer.parseInt(current.replace(":", ""));
 
+            
             if (start < end) {
                 return now >= start && now < end;
             } else {
-
+                
                 return now >= start || now < end;
             }
         } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
     }

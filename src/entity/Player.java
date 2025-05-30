@@ -4,6 +4,7 @@ import items.*;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+import java.util.List;
 import java.util.Map;
 import main.GamePanel;
 import main.InventoryManager;
@@ -15,11 +16,16 @@ public class Player extends Entity {
 
     public final int screenX;
     public final int screenY;
-    private int defaultSpeed = 10;
-    private int sprintSpeed = 15;
-    private int energy = 100;
-    private int gold = 500;
+    private int defaultSpeed;
+    private int sprintSpeed;
+    private int energy;
+    private int gold;
+    private int totalFishCaught;
+    public InventoryManager fishCaught;
+    private int coalUseCount = 0; 
+    private boolean hasHarvested;
     public InventoryManager inventoryManager;
+    public List<Recipe> recipesUnlocked = RecipeData.getAllRecipes(gp);
 
     public Player(GamePanel gp, KeyHandler keyH){
         super(gp);
@@ -39,43 +45,75 @@ public class Player extends Entity {
         solidArea.height = 32;
         getImage();
         setDefaultValues();
-        initializeStartingItems();
+        initializeStartingItems(); // Add this line
     }
 
+    public void setDefaultValues(){
+        // Default spawn position can be overridden by map changes
+        worldX = gp.tileSize * 2;
+        worldY = gp.tileSize * 2;
+        speed = defaultSpeed;  // Use default speed initially
+        direction = "down";
+        spriteNum = 1;
+        defaultSpeed = 10; 
+        sprintSpeed = 15; 
+        energy = 100; 
+        totalFishCaught = 0; 
+        gold = 500; 
+        hasHarvested = false;
+    }
+
+    // Add this method to Player class
     private void initializeStartingItems() {
         equipment hoe = new equipment("Hoe", gp);
-        addItemToInventory(hoe, 1);
+        addItemToInventory(hoe, 1); 
         
         equipment pickaxe = new equipment("Pickaxe", gp);
-        addItemToInventory(pickaxe, 1);
+        addItemToInventory(pickaxe, 1); 
         
         equipment wateringCan = new equipment("Watering Can", gp);
-        addItemToInventory(wateringCan, 1);
+        addItemToInventory(wateringCan, 1); 
         
         equipment sickle = new equipment("Sickle", gp);
-        addItemToInventory(sickle, 1);
+        addItemToInventory(sickle, 1); 
 
         equipment FishingRod = new equipment("Fishing Rod", gp);
         addItemToInventory(FishingRod, 1);
         
+        fishCaught = new InventoryManager();
+
         seed parsnipSeed = SeedData.getSeedByName(gp, "Parsnip Seeds");
         if (parsnipSeed != null) {
-            addItemToInventory(parsnipSeed, 10);
+            addItemToInventory(parsnipSeed, 10); 
         }
         
         seed potatoSeed = SeedData.getSeedByName(gp, "Potato Seeds");
         if (potatoSeed != null) {
-            addItemToInventory(potatoSeed, 5);
+            addItemToInventory(potatoSeed, 5); 
         }
 
         seed wheatSeed = SeedData.getSeedByName(gp, "Wheat Seeds");
         if (wheatSeed != null) {
-            addItemToInventory(wheatSeed, 3);
+            addItemToInventory(wheatSeed, 3); 
         }
+        misc firewood = new misc("Firewood", gp,10,5);
+        addItemToInventory(firewood, 10); 
+        misc coal = new misc("Coal", gp, 15, 8);
+        addItemToInventory(coal, 5); 
+        crop grape = new crop( "Grape", gp,100, 10, 20);
+        addItemToInventory(grape, 5);
     }
 
     public int getGold() {
         return gold;
+    }
+
+    public void setCoalUseCount(int count) {
+        this.coalUseCount = count;
+    }
+
+    public int getCoalUseCount() {
+        return coalUseCount;
     }
 
     public void setGold(int gold) {
@@ -94,6 +132,22 @@ public class Player extends Entity {
         return false;
     }
 
+    public int getTotalFishCaught() {
+        return totalFishCaught;
+    }
+
+    public void setTotalFishCaught(int totalFishCaught) {
+        this.totalFishCaught = totalFishCaught;
+    }
+
+    public boolean hasHarvested() {
+        return hasHarvested;
+    }
+    
+    public void setHasHarvested(boolean hasHarvested) {
+        this.hasHarvested = hasHarvested;
+    }
+    
     public void addItemToInventory(Item item, int quantity) {
         inventoryManager.addItem(item, quantity);
     }
@@ -150,18 +204,11 @@ public class Player extends Entity {
         }
     }
 
-    public void setDefaultValues(){
-        worldX = gp.tileSize * 2;
-        worldY = gp.tileSize * 2;
-        speed = defaultSpeed;
-        direction = "down";
-        spriteNum = 1;
-    }
-
     public void setPosition(int x, int y) {
         worldX = gp.tileSize * x;
         worldY = gp.tileSize * y;
     }
+
 
     public Map<Item, Integer> getInventory() {
         return inventoryManager.getInventory();
@@ -279,26 +326,26 @@ public class Player extends Entity {
 
         return tileNum;
     }
-    
+
     public int[] getFacingTileCoordinates() {
-    int playerCenterX = worldX + solidArea.x + solidArea.width / 2;
-    int playerCenterY = worldY + solidArea.y + solidArea.height / 2;
-    
-    int facingX = playerCenterX;
-    int facingY = playerCenterY;
-    
-    switch (direction) {
-        case "up":    facingY -= gp.tileSize; break;
-        case "down":  facingY += gp.tileSize; break;
-        case "left":  facingX -= gp.tileSize; break;
-        case "right": facingX += gp.tileSize; break;
+        int playerCenterX = worldX + solidArea.x + solidArea.width / 2;
+        int playerCenterY = worldY + solidArea.y + solidArea.height / 2;
+
+        int facingX = playerCenterX;
+        int facingY = playerCenterY;
+
+        switch (direction) {
+            case "up":    facingY -= gp.tileSize; break;
+            case "down":  facingY += gp.tileSize; break;
+            case "left":  facingX -= gp.tileSize; break;
+            case "right": facingX += gp.tileSize; break;
+        }
+
+        int col = facingX / gp.tileSize;
+        int row = facingY / gp.tileSize;
+
+        return new int[]{col, row};
     }
-    
-    int col = facingX / gp.tileSize;
-    int row = facingY / gp.tileSize;
-    
-    return new int[]{col, row};
-}
 
     public void draw(Graphics2D g2){
         BufferedImage image = null;
@@ -371,8 +418,8 @@ public class Player extends Entity {
     }
 
     public void setEnergy(int energy) {
-        this.energy = Math.max(-20, Math.min(100, energy));
-        
+        this.energy = Math.max(-20, Math.min(100, energy)); 
+
         if (this.energy <= -20) {
             forceCollapse();
         }
@@ -392,7 +439,7 @@ public class Player extends Entity {
         if (object.OBJ_ShippingBin.goldEarned > 0) {
             int goldFromShipping = object.OBJ_ShippingBin.goldEarned;
             addGold(goldFromShipping);
-            object.OBJ_ShippingBin.goldEarned = 0;
+            object.OBJ_ShippingBin.goldEarned = 0; // Reset for next day
         }
         
         if (getEnergy() > 10) {
@@ -404,9 +451,12 @@ public class Player extends Entity {
         }
         
         gp.timeM.skipDay();
+
     }
 
     private void forceCollapse() {
+
+        // Process shipping bin gold even when collapsing
         if (object.OBJ_ShippingBin.goldEarned > 0) {
             int goldFromShipping = object.OBJ_ShippingBin.goldEarned;
             addGold(goldFromShipping);
@@ -418,5 +468,6 @@ public class Player extends Entity {
         this.energy = 10;
         
         gp.timeM.skipDay();
+
     }
 }

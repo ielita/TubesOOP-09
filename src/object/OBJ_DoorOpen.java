@@ -13,7 +13,6 @@ public class OBJ_DoorOpen extends SuperObject {
     private int destinationX;
     private int destinationY;
     private boolean hasTriggered = false;
-    private Rectangle triggerArea;
 
     public OBJ_DoorOpen(GamePanel gp, String destMap, int destX, int destY) {
         this.gp = gp;
@@ -30,7 +29,9 @@ public class OBJ_DoorOpen extends SuperObject {
             e.printStackTrace();
         }
 
+        
         collision = false;
+        
         
         triggerArea = new Rectangle(
             0,    
@@ -39,21 +40,23 @@ public class OBJ_DoorOpen extends SuperObject {
             gp.tileSize/2 
         );
         
+        
         solidArea = new Rectangle(0, 0, 0, 0);
     }
 
     
     public void update() {
+        
         if (!hasTriggered && isPlayerInRange(gp,64)) {
-            message = "Going to " + destinationMap + "...";
-            gp.tileM.mapManager.changeMap(destinationMap, destinationX, destinationY);
-            if (!gp.tileM.mapManager.getCurrentMap().equals("insideHouse")){
-            gp.player.setEnergy(gp.player.getEnergy()-10);
-            gp.timeM.setMinute(gp.timeM.getMinute() + 15);
             
+            message = "Going to " + destinationMap + "...";
+            if (!gp.tileM.mapManager.getCurrentMap().equals("insideHouse")){
+                gp.player.setEnergy(gp.player.getEnergy()-10);
+                gp.timeM.setMinute(gp.timeM.getMinute() + 15);
             }
+            gp.tileM.mapManager.changeMap(destinationMap, destinationX, destinationY);
             hasTriggered = true;
-    }
+        }
     }
 
 }

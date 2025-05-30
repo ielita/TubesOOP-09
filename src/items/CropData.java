@@ -4,14 +4,12 @@ import main.GamePanel;
 import java.util.*;
 
 public class CropData {
-    
     private static crop createCrop(GamePanel gp, String name, int hargabeli, int hargajual, int jumlah) {
         return new crop(name, gp, hargabeli, hargajual, jumlah);
     }
-    
+
     public static List<crop> getAllCrops(GamePanel gp) {
         List<crop> list = new ArrayList<>();
-
         list.add(createCrop(gp, "Parsnip", 50, 35, 1));
         list.add(createCrop(gp, "Cauliflower", 200, 150, 1));
         list.add(createCrop(gp, "Potato", 0, 80, 1));
@@ -28,13 +26,11 @@ public class CropData {
 
     public static crop getCropByName(GamePanel gp, String cropName) {
         List<crop> allCrops = getAllCrops(gp);
-        
         for (crop c : allCrops) {
             if (c.getName().equalsIgnoreCase(cropName)) {
                 return c;
             }
         }
-        
         return null;
     }
 }

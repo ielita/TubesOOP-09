@@ -14,7 +14,7 @@ public class TileManager {
 
     public TileManager(GamePanel gp) {
         this.gp = gp;
-        tile = new Tile[200];
+        tile = new Tile[50];
         mapManager = new MapManager(gp);
         getTileImage();
     }
@@ -30,11 +30,11 @@ public class TileManager {
         setup(4, "wall", true);
         setup(5, "wall2", true);
         setup(6, "water", true);
-        setup(7, "tilted", false); 
+        setup(7, "tilted", false);
         setup(8, "planted", false);
-        setup(9, "tilted_w", false);  
-        setup(10, "planted_w", false); 
-        setup(11, "harvest", false); 
+        setup(9, "tilted_w", false);
+        setup(10, "planted_w", false);
+        setup(11, "harvest", false);
         setup(12, "woodtile", false);
         setup(13, "woodwallsideleft", true);
         setup(14, "woodwallsidedown", true);
@@ -50,12 +50,10 @@ public class TileManager {
         setup(24, "shippingbin4", true);
         setup(25, "shippingbin5", true);
         setup(26, "shippingbin6", true);
-        
-}
+    }
 
     public void setup(int index, String imagePath, boolean collision) {
         UtilityTool uTool = new UtilityTool();
-
         try {
             tile[index] = new Tile();
             tile[index].image = ImageIO.read(new File("res/tiles/" + imagePath + ".png"));
@@ -69,10 +67,8 @@ public class TileManager {
     public void draw(Graphics2D g2) {
         int worldCol = 0;
         int worldRow = 0;
-
-        while (worldCol < mapManager.maxWorldCol && worldRow < mapManager.maxWorldRow) {
+        while (worldRow < mapManager.maxWorldRow) {
             int tileNum = mapManager.mapTileNum[worldCol][worldRow];
-
             int worldX = worldCol * gp.tileSize;
             int worldY = worldRow * gp.tileSize;
             int screenX = worldX - gp.player.worldX + gp.player.screenX;
@@ -85,7 +81,6 @@ public class TileManager {
                 g2.drawImage(tile[tileNum].image, screenX, screenY, null);
             }
             worldCol++;
-
             if (worldCol == mapManager.maxWorldCol) {
                 worldCol = 0;
                 worldRow++;

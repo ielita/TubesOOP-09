@@ -4,7 +4,7 @@ import main.GamePanel;
 
 import java.util.List;
 
-public class fish extends Item implements buysellable, consumable, cookable{
+public class fish extends Item implements buysellable, consumable {
     private List<String> location;
     private List<String> seasons;
     private List<String> time;
@@ -97,10 +97,13 @@ public class fish extends Item implements buysellable, consumable, cookable{
         return (int) Math.round(harga);
     }
 
+    @Override
+    public int getHargaBeli() {
+        return 0;
+    }
 
     public void consume(Player player) {
-    }
-    
-    public void cook(Item item) {
+        player.setEnergy(player.getEnergy() + 1);
+        player.inventoryManager.removeItem(player.getOnhandItem(), 1);
     }
 }

@@ -8,26 +8,35 @@ public class StoreManager {
     private List<crop> cropStore;
     private List<food> foodStore;
     private List<Item> miscStore;
+    private List<Recipe> recipes;
     private Map<String, List<? extends Item>> allStore;
-    
+
     public StoreManager() {
         seedStore = new ArrayList<>();
         cropStore = new ArrayList<>();
         foodStore = new ArrayList<>();
+        recipes = new ArrayList<>();
         miscStore = new ArrayList<>();
-        
+
         allStore = new HashMap<>();
         allStore.put("Seeds", seedStore);
         allStore.put("Crops", cropStore);
         allStore.put("Food", foodStore);
         allStore.put("Misc", miscStore);
+        allStore.put("Recipes", recipes);
     }
 
     public void initializeStores(GamePanel gp) {
         seedStore.addAll(SeedData.getAllSeeds(gp));
         cropStore.addAll(CropData.getAllCrops(gp));
         foodStore.addAll(FoodData.getAllFoods(gp));
-        miscStore.addAll(MiscData.getAllMiscItems(gp));
+        miscStore.addAll(MiscData.getAllMisc(gp));
+        List<Recipe> tempRecipes = gp.player.recipesUnlocked;
+        for (Recipe recipe : tempRecipes) {
+            if (recipe.getUnlockType() == Recipe.UnlockType.STORE) {
+                recipes.add(recipe);
+            }
+        }
     }
 
     public List<seed> getSeedStore() {
@@ -71,9 +80,7 @@ public class StoreManager {
                 }
                 break;
             case "Misc":
-                if (item instanceof misc){
-                    miscStore.add(item);
-                }
+                miscStore.add(item);
                 break;
             default:
                 break;
@@ -93,11 +100,12 @@ public class StoreManager {
             case "Misc":
                 miscStore.remove(item);
                 break;
+            case "Recipes":
+                recipes.remove(item);
+                break;
             default:
                 break;
         }
     }    
-    
+
 }
-
-

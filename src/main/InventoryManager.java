@@ -3,6 +3,7 @@ package main;
 import java.util.Map;
 import java.util.HashMap;
 import items.Item;
+import items.fish;
 
 public class InventoryManager {
     private Map<Item, Integer> inventory;
@@ -25,7 +26,7 @@ public class InventoryManager {
         }
     }
 
-    private Item findItemByName(String name) {
+    public Item findItemByName(String name) {
         for (Item item : inventory.keySet()) {
             if (item.getName().equals(name)) {
                 return item;
@@ -36,7 +37,7 @@ public class InventoryManager {
 
     public void removeItem(Item item, int quantity) {
         if (item == null || quantity <= 0) return;
-
+        
         Item existingItem = findItemByName(item.getName());
         
         if (existingItem != null && inventory.containsKey(existingItem)) {
@@ -76,6 +77,24 @@ public class InventoryManager {
 
     public boolean hasItem(String itemName) {
         return findItemByName(itemName) != null;
+    }
+
+    public void removeFish(int quantity) {
+        for (Item item : inventory.keySet()) {
+            if (item instanceof fish) {
+                int currentQuantity = inventory.get(item);
+                if (currentQuantity >= quantity) {
+                    inventory.put(item, currentQuantity - quantity);
+                    if (currentQuantity - quantity <= 0) {
+                        inventory.remove(item);
+                    }
+                    return;
+                } else {
+                    inventory.remove(item);
+                    quantity -= currentQuantity;
+                }
+            }
+        }
     }
 
     public int getItemQuantity(String itemName) {

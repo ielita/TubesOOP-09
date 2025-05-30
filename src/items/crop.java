@@ -3,7 +3,7 @@ package items;
 import entity.Player;
 import main.GamePanel;
 
-public class crop extends Item implements consumable, buysellable, cookable{
+public class crop extends Item implements consumable, buysellable{
     int hargabeli;
     int hargajual;
     int jumlahCropPanen;
@@ -23,6 +23,11 @@ public class crop extends Item implements consumable, buysellable, cookable{
     @Override
     public int getHargaJual(){
         return hargajual;
+    }
+
+    @Override
+    public int getHargaBeli(){
+        return hargabeli;
     }
     
     public int getjumlahCropPanen(){
@@ -44,42 +49,13 @@ public class crop extends Item implements consumable, buysellable, cookable{
     // Implement abstract methods
     @Override
     public void consume(Player player) {
-        int energyGain = calculateEnergyGain();
-        if (jumlahCropPanen > 0) {
-            jumlahCropPanen--;
-        }
-    }
-
-    private int calculateEnergyGain() {
-        String cropName = getName().toLowerCase();
-        
-        // Energy gain based on crop type
-        return switch (cropName) {
-            case "parsnip" -> 25;
-            case "cauliflower" -> 35;
-            case "potato" -> 30;
-            case "wheat" -> 15;
-            case "blueberry" -> 20;
-            case "tomato" -> 25;
-            case "hot pepper" -> 40;
-            case "melon" -> 45;
-            case "cranberry" -> 15;
-            case "pumpkin" -> 50;
-            case "grape" -> 10;
-            default -> 20;
-        }; // Spicy gives more energy
-        // Large fruit gives more energy
-        // Large vegetable
-    }
-
-
-
-    @Override
-    public void cook(Item item) {
-
+        player.setEnergy(player.getEnergy() + 3);
+        player.inventoryManager.removeItem(player.getOnhandItem(), 1);
     }
 
     @Override
     public void getinfo() {
+
     }
+
 }

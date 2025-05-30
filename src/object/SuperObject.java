@@ -52,7 +52,6 @@ public class SuperObject{
         return distance < range;
     }
 
-    
     public void interact(GamePanel gp, KeyHandler keyH) {
         if (keyH != null) {
             int interactionRange = (int)(gp.tileSize * 1.5);
@@ -71,6 +70,6 @@ public class SuperObject{
     
     protected void onInteract() {}
 
-    public void update() {}
+    public void update(){}
     
 }

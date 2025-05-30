@@ -11,7 +11,7 @@ public class Store {
     private int currentCategoryIndex = 0;
     private List<String> categories;
     private int gridCols = 4;
-    
+
     public Store(GamePanel gp) {
         this.gp = gp;
         this.storeManager = new StoreManager();
@@ -167,15 +167,22 @@ public class Store {
         currentItemIndex = 0;
     }
 
-    public boolean buyItem(Item item) {
+    public void buyItem(Item item) {
         if (item instanceof buysellable) {
             buysellable buyableItem = (buysellable) item;
             if (gp.player.getGold() >= buyableItem.getHargaBeli()) {
                 gp.player.setGold(gp.player.getGold() - buyableItem.getHargaBeli());
+                if (item instanceof Recipe) {
+                    Recipe recipe = (Recipe) item;
+                    if (!recipe.isUnlocked()) {
+                        recipe.setUnlocked(true);
+                        storeManager.removeItemFromStore(currentCategory, item);
+                        return;
+                    }
+                }
                 gp.player.addItemToInventory(item,1);
-                return true;
+        
             }
         }
-        return false;
     }
 }

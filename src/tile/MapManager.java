@@ -1,4 +1,5 @@
 package tile;
+
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -15,9 +16,11 @@ public class MapManager {
     public int maxWorldCol;
     public int maxWorldRow;
     private float brightness = 1.0f;
+
     public int[][] plantGrowth;
     public boolean[][] wateredToday;
     public seed[][] plantedSeeds;
+
     private int[][] savedFarmTiles;
     private int[][] savedFarmGrowth;
     private boolean[][] savedFarmWatered;
@@ -28,7 +31,7 @@ public class MapManager {
         currentMap = "insideHouse";
         loadMapConfig(currentMap);
     }
-    
+
     public void loadMapConfig(String mapName) {
         try {
             FileInputStream fis = new FileInputStream("res/maps/" + mapName + ".txt");
@@ -39,10 +42,11 @@ public class MapManager {
             initializeArrays();
             loadMap(br);
             br.close();
-        } catch(Exception e) {
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
-    
+
     private void initializeArrays() {
         mapTileNum = new int[maxWorldCol][maxWorldRow];
         if ("farm".equals(currentMap)) {
@@ -51,38 +55,26 @@ public class MapManager {
             plantedSeeds = new seed[maxWorldCol][maxWorldRow];
         }
     }
-    
+
     private void loadMap(BufferedReader br) {
         try {
             int col = 0, row = 0;
-            while(row < maxWorldRow) {
+            while (row < maxWorldRow) {
                 String line = br.readLine();
-                if(line == null) break;
-                String numbers[] = line.split(" ");
-                while(col < maxWorldCol && col < numbers.length) {
+                if (line == null) break;
+                String[] numbers = line.split(" ");
+                while (col < maxWorldCol && col < numbers.length) {
                     mapTileNum[col][row] = Integer.parseInt(numbers[col]);
                     col++;
                 }
-                if(col == maxWorldCol) {
+                if (col == maxWorldCol) {
                     col = 0;
                     row++;
                 }
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-    }
-    
-    public void changeMap(String newMap, int playerX, int playerY) {
-        if ("farm".equals(currentMap)) {
-            saveFarmState();
-        }
-        currentMap = newMap;
-        loadMapConfig(newMap);
-        if ("farm".equals(newMap)) {
-            restoreFarmState();
-        }
-        gp.aSetter.setObject(newMap);
-        gp.player.setPosition(playerX, playerY);
     }
 
     public void rainyDay() {
@@ -123,10 +115,22 @@ public class MapManager {
                     }
                 }
             }
-        } else {
-        }
+        } 
     }
-    
+
+    public void changeMap(String newMap, int playerX, int playerY) {
+        if ("farm".equals(currentMap)) {
+            saveFarmState();
+        }
+        currentMap = newMap;
+        loadMapConfig(newMap);
+        if ("farm".equals(newMap)) {
+            restoreFarmState();
+        }
+        gp.aSetter.setObject(newMap);
+        gp.player.setPosition(playerX, playerY);
+    }
+
     private void saveFarmState() {
         if (mapTileNum == null) return;
         savedFarmTiles = new int[maxWorldCol][maxWorldRow];
@@ -148,7 +152,7 @@ public class MapManager {
             }
         }
     }
-    
+
     private void restoreFarmState() {
         if (savedFarmTiles == null) return;
         for (int col = 0; col < maxWorldCol; col++) {
@@ -180,10 +184,10 @@ public class MapManager {
                     mapTileNum[col][row] = 7;
                 } else if (currentTile == 10) {
                     mapTileNum[col][row] = 8;
-                    if (wateredToday[col][row] 
-                    && plantGrowth[col][row] > 0 
-                    && plantedSeeds[col][row] != null 
-                    && plantedSeeds[col][row].getSeason().equalsIgnoreCase(gp.timeM.getSeason())) {
+                    if (savedFarmWatered[col][row] 
+                    && savedFarmGrowth[col][row] > 0 
+                    && savedFarmSeeds[col][row] != null 
+                    && savedFarmSeeds[col][row].getSeason().equalsIgnoreCase(gp.timeM.getSeason())) {
                         plantGrowth[col][row]--;
                         if (plantGrowth[col][row] <= 0) {
                             mapTileNum[col][row] = 11;
@@ -194,7 +198,7 @@ public class MapManager {
             }
         }
     }
-    
+
     private void updateSavedFarmState() {
         for (int col = 0; col < savedFarmTiles.length; col++) {
             for (int row = 0; row < savedFarmTiles[col].length; row++) {
@@ -203,10 +207,7 @@ public class MapManager {
                     savedFarmTiles[col][row] = 7;
                 } else if (currentTile == 10) {
                     savedFarmTiles[col][row] = 8;
-                    if (savedFarmWatered[col][row] 
-                    && savedFarmGrowth[col][row] > 0 
-                    && savedFarmSeeds[col][row] != null 
-                    && savedFarmSeeds[col][row].getSeason().equalsIgnoreCase(gp.timeM.getSeason())) {
+                    if (savedFarmWatered[col][row] && savedFarmGrowth[col][row] > 0) {
                         savedFarmGrowth[col][row]--;
                         if (savedFarmGrowth[col][row] <= 0) {
                             savedFarmTiles[col][row] = 11;
@@ -217,7 +218,7 @@ public class MapManager {
             }
         }
     }
-    
+
     public void harvestCrop(int col, int row) {
         if (!"farm".equals(currentMap)) return;
         if (plantedSeeds != null && plantGrowth != null) {
@@ -226,7 +227,7 @@ public class MapManager {
             mapTileNum[col][row] = 7;
         }
     }
-    
+
     public void initializePlantTracking() {
         if (!"farm".equals(currentMap)) return;
         if (maxWorldCol > 0 && maxWorldRow > 0) {
@@ -234,19 +235,18 @@ public class MapManager {
             plantGrowth = new int[maxWorldCol][maxWorldRow];
         }
     }
-    
+
     public boolean isValidPosition(int col, int row) {
         return col >= 0 && row >= 0 && col < maxWorldCol && row < maxWorldRow;
     }
-    
     public void setBrightness(float brightness) {
         this.brightness = Math.max(0.0f, Math.min(1.0f, brightness));
     }
-    
+
     public float getBrightness() {
         return brightness;
     }
-    
+
     public void drawBrightnessOverlay(Graphics2D g2) {
         if (brightness < 1.0f) {
             AlphaComposite originalComposite = (AlphaComposite) g2.getComposite();
@@ -258,7 +258,7 @@ public class MapManager {
             g2.setColor(originalColor);
         }
     }
-    
+
     public String getCurrentMap() {
         return currentMap;
     }

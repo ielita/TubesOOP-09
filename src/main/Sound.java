@@ -24,7 +24,7 @@ public class Sound{
             clip.open(ais);
         }
         catch (Exception e){
-
+            e.printStackTrace();
         }
 
     }
