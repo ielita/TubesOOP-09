@@ -33,7 +33,7 @@ public class TimeManager {
         }
         private void generateWeatherPattern() {
             Random random = new Random();
-            int rainyDays = 2; 
+            int rainyDays = 2 + random.nextInt(3); 
             int sunnyDays = DAYS_PER_SEASON - rainyDays;
             for (int i = 0; i < sunnyDays; i++) {
                 weatherPattern[i] = SUNNY;

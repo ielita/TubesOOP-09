@@ -15,6 +15,7 @@ public class crop extends Item implements consumable, buysellable, cookable{
         this.jumlahCropPanen = jumlahCropPanen;
     }
 
+    @Override
     public int getHargaBeli(){
         return hargabeli;
     }
@@ -53,20 +54,22 @@ public class crop extends Item implements consumable, buysellable, cookable{
         String cropName = getName().toLowerCase();
         
         // Energy gain based on crop type
-        switch (cropName) {
-            case "parsnip": return 25;
-            case "cauliflower": return 35;
-            case "potato": return 30;
-            case "wheat": return 15;
-            case "blueberry": return 20;
-            case "tomato": return 25;
-            case "hot pepper": return 40; // Spicy gives more energy
-            case "melon": return 45; // Large fruit gives more energy
-            case "cranberry": return 15;
-            case "pumpkin": return 50; // Large vegetable
-            case "grape": return 10;
-            default: return 20;
-        }
+        return switch (cropName) {
+            case "parsnip" -> 25;
+            case "cauliflower" -> 35;
+            case "potato" -> 30;
+            case "wheat" -> 15;
+            case "blueberry" -> 20;
+            case "tomato" -> 25;
+            case "hot pepper" -> 40;
+            case "melon" -> 45;
+            case "cranberry" -> 15;
+            case "pumpkin" -> 50;
+            case "grape" -> 10;
+            default -> 20;
+        }; // Spicy gives more energy
+        // Large fruit gives more energy
+        // Large vegetable
     }
 
 

@@ -22,7 +22,7 @@ public class OBJ_ShippingBin extends SuperObject {
 
 
         try {
-            image = ImageIO.read(new File("res/objects/shippingbin.png"));
+            image = ImageIO.read(new File(""));
             uTool.scaleImage(image, gp.tileSize, gp.tileSize);
         }
         catch (IOException e) {

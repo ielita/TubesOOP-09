@@ -44,6 +44,12 @@ public class TileManager {
         setup(18, "woodwallcorner2", true);
         setup(19, "woodwallcorner3", true);
         setup(20, "woodwallcorner4", true);
+        setup(21, "shippingbin1", true);
+        setup(22, "shippingbin2", true);
+        setup(23, "shippingbin3", true);
+        setup(24, "shippingbin4", true);
+        setup(25, "shippingbin5", true);
+        setup(26, "shippingbin6", true);
         
 }
 
