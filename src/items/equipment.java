@@ -16,10 +16,11 @@ public class equipment extends Item {
         GamePanel gp = player.getGp();
 
         if (getName().equals("Hoe")) {
-            if (!"farm".equals(gp.tileM.mapManager.selectedFarmMap)) return;
+            if (!"farm".equals(gp.tileM.mapManager.selectedFarmMap) 
+            && !"farm1".equals(gp.tileM.mapManager.selectedFarmMap)
+            && !"farm2".equals(gp.tileM.mapManager.selectedFarmMap)
+            && !"farm3".equals(gp.tileM.mapManager.selectedFarmMap)) return;
 
-            gp.timeM.setMinute(gp.timeM.getMinute() + 5);
-            player.setEnergy(player.getEnergy() - 5);
 
             int playerCenterX = player.worldX + player.solidArea.x + player.solidArea.width / 2;
             int playerCenterY = player.worldY + player.solidArea.y + player.solidArea.height / 2;
@@ -47,7 +48,10 @@ public class equipment extends Item {
         }
 
         if (getName().equals("Watering Can")) {
-            if (!"farm".equals(gp.tileM.mapManager.selectedFarmMap)) return;
+            if (!"farm".equals(gp.tileM.mapManager.selectedFarmMap) 
+            && !"farm1".equals(gp.tileM.mapManager.selectedFarmMap)
+            && !"farm2".equals(gp.tileM.mapManager.selectedFarmMap)
+            && !"farm3".equals(gp.tileM.mapManager.selectedFarmMap)) return;
 
             int currentTile = player.getFacingTile();
             int[] coords = player.getFacingTileCoordinates();
@@ -66,12 +70,13 @@ public class equipment extends Item {
                 gp.tileM.mapManager.wateredToday[col][row] = true;
             }
 
-            player.setEnergy(player.getEnergy() - 5);
-            gp.timeM.setMinute(gp.timeM.getMinute() + 5);
         }
 
         if (getName().equals("Sickle")) {
-            if (!"farm".equals(gp.tileM.mapManager.selectedFarmMap)) return;
+            if (!"farm".equals(gp.tileM.mapManager.selectedFarmMap) 
+            && !"farm1".equals(gp.tileM.mapManager.selectedFarmMap)
+            && !"farm2".equals(gp.tileM.mapManager.selectedFarmMap)
+            && !"farm3".equals(gp.tileM.mapManager.selectedFarmMap)) return;
 
             int[] coordinates = player.getFacingTileCoordinates();
             int col = coordinates[0];
@@ -105,7 +110,10 @@ public class equipment extends Item {
         }
 
         if (getName().equals("Pickaxe")) {
-            if (!"farm".equals(gp.tileM.mapManager.selectedFarmMap)) return;
+            if (!"farm".equals(gp.tileM.mapManager.selectedFarmMap) 
+            && !"farm1".equals(gp.tileM.mapManager.selectedFarmMap)
+            && !"farm2".equals(gp.tileM.mapManager.selectedFarmMap)
+            && !"farm3".equals(gp.tileM.mapManager.selectedFarmMap)) return;
 
             int currentTile = player.getFacingTile();
             int[] coords = player.getFacingTileCoordinates();

@@ -240,6 +240,7 @@ public class Player extends Entity {
                 }
                 
                 reduceEnergy(5);
+                gp.timeM.setMinute(gp.timeM.getMinute() + 5);
 
             }
         }
