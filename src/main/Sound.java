@@ -12,7 +12,7 @@ public class Sound{
 
     public Sound(){
         
-        soundFile[0] = new File("res/sound/king.wav");
+        soundFile[0] = new File("res/sound/forestquiet.wav");
 
     }
 

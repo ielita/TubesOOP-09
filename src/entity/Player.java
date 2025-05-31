@@ -206,7 +206,7 @@ public class Player extends Entity {
     }
 
     public void plantSeed() {
-        if (!"farm".equals(gp.tileM.mapManager.getCurrentMap())) {
+        if (!"farm".equals(gp.tileM.mapManager.selectedFarmMap)) {
             return;
         }
         
