@@ -1908,18 +1908,18 @@ public class UI {
         int frameWidth = gp.tileSize * 10;   
         int frameHeight = gp.tileSize * 9;
         int frameX = (gp.screenWidth - frameWidth) / 2;
-        int frameY = (gp.screenHeight - frameHeight) / 2 + 10; // Turunin frame dikit
+        int frameY = (gp.screenHeight - frameHeight) / 2 + 10; 
 
         drawSubWindow(frameX, frameY, frameWidth, frameHeight);
 
         int x = frameX + 24;
-        int y = frameY + 48; // Awalnya 38, dinaikkan 10
+        int y = frameY + 48; 
         int line = 26;       
 
-        g2.setFont(pixelify32); // Perbesar judul
+        g2.setFont(pixelify32); 
         g2.setColor(Color.WHITE);
 
-        // Tengahkan tulisan
+        
         String title = "END GAME STATISTICS";
         int titleWidth = g2.getFontMetrics().stringWidth(title);
         int centerX = frameX + (frameWidth - titleWidth) / 2;
