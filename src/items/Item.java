@@ -37,6 +37,7 @@ public abstract class Item {
     public BufferedImage loadImageFromResource() {
         try {
             String path = "res/items/" + name + ".png";
+            
             return ImageIO.read(new File(path));
         } catch (IOException | IllegalArgumentException e) {
             System.err.println("Error loading image for item: " + name);

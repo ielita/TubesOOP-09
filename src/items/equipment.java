@@ -41,6 +41,8 @@ public class equipment extends Item {
 
             if (gp.tileM.mapManager.mapTileNum[col][row] == 0) {
                 gp.tileM.mapManager.mapTileNum[col][row] = 7;
+                player.setEnergy(player.getEnergy() - 5);
+                gp.timeM.setMinute(gp.timeM.getMinute() + 5);
             }
         }
 
@@ -81,7 +83,7 @@ public class equipment extends Item {
                     crop harvestedCrop = plantedSeed.plant();
 
                     player.addItemToInventory(harvestedCrop, harvestedCrop.getjumlahCropPanen());
-                    player.setHasHarvested(true);
+                    player.setTotalHarvest(player.getTotalHarvest() + harvestedCrop.getjumlahCropPanen());
 
                     gp.tileM.mapManager.mapTileNum[col][row] = 7;
                     gp.tileM.mapManager.plantedSeeds[col][row] = null;
@@ -97,8 +99,8 @@ public class equipment extends Item {
                         gp.tileM.mapManager.plantGrowth[col][row] = 0;
                     }
                 }
-
-                player.setEnergy(player.getEnergy() - 15);
+                player.setEnergy(player.getEnergy() - 5);
+                gp.timeM.setMinute(gp.timeM.getMinute() + 5);
             }
         }
 

@@ -89,7 +89,7 @@ public class OBJ_Oven extends SuperObject {
             case ITEM_OBTAIN:
                 return inventory.hasItem(r.getUnlockParam());
             case HARVEST:
-                return gp.player.hasHarvested();
+                return gp.player.getTotalHarvest() > 0;
             case FISH_SPECIFIC:
                 return inventory.hasItem(r.getUnlockParam());
             default:

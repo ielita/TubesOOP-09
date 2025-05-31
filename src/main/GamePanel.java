@@ -72,10 +72,12 @@ public class GamePanel extends JPanel implements Runnable {
     public final int storeState = 13;
     public final int setupGameInfoState = 14;
     public final int npcInteractionState = 15;
-    public final int npcChattingState = 16;
+    public final int npcChatState = 16;
     public final int npcGivingGiftState = 17;
     public final int npcMarryState = 18;
-    public final int npcProposalState = 19;     
+    public final int npcProposalState = 19;   
+    public final int npcInfoState = 20;  
+    public final int endGameStatsState = 21;
 
     public GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -167,6 +169,9 @@ public class GamePanel extends JPanel implements Runnable {
                 }
                 player.sleep();
                 autoSleepTriggered = true;
+            }
+            if ((player.getGold() >= 17209 || player.marriedToWho != null) && gameState != endGameStatsState) {
+                gameState = endGameStatsState;
             }
         }
         if (gameState == sleepState) {

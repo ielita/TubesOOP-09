@@ -273,7 +273,7 @@ public class KeyHandler implements KeyListener{
         }
 
         if (gp.gameState == gp.npcInteractionState) {
-            int maxOption = 4; // 5 opsi: 0-4
+            int maxOption = 4; 
             if (code == KeyEvent.VK_W || code == KeyEvent.VK_UP) {
                 menuOption = (menuOption - 1 + (maxOption + 1)) % (maxOption + 1);
             }
@@ -281,14 +281,144 @@ public class KeyHandler implements KeyListener{
                 menuOption = (menuOption + 1) % (maxOption + 1);
             }
             if (code == KeyEvent.VK_ENTER) {
-               
+                switch (menuOption) {
+                    case 0: // Talk
+                        gp.gameState = gp.npcChatState; 
+                        break;
+                    case 1: // Gift
+                        gp.gameState = gp.npcGivingGiftState;
+                        break;
+                    case 2: // Info
+                        gp.gameState = gp.npcInfoState; 
+                        break;
+                    case 3: // Marry
+                        gp.gameState = gp.npcMarryState;
+                        break;
+                    case 4: // Proposal
+                        gp.gameState = gp.npcProposalState;
+                        break;
+                }
             }
             if (code == KeyEvent.VK_ESCAPE) {
-                gp.gameState = gp.playState; 
+                gp.gameState = gp.playState;
             }
             return;
         }
 
+        if (gp.gameState == gp.npcChatState) {
+            object.OBJ_NPC npc = null;
+            for (int i = 0; i < gp.obj.length; i++) {
+                if (gp.obj[i] instanceof object.OBJ_NPC && gp.obj[i] != null) {
+                    int dx = Math.abs(gp.player.worldX - gp.obj[i].worldX) / gp.tileSize;
+                    int dy = Math.abs(gp.player.worldY - gp.obj[i].worldY) / gp.tileSize;
+                    if (dx + dy <= 1) {
+                        npc = (object.OBJ_NPC) gp.obj[i];
+                        break;
+                    }
+                }
+            }
+
+            if (code == KeyEvent.VK_ENTER || code == KeyEvent.VK_ESCAPE) {
+                gp.gameState = gp.playState;
+                npc.chat();
+            }
+            return;
+        }
+
+        if (gp.gameState == gp.npcMarryState) {
+            object.OBJ_NPC npc = null;
+            for (int i = 0; i < gp.obj.length; i++) {
+                if (gp.obj[i] instanceof object.OBJ_NPC && gp.obj[i] != null) {
+                    int dx = Math.abs(gp.player.worldX - gp.obj[i].worldX) / gp.tileSize;
+                    int dy = Math.abs(gp.player.worldY - gp.obj[i].worldY) / gp.tileSize;
+                    if (dx + dy <= 1) {
+                        npc = (object.OBJ_NPC) gp.obj[i];
+                        break;
+                    }
+                }
+            }
+            if (code == KeyEvent.VK_ENTER) {
+                if (gp.player.inventoryManager.findItemByName("Proposal Ring") == null) {
+                    // Tidak ada ring, gagal
+                } else if (gp.player.fianceToWho != npc.name) {
+                    // Belum tunangan
+                } else if (!npc.canMarryToday()) {
+                    // Belum sehari setelah tunangan
+                } else {
+                    npc.marry();
+                    // Efek lain sudah di method marry()
+                }
+                gp.gameState = gp.playState;
+            }
+            if (code == KeyEvent.VK_ESCAPE) {
+                gp.gameState = gp.gameState;
+            }
+            return;
+        }
+
+        if (gp.gameState == gp.npcInfoState) {
+            if (code == KeyEvent.VK_ENTER || code == KeyEvent.VK_ESCAPE) {
+                gp.gameState = gp.playState;
+            }
+            return;
+        }
+
+        if (gp.gameState == gp.npcGivingGiftState) {
+            object.OBJ_NPC npc = null;
+            for (int i = 0; i < gp.obj.length; i++) {
+                if (gp.obj[i] instanceof object.OBJ_NPC && gp.obj[i] != null) {
+                    int dx = Math.abs(gp.player.worldX - gp.obj[i].worldX) / gp.tileSize;
+                    int dy = Math.abs(gp.player.worldY - gp.obj[i].worldY) / gp.tileSize;
+                    if (dx + dy <= 1) {
+                        npc = (object.OBJ_NPC) gp.obj[i];
+                        break;
+                    }
+                }
+            }
+            if (code == KeyEvent.VK_ENTER || code == KeyEvent.VK_ESCAPE) {
+                gp.gameState = gp.playState;
+                npc.gift(gp.player.getOnhandItem().getName(), gp.player.getOnhandItem());
+            }
+            return;
+        }
+
+        if (gp.gameState == gp.npcProposalState) {
+            object.OBJ_NPC npc = null;
+            for (int i = 0; i < gp.obj.length; i++) {
+                if (gp.obj[i] instanceof object.OBJ_NPC && gp.obj[i] != null) {
+                    int dx = Math.abs(gp.player.worldX - gp.obj[i].worldX) / gp.tileSize;
+                    int dy = Math.abs(gp.player.worldY - gp.obj[i].worldY) / gp.tileSize;
+                    if (dx + dy <= 1) {
+                        npc = (object.OBJ_NPC) gp.obj[i];
+                        break;
+                    }
+                }
+            }
+            
+            if (code == KeyEvent.VK_ENTER) {
+                if (gp.player.inventoryManager.findItemByName("Proposal Ring") == null) {
+                    gp.player.reduceEnergy(20);
+                    // Tidak ada ring, gagal
+                } else if (npc.getHeartPoints() < 150) {
+                    gp.player.reduceEnergy(20);
+                } else if (gp.player.fianceToWho == npc.name) {
+                  
+                } else if (gp.player.marriedToWho != null) {
+                    gp.player.reduceEnergy(20);
+                    // Sudah menikah
+                } else {
+                    npc.propose();
+                    gp.player.reduceEnergy(10);
+                    gp.timeM.setHour(gp.timeM.getHour() + 1);
+                    
+                }
+                gp.gameState = gp.playState;
+            }
+            if (code == KeyEvent.VK_ESCAPE) {
+                gp.gameState = gp.playState;
+            }
+            return;
+        }
 
         if (gp.gameState == gp.inventoryState) {
             int invSize = gp.player.getInventory().size();
@@ -499,7 +629,7 @@ public class KeyHandler implements KeyListener{
             showDebug = !showDebug;
         }
 
-        if (code == KeyEvent.VK_B) {
+        if (code == KeyEvent.VK_B && gp.tileM.mapManager.getCurrentMap().equals("store")) {
             try {
                 if (gp.store == null) {
                     gp.store = new Store(gp);
@@ -558,16 +688,6 @@ public class KeyHandler implements KeyListener{
             gp.tileM.mapManager.debugAllPlants();
         }
 
-        if (code == KeyEvent.VK_B) {
-            try {
-                if (gp.store == null) {
-                    gp.store = new Store(gp);
-                }
-                gp.gameState = gp.storeState;
-            } catch (Exception ex) {
-                gp.gameState = gp.playState;
-            }
-        }
     }
 
     @Override

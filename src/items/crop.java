@@ -47,6 +47,7 @@ public class crop extends Item implements consumable, buysellable{
     public void consume(Player player) {
         player.setEnergy(player.getEnergy() + 3);
         player.inventoryManager.removeItem(player.getOnhandItem(), 1);
+        gp.timeM.setMinute(gp.timeM.getMinute() + 5);
     }
 
     @Override

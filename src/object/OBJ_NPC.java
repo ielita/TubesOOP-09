@@ -6,27 +6,30 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
+import items.fish;
 import main.GamePanel;
 
 public class OBJ_NPC extends SuperObject {
 
-    private int heartPoints = 0;
+    private int heartPoints = 150;
+    private int chatFrequency = 0;
+    private int giftFrequency = 0;
+
     private final int maxHeartPoints = 150;
     private List<String> lovedItems;
     private List<String> likedItems;
     private List<String> hatedItems;
     private String relationshipStatus = "single";
-    private String location;
+    private int fianceDay = -1;
     public GamePanel gp;
 
-    public OBJ_NPC(String name, String location, List<String> lovedItems, List<String> likedItems, List<String> hatedItems, GamePanel gp) {
+    public OBJ_NPC(String name, List<String> lovedItems, List<String> likedItems, List<String> hatedItems, GamePanel gp) {
         this.gp = gp;
         this.name = name;
-        this.location = location;
         this.lovedItems = lovedItems;
         this.likedItems = likedItems;
         this.hatedItems = hatedItems;
-        String imagePath = "res/npc/ninja.png";
+        String imagePath = "res/npc/" + name.toLowerCase() + ".png";
         try {
             image = ImageIO.read(new File(imagePath));
             uTool.scaleImage(image, gp.tileSize, gp.tileSize);
@@ -67,27 +70,76 @@ public class OBJ_NPC extends SuperObject {
         this.relationshipStatus = status;
     }
 
-    public String getLocation() {
-        return location;
-    }
-
     @Override
     protected void onInteract() {
         if (collision) {
             gp.keyH.menuOption = 0;
             gp.gameState = gp.npcInteractionState;
-        }
-}
+        }   
+    }
 
-    public void evaluateGift(String itemName) {
+    public void chat() {
+        chatFrequency++;
+        gp.player.reduceEnergy(10);
+        increaseHeartPoints(10);
+        gp.timeM.setMinute(gp.timeM.getMinute() + 10);
+    }
+
+    public void gift(String itemName, items.Item item) {
+        if (item == null) {
+            return; // Tidak ada item yang diberikan
+        }
+        giftFrequency++;
+        if (evaluateGift(itemName, item)) {
+            gp.player.inventoryManager.removeItem(item, 1);
+            gp.timeM.setMinute(gp.timeM.getMinute() + 10);
+            gp.player.reduceEnergy(5);
+        } 
+    }
+
+    public void propose() {
+        gp.player.fianceToWho = name;
+        fianceDay = gp.timeM.getDay();
+        relationshipStatus = "fiance";
+    }
+
+    public void marry() {
+        if (canMarryToday()) {
+            gp.player.marriedToWho = name;
+            relationshipStatus = "married";
+            gp.player.reduceEnergy(80);
+            gp.timeM.setHour(22);
+            gp.timeM.setMinute(0);
+            gp.tileM.mapManager.changeMap("insideHouse", 2 , 2 );
+            
+        }
+    }
+
+    public int getFianceDay() {
+        return fianceDay;
+    }
+    public boolean canMarryToday() {
+        return gp.timeM.getDay() > fianceDay;
+    }
+
+    public boolean evaluateGift(String itemName, items.Item item) {
+        if (item instanceof items.equipment) {
+            // Tidak melakukan apa-apa, equipment tidak bisa diberikan
+            return false;
+        }
         if (lovedItems.contains(itemName)) {
-            increaseHeartPoints(20);
+            increaseHeartPoints(25);
         } else if (likedItems.contains(itemName)) {
-            increaseHeartPoints(10);
-        } else if (hatedItems.contains(itemName)) {
-            increaseHeartPoints(-10);
+            increaseHeartPoints(20);
+        } else if (
+            (hatedItems.isEmpty() && !lovedItems.contains(itemName) && !likedItems.contains(itemName))
+            || hatedItems.contains(itemName)
+            || (hatedItems.contains("Fish") && item instanceof items.fish)
+        ) {
+            increaseHeartPoints(-25);
         } else {
             increaseHeartPoints(0);
         }
+        return true; 
     }
 }

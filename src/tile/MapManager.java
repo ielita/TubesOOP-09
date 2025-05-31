@@ -6,12 +6,14 @@ import java.awt.Graphics2D;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
+import java.util.Random;
 import main.GamePanel;
 import items.seed;
 
 public class MapManager {
     GamePanel gp;
     public String currentMap;
+    public String selectedFarmMap; // Store the randomly selected farm map
     public int[][] mapTileNum;
     public int maxWorldCol;
     public int maxWorldRow;
@@ -25,16 +27,27 @@ public class MapManager {
     private int[][] savedFarmGrowth;
     private boolean[][] savedFarmWatered;
     private seed[][] savedFarmSeeds;
+    private int savedFarmMaxCol;
+    private int savedFarmMaxRow;
 
     public MapManager(GamePanel gp) {
         this.gp = gp;
         currentMap = "insideHouse";
+        selectRandomFarmMap();
         loadMapConfig(currentMap);
     }
 
+    private void selectRandomFarmMap() {
+        String[] farmMaps = {"farm","farm1","farm2","farm3","farm4"};
+        Random random = new Random();
+        selectedFarmMap = farmMaps[random.nextInt(farmMaps.length)];
+        System.out.println("Selected farm map: " + selectedFarmMap);
+    }
+
     public void loadMapConfig(String mapName) {
+        String actualMapName = mapName.equals("farm") ? selectedFarmMap : mapName;
         try {
-            FileInputStream fis = new FileInputStream("res/maps/" + mapName + ".txt");
+            FileInputStream fis = new FileInputStream("res/maps/" + actualMapName + ".txt");
             BufferedReader br = new BufferedReader(new InputStreamReader(fis));
             String[] dimensions = br.readLine().split(" ");
             maxWorldCol = Integer.parseInt(dimensions[0]);
@@ -49,106 +62,55 @@ public class MapManager {
 
     private void initializeArrays() {
         mapTileNum = new int[maxWorldCol][maxWorldRow];
-        if ("farm".equals(currentMap)) {
-    if (plantGrowth == null) {
-        plantGrowth = new int[maxWorldCol][maxWorldRow];
-        System.out.println("Initialized plantGrowth array: " + maxWorldCol + "x" + maxWorldRow);
-    }
-    
-    if (wateredToday == null) {
-        wateredToday = new boolean[maxWorldCol][maxWorldRow];
-        System.out.println("Initialized wateredToday array: " + maxWorldCol + "x" + maxWorldRow);
-    }
-    
-    if (plantedSeeds == null) {
-        plantedSeeds = new seed[maxWorldCol][maxWorldRow];
-        }
-    }
-    }
-
-    private void loadMap(BufferedReader br) {
-        try {
-            int col = 0, row = 0;
-            while (row < maxWorldRow) {
-                String line = br.readLine();
-                if (line == null) break;
-                String[] numbers = line.split(" ");
-                while (col < maxWorldCol && col < numbers.length) {
-                    mapTileNum[col][row] = Integer.parseInt(numbers[col]);
-                    col++;
-                }
-                if (col == maxWorldCol) {
-                    col = 0;
-                    row++;
-                }
+        if (isFarmMap(currentMap)) {
+            if (plantGrowth == null) {
+                plantGrowth = new int[maxWorldCol][maxWorldRow];
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+            
+            if (wateredToday == null) {
+                wateredToday = new boolean[maxWorldCol][maxWorldRow];
+            }
+            
+            if (plantedSeeds == null) {
+                plantedSeeds = new seed[maxWorldCol][maxWorldRow];
+            }
         }
     }
 
-    public void rainyDay() {
-        if (gp.timeM.isRainyDay()) {
-            if ("farm".equals(currentMap) && wateredToday != null) {
-                for (int col = 0; col < maxWorldCol; col++) {
-                    for (int row = 0; row < maxWorldRow; row++) {
-                        int currentTile = mapTileNum[col][row];
-
-                        if (currentTile == 7 || currentTile == 8){
-                            wateredToday[col][row] = true;
-                        }
-
-                        if (currentTile == 8) { 
-                            mapTileNum[col][row] = 10;
-                        } else if (currentTile == 7) {
-                            mapTileNum[col][row] = 9;
-                        }
-                    }
-                }
-            }
-            if (!"farm".equals(currentMap) && savedFarmWatered != null) {
-                for (int col = 0; col < savedFarmWatered.length; col++) {
-                    for (int row = 0; row < savedFarmWatered[col].length; row++) {
-                        if (savedFarmTiles != null) {
-                            int currentTile = savedFarmTiles[col][row];
-
-                        if (currentTile == 7 || currentTile == 8){
-                            savedFarmWatered[col][row] = true;
-                        }
-
-                            if (currentTile == 8) {
-                                savedFarmTiles[col][row] = 10;
-                            } else if (currentTile == 7) {
-                                savedFarmTiles[col][row] = 9;
-                            }
-                        }
-                    }
-                }
-            }
-        } 
+    private boolean isFarmMap(String mapName) {
+        return mapName.equals("farm") || mapName.startsWith("farm");
     }
 
     public void changeMap(String newMap, int playerX, int playerY) {
-        if ("farm".equals(currentMap)) {
+        // Save current farm state if leaving a farm
+        if (isFarmMap(currentMap)) {
             saveFarmState();
         }
+        
         currentMap = newMap;
         loadMapConfig(newMap);
-        if ("farm".equals(newMap)) {
+        
+        if (isFarmMap(newMap)) {
             restoreFarmState();
         }
+        
         gp.aSetter.setObject(newMap);
         gp.player.setPosition(playerX, playerY);
     }
 
     private void saveFarmState() {
         if (mapTileNum == null) return;
+        
+        savedFarmMaxCol = maxWorldCol;
+        savedFarmMaxRow = maxWorldRow;
         savedFarmTiles = new int[maxWorldCol][maxWorldRow];
+        
         for (int col = 0; col < maxWorldCol; col++) {
             for (int row = 0; row < maxWorldRow; row++) {
                 savedFarmTiles[col][row] = mapTileNum[col][row];
             }
         }
+        
         if (plantGrowth != null) {
             savedFarmGrowth = new int[maxWorldCol][maxWorldRow];
             savedFarmWatered = new boolean[maxWorldCol][maxWorldRow];
@@ -165,14 +127,21 @@ public class MapManager {
 
     private void restoreFarmState() {
         if (savedFarmTiles == null) return;
-        for (int col = 0; col < maxWorldCol; col++) {
-            for (int row = 0; row < maxWorldRow; row++) { 
+        
+        // Check if dimensions match
+        if (savedFarmMaxCol != maxWorldCol || savedFarmMaxRow != maxWorldRow) {
+            return;
+        }
+        
+        for (int col = 0; col < Math.min(maxWorldCol, savedFarmMaxCol); col++) {
+            for (int row = 0; row < Math.min(maxWorldRow, savedFarmMaxRow); row++) {
                 mapTileNum[col][row] = savedFarmTiles[col][row];
             }
         }
-        if (savedFarmGrowth != null) {
-            for (int col = 0; col < maxWorldCol; col++) {
-                for (int row = 0; row < maxWorldRow; row++) {
+        
+        if (savedFarmGrowth != null && plantGrowth != null) {
+            for (int col = 0; col < Math.min(maxWorldCol, savedFarmMaxCol); col++) {
+                for (int row = 0; row < Math.min(maxWorldRow, savedFarmMaxRow); row++) {
                     plantGrowth[col][row] = savedFarmGrowth[col][row];
                     wateredToday[col][row] = savedFarmWatered[col][row];
                     plantedSeeds[col][row] = savedFarmSeeds[col][row];
@@ -180,54 +149,84 @@ public class MapManager {
             }
         }
     }
-public void updatePlantGrowth() {
-    if (!"farm".equals(currentMap) || plantGrowth == null) {
-        if (savedFarmGrowth != null) {
-            updateSavedFarmState();
-        }
-        return;
+
+    public String getSelectedFarmMap() {
+        return selectedFarmMap;
     }
-    
-    for (int col = 0; col < maxWorldCol; col++) {
-        for (int row = 0; row < maxWorldRow; row++) {
-            int currentTile = mapTileNum[col][row];
-            
-            // Reset watered tiles back to dry state
-            if (currentTile == 9) {
-                mapTileNum[col][row] = 7; // watered tilled -> dry tilled
-            } else if (currentTile == 10) {
-                mapTileNum[col][row] = 8; // watered planted -> dry planted
+
+    private void loadMap(BufferedReader br) {
+        try {
+            int col = 0, row = 0;
+            while (row < maxWorldRow) {
+                String line = br.readLine();
+                if (line == null) break;
+                String[] numbers = line.split(" ");
                 
-                // ✅ Fix: Use current arrays instead of saved arrays
-                if (wateredToday[col][row] 
-                    && plantGrowth[col][row] > 0 
-                    && plantedSeeds[col][row] != null 
-                    && plantedSeeds[col][row].getSeason().equalsIgnoreCase(gp.timeM.getSeason())) {
-                    
-                    plantGrowth[col][row]--; // ✅ Decrease growth time
-                    
-                    if (plantGrowth[col][row] <= 0) {
-                        mapTileNum[col][row] = 11; // Ready to harvest
+                while (col < maxWorldCol && col < numbers.length) {
+                    int num = Integer.parseInt(numbers[col]);
+                    mapTileNum[col][row] = num;
+                    col++;
+                }
+                if (col == maxWorldCol) {
+                    col = 0;
+                    row++;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void rainyDay() {
+        if (gp.timeM.isRainyDay()) {
+            if (isFarmMap(currentMap) && wateredToday != null) {
+                for (int col = 0; col < maxWorldCol; col++) {
+                    for (int row = 0; row < maxWorldRow; row++) {
+                        wateredToday[col][row] = true;
                     }
                 }
             }
+            if (!isFarmMap(currentMap) && savedFarmWatered != null) {
+                for (int col = 0; col < savedFarmMaxCol; col++) {
+                    for (int row = 0; row < savedFarmMaxRow; row++) {
+                        savedFarmWatered[col][row] = true;
+                    }
+                }
+            }
+        } 
+    }
+
+    public void updatePlantGrowth() {
+        if (!isFarmMap(currentMap) || plantGrowth == null) {
+            if (savedFarmGrowth != null) {
+                updateSavedFarmState();
+            }
+            return;
+        }
         
-            wateredToday[col][row] = false;
+        for (int col = 0; col < maxWorldCol; col++) {
+            for (int row = 0; row < maxWorldRow; row++) {
+                if (plantedSeeds[col][row] != null) {
+                    if (wateredToday[col][row]) {
+                        plantGrowth[col][row]++;
+                        if (plantGrowth[col][row] >= plantedSeeds[col][row].getGrowthTime()) {
+                            mapTileNum[col][row] = 11;
+                        }
+                    }
+                }
+                wateredToday[col][row] = false;
+            }
         }
     }
-}
 
     private void updateSavedFarmState() {
-        for (int col = 0; col < savedFarmTiles.length; col++) {
-            for (int row = 0; row < savedFarmTiles[col].length; row++) {
-                int currentTile = savedFarmTiles[col][row];
-                if (currentTile == 9) {
-                    savedFarmTiles[col][row] = 7;
-                } else if (currentTile == 10) {
-                    savedFarmTiles[col][row] = 8;
-                    if (savedFarmWatered[col][row] && savedFarmGrowth[col][row] > 0) {
-                        savedFarmGrowth[col][row]--;
-                        if (savedFarmGrowth[col][row] <= 0) {
+        if (savedFarmTiles == null) return;
+        for (int col = 0; col < savedFarmMaxCol; col++) {
+            for (int row = 0; row < savedFarmMaxRow; row++) {
+                if (savedFarmSeeds[col][row] != null) {
+                    if (savedFarmWatered[col][row]) {
+                        savedFarmGrowth[col][row]++;
+                        if (savedFarmGrowth[col][row] >= savedFarmSeeds[col][row].getGrowthTime()) {
                             savedFarmTiles[col][row] = 11;
                         }
                     }
@@ -238,7 +237,7 @@ public void updatePlantGrowth() {
     }
 
     public void harvestCrop(int col, int row) {
-        if (!"farm".equals(currentMap)) return;
+        if (!isFarmMap(currentMap)) return;
         if (plantedSeeds != null && plantGrowth != null) {
             plantedSeeds[col][row] = null;
             plantGrowth[col][row] = 0;
@@ -246,31 +245,28 @@ public void updatePlantGrowth() {
         }
     }
 
-public void initializePlantTracking() {
-    if (!"farm".equals(currentMap)) {
-        return;
+    public void initializePlantTracking() {
+        if (!isFarmMap(currentMap)) {
+            return;
+        }
+        
+        if (plantGrowth == null) {
+            plantGrowth = new int[maxWorldCol][maxWorldRow];
+        }
+        
+        if (wateredToday == null) {
+            wateredToday = new boolean[maxWorldCol][maxWorldRow];
+        }
+        
+        if (plantedSeeds == null) {
+            plantedSeeds = new seed[maxWorldCol][maxWorldRow];
+        }
     }
-    
-    // ✅ Only initialize if arrays are null - don't reset existing data!
-    if (plantGrowth == null) {
-        plantGrowth = new int[maxWorldCol][maxWorldRow];
-        System.out.println("Initialized plantGrowth array: " + maxWorldCol + "x" + maxWorldRow);
-    }
-    
-    if (wateredToday == null) {
-        wateredToday = new boolean[maxWorldCol][maxWorldRow];
-        System.out.println("Initialized wateredToday array: " + maxWorldCol + "x" + maxWorldRow);
-    }
-    
-    if (plantedSeeds == null) {
-        plantedSeeds = new seed[maxWorldCol][maxWorldRow];
-        System.out.println("Initialized plantedSeeds array: " + maxWorldCol + "x" + maxWorldRow);
-    }
-}
 
     public boolean isValidPosition(int col, int row) {
         return col >= 0 && row >= 0 && col < maxWorldCol && row < maxWorldRow;
     }
+
     public void setBrightness(float brightness) {
         this.brightness = Math.max(0.0f, Math.min(1.0f, brightness));
     }
@@ -282,35 +278,31 @@ public void initializePlantTracking() {
     public void drawBrightnessOverlay(Graphics2D g2) {
         if (brightness < 1.0f) {
             AlphaComposite originalComposite = (AlphaComposite) g2.getComposite();
-            Color originalColor = g2.getColor();
-            g2.setColor(new Color(0, 0, 0, 1.0f - brightness));
             g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f - brightness));
+            g2.setColor(Color.BLACK);
             g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
             g2.setComposite(originalComposite);
-            g2.setColor(originalColor);
         }
     }
 
     public String getCurrentMap() {
         return currentMap;
     }
-    
+
     public void debugAllPlants() {
-        if (!"farm".equals(currentMap) || plantedSeeds == null) return;
+        if (!isFarmMap(currentMap) || plantedSeeds == null)
+            return;
         
-        System.out.println("=== ALL PLANTED SEEDS DEBUG ===");
         int totalPlants = 0;
         
         for (int col = 0; col < maxWorldCol; col++) {
             for (int row = 0; row < maxWorldRow; row++) {
                 if (plantedSeeds[col][row] != null) {
+                    System.out.println("Plant at (" + col + "," + row + "): " + 
+                                       plantedSeeds[col][row].getName() + 
+                                       " - Growth: " + plantGrowth[col][row] + 
+                                       "/" + plantedSeeds[col][row].getGrowthTime());
                     totalPlants++;
-                    System.out.println("Plant " + totalPlants + " at (" + col + "," + row + "): " + 
-                                     plantedSeeds[col][row].getName() + 
-                                     " | Growth time: " + plantGrowth[col][row] + 
-                                     " | Watered today: " + wateredToday[col][row] + 
-                                     " | Tile: " + mapTileNum[col][row] + 
-                                     " | Season: " + plantedSeeds[col][row].getSeason());
                 }
             }
         }

@@ -119,6 +119,25 @@ public class UI {
             drawInteractionMenu();
         }
 
+        if (gp.gameState == gp.npcChatState) {
+            drawChatNPC();
+        }
+        if (gp.gameState == gp.npcInfoState) {
+            drawNPCInfo();
+        }
+
+        if (gp.gameState == gp.npcGivingGiftState) {
+            drawNPCGift();
+        }
+
+        if( gp.gameState == gp.npcProposalState) {
+            drawNPCProposal();
+        }
+
+        if (gp.gameState == gp.npcMarryState) {
+            drawNPCMarry();
+        }
+
         if(gp.gameState == gp.fishingMiniGameState) {
             drawFishingMiniGame();
         }
@@ -594,8 +613,8 @@ public class UI {
             info_def = ImageIO.read(new File("res/ui/info_def.png"));
             marry_selected = ImageIO.read(new File("res/ui/marry_selected.png"));
             marry_def = ImageIO.read(new File("res/ui/marry_def.png"));
-            proposal_selected = ImageIO.read(new File("res/ui/proposal_selected.png"));
-            proposal_def = ImageIO.read(new File("res/ui/proposal_def.png"));
+            proposal_selected = ImageIO.read(new File("res/ui/propose_selected.png"));
+            proposal_def = ImageIO.read(new File("res/ui/propose_def.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -636,6 +655,296 @@ public class UI {
             g2.setColor(Color.RED);
             g2.drawString("menuOption: " + gp.keyH.menuOption, 20, 30);
         }
+    }
+
+    public void drawNPCInfo() {
+        // Cari NPC terdekat
+        object.OBJ_NPC npc = null;
+        for (int i = 0; i < gp.obj.length; i++) {
+            if (gp.obj[i] instanceof object.OBJ_NPC && gp.obj[i] != null) {
+                int dx = Math.abs(gp.player.worldX - gp.obj[i].worldX) / gp.tileSize;
+                int dy = Math.abs(gp.player.worldY - gp.obj[i].worldY) / gp.tileSize;
+                if (dx + dy <= 1) {
+                    npc = (object.OBJ_NPC) gp.obj[i];
+                    break;
+                }
+            }
+        }
+        if (npc == null) return;
+
+        String name = npc.name.toLowerCase();
+        BufferedImage infoImg = null;
+        try {
+            infoImg = ImageIO.read(new File("res/ui/" + name + "_template.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        int margin = 50;
+        if (infoImg != null) {
+            int infoWidth = infoImg.getWidth();
+            int infoHeight = infoImg.getHeight();
+            int x = (gp.screenWidth - infoWidth) / 2;
+            int y = gp.screenHeight - infoHeight - margin;
+            g2.drawImage(infoImg, x, y, null);
+
+            // --- Teks di tengah bubble, warna coklat hangat, font kecil ---
+            g2.setFont(pixelify15);
+            g2.setColor(new Color(139, 69, 19)); // Coklat hangat
+
+            int textAreaWidth = infoWidth - 200; // lebih ke kanan & wrap lebih awal
+            int textX = x + 200; // margin kiri lebih besar
+            int textY = y + 25;
+
+            // Loved Items
+            g2.setColor(new Color(205, 133, 63));
+            g2.drawString("Loved Items:", textX, textY);
+            g2.drawString("Heart Point: " + npc.getHeartPoints(), textX + 317, textY);
+            textY += g2.getFontMetrics().getHeight();
+            g2.setColor(new Color(139, 69, 19));
+            textY = drawWrappedList(g2, npc.getLovedItems(), textX, textY, textAreaWidth);
+
+            // Liked Items
+            g2.setColor(new Color(205, 133, 63));
+            g2.drawString("Liked Items:", textX, textY);
+            textY += g2.getFontMetrics().getHeight();
+            g2.setColor(new Color(139, 69, 19));
+            textY = drawWrappedList(g2, npc.getLikedItems(), textX, textY, textAreaWidth);
+
+            // Hated Items
+            g2.setColor(new Color(205, 133, 63));
+            g2.drawString("Hated Items:", textX, textY);
+            textY += g2.getFontMetrics().getHeight();
+            g2.setColor(new Color(139, 69, 19));
+            textY = drawWrappedList(g2, npc.getHatedItems(), textX, textY, textAreaWidth);
+        }
+    }
+
+    public void drawNPCGift() {
+        
+        object.OBJ_NPC npc = null;
+        for (int i = 0; i < gp.obj.length; i++) {
+            if (gp.obj[i] instanceof object.OBJ_NPC && gp.obj[i] != null) {
+                int dx = Math.abs(gp.player.worldX - gp.obj[i].worldX) / gp.tileSize;
+                int dy = Math.abs(gp.player.worldY - gp.obj[i].worldY) / gp.tileSize;
+                if (dx + dy <= 1) {
+                    npc = (object.OBJ_NPC) gp.obj[i];
+                    break;
+                }
+            }
+        }
+        if (npc == null) return;
+
+        String name = npc.name.toLowerCase();
+        BufferedImage infoImg = null;
+        try {
+            infoImg = ImageIO.read(new File("res/ui/" + name + "_template.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        int margin = 50;
+        if (infoImg != null) {
+            int infoWidth = infoImg.getWidth();
+            int infoHeight = infoImg.getHeight();
+            int x = (gp.screenWidth - infoWidth) / 2;
+            int y = gp.screenHeight - infoHeight - margin;
+            g2.drawImage(infoImg, x, y, null);
+
+            items.Item onhand = gp.player.getOnhandItem();
+            String message;
+            String effect = "";
+
+            if (onhand == null) {
+                message = "Kamu tidak memegang item apapun.";
+            } else if (onhand instanceof items.equipment) {
+                message = "Kamu tidak bisa memberikan equipment kepada NPC!";
+            } else {
+                String itemName = onhand.getName();
+                if (npc.getLovedItems().contains(itemName)) {
+                    message = "Kamu memberikan " + itemName + " kepada " + npc.name ;
+                    effect = "Itu adalah loved item! (+25 HP)";
+                } else if (npc.getLikedItems().contains(itemName)) {
+                    message = "Kamu memberikan " + itemName + " kepada " + npc.name ;
+                    effect = "Itu adalah liked item! (+20 HP)";
+                } else if (
+                    (npc.getHatedItems().isEmpty() && !npc.getLovedItems().contains(itemName) && !npc.getLikedItems().contains(itemName))
+                    || npc.getHatedItems().contains(itemName)
+                    || (npc.getHatedItems().contains("Fish") && onhand instanceof items.fish)
+                ) {
+                    message = "Kamu memberikan " + itemName + " kepada " + npc.name ;
+                    effect = "Itu adalah hated item! (-25 HP)";
+                } else {
+                    message = "Kamu memberikan " + itemName + " kepada " + npc.name ;
+                    effect = "Tidak berefek.";
+                }
+            }
+
+            int textX = x + 195;
+            int textY = y + 25;
+
+            g2.setFont(pixelify15);
+            g2.setColor(new Color(139, 69, 19));
+            String[] lines = {message, effect};
+            for (String line : lines) {
+                g2.drawString(line, textX, textY);
+                textY += g2.getFontMetrics().getHeight() + 8;
+            }
+    
+        }
+    }
+
+    public void drawNPCProposal() {
+        object.OBJ_NPC npc = null;
+        for (int i = 0; i < gp.obj.length; i++) {
+            if (gp.obj[i] instanceof object.OBJ_NPC && gp.obj[i] != null) {
+                int dx = Math.abs(gp.player.worldX - gp.obj[i].worldX) / gp.tileSize;
+                int dy = Math.abs(gp.player.worldY - gp.obj[i].worldY) / gp.tileSize;
+                if (dx + dy <= 1) {
+                    npc = (object.OBJ_NPC) gp.obj[i];
+                    break;
+                }
+            }
+        }
+        if (npc == null) return;
+
+        String name = npc.name.toLowerCase();
+        BufferedImage infoImg = null;
+        try {
+            infoImg = ImageIO.read(new File("res/ui/" + name + "_template.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        int margin = 50;
+        if (infoImg != null) {
+            int infoWidth = infoImg.getWidth();
+            int infoHeight = infoImg.getHeight();
+            int x = (gp.screenWidth - infoWidth) / 2;
+            int y = gp.screenHeight - infoHeight - margin;
+            g2.drawImage(infoImg, x, y, null);
+
+            g2.setFont(pixelify15);
+            g2.setColor(new Color(139, 69, 19));
+            String message;
+            if (gp.player.inventoryManager.findItemByName("Proposal Ring") == null) {
+                message = "Kamu tidak punya Proposal Ring!";
+            } else if (npc.getHeartPoints() < 150) {
+                message = "Heart Points " + npc.name + " belum maksimal!";
+            } else if (gp.player.fianceToWho != null) {
+                message = gp.player.fianceToWho + " sudah menjadi tunanganmu!";
+            } else {
+                message = "Tekan ENTER untuk melamar " + npc.name + ".";
+            }
+            g2.drawString(message, x + 200, y + 40);
+
+        }
+    }
+
+    public void drawNPCMarry() {
+        object.OBJ_NPC npc = null;
+        for (int i = 0; i < gp.obj.length; i++) {
+            if (gp.obj[i] instanceof object.OBJ_NPC && gp.obj[i] != null) {
+                int dx = Math.abs(gp.player.worldX - gp.obj[i].worldX) / gp.tileSize;
+                int dy = Math.abs(gp.player.worldY - gp.obj[i].worldY) / gp.tileSize;
+                if (dx + dy <= 1) {
+                    npc = (object.OBJ_NPC) gp.obj[i];
+                    break;
+                }
+            }
+        }
+        if (npc == null) return;
+
+        String name = npc.name.toLowerCase();
+        BufferedImage infoImg = null;
+        try {
+            infoImg = ImageIO.read(new File("res/ui/" + name + "_template.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        int margin = 50;
+        if (infoImg != null) {
+            int infoWidth = infoImg.getWidth();
+            int infoHeight = infoImg.getHeight();
+            int x = (gp.screenWidth - infoWidth) / 2;
+            int y = gp.screenHeight - infoHeight - margin;
+            g2.drawImage(infoImg, x, y, null);
+
+            g2.setFont(pixelify15);
+            g2.setColor(new Color(139, 69, 19));
+            String message;
+            if (gp.player.inventoryManager.findItemByName("Proposal Ring") == null) {
+                message = "Kamu tidak punya Proposal Ring!";
+            } else if (gp.player.fianceToWho != npc.name) {
+                message = npc.name + " belum menjadi tunanganmu!";
+            } else if (!npc.canMarryToday()) {
+                message = "Tunggu satu hari lagi untuk menikahinya.";
+            } else {
+                message = "Tekan ENTER untuk menikahi " + npc.name + ".";
+            }
+            g2.drawString(message, x + 200, y + 40);
+
+
+        }
+    }
+
+    private int drawWrappedList(Graphics2D g2, List<String> items, int x, int y, int maxWidth) {
+        StringBuilder line = new StringBuilder();
+        for (int i = 0; i < items.size(); i++) {
+            String item = items.get(i);
+            String next = (line.length() == 0 ? "" : ", ") + item;
+            int width = g2.getFontMetrics().stringWidth(line + next);
+            if (width > maxWidth && line.length() > 0) {
+                g2.drawString(line.toString(), x, y);
+                y += g2.getFontMetrics().getHeight();
+                line = new StringBuilder(item);
+            } else {
+                if (line.length() > 0) line.append(", ");
+                line.append(item);
+            }
+        }
+        if (line.length() > 0) {
+            g2.drawString(line.toString(), x, y);
+            y += g2.getFontMetrics().getHeight();
+        }
+        return y;
+    }
+
+    public void drawChatNPC() {
+        // Cari NPC terdekat
+        object.OBJ_NPC npc = null;
+        for (int i = 0; i < gp.obj.length; i++) {
+            if (gp.obj[i] instanceof object.OBJ_NPC && gp.obj[i] != null) {
+                int dx = Math.abs(gp.player.worldX - gp.obj[i].worldX) / gp.tileSize;
+                int dy = Math.abs(gp.player.worldY - gp.obj[i].worldY) / gp.tileSize;
+                if (dx + dy <= 1) {
+                    npc = (object.OBJ_NPC) gp.obj[i];
+                    break;
+                }
+            }
+        }
+        if (npc == null) return;
+
+        String name = npc.name.toLowerCase();
+        BufferedImage chatImg = null;
+        try {
+            chatImg = ImageIO.read(new File("res/ui/" + name + "_chat.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        int margin = 50;
+        if (chatImg != null) {
+            int chatWidth = chatImg.getWidth();
+            int chatHeight = chatImg.getHeight();
+            int x = (gp.screenWidth - chatWidth) / 2;
+            int y = gp.screenHeight - chatHeight - margin;
+
+            // Hanya gambar chat image di tengah bawah
+            g2.drawImage(chatImg, x, y, null);
+        }
+
     }
 
     public void drawInventory() {
@@ -712,6 +1021,9 @@ public class UI {
             g2.setColor(Color.WHITE);
             g2.setFont(pixelify15);
             String itemName = item.getName();
+            if (itemName.length() > 8) {
+                itemName = itemName.substring(0, 8) + "..";
+            }
             int nameWidth = g2.getFontMetrics().stringWidth(itemName);
             g2.drawString(itemName, x + (slotSize - nameWidth) / 2, y + slotSize + 20);
 
@@ -1210,7 +1522,11 @@ public class UI {
 
                 g2.setColor(gp.keyH.cursorIndex == i ? Color.YELLOW : (canCook ? Color.WHITE : Color.GRAY));
                 g2.setFont(g2.getFont().deriveFont(Font.BOLD, 24f));
-                g2.drawString(r.getName(), boxX + 52, y);
+                String recipeName = r.getName();
+                if (recipeName.length() > 14) {
+                    recipeName = recipeName.substring(0, 14) + "..";
+                }
+                g2.drawString(recipeName, boxX + 52, y);
             }
 
             if (!recipes.isEmpty()) {
@@ -1373,13 +1689,32 @@ public class UI {
 
     private String getFormattedLocationName(String currentMap) {
         switch (currentMap) {
-            case "insideHouse": return "Inside House";
-            case "farm": return "Farm";
-            case "town": return "Town";
-            case "mountainlake": return "Mountain Lake";
-            case "forestriver": return "Forest River";
-            case "ocean": return "Ocean";
-            default: return currentMap;
+            case "farm":
+            case "farm1":
+            case "farm2": 
+            case "farm3":
+            case "farm4":
+            case "farm5":
+                String farmVariant = gp.tileM.mapManager.getSelectedFarmMap();
+                if (farmVariant.equals("farm")) {
+                    return "Your Farm";
+                } else {
+                    return "Your Farm (" + farmVariant.toUpperCase() + ")";
+                }
+            case "insideHouse":
+                return "Your House";
+            case "town":
+                return "Town";
+            case "mountainlake":
+                return "Mountain Lake";
+            case "forestriver":
+                return "Forest River";
+            case "ocean":
+                return "Ocean";
+            case "store":
+                return "Store";
+            default:
+                return currentMap;
         }
     }
 

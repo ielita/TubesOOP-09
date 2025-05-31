@@ -101,5 +101,6 @@ public class fish extends Item implements buysellable, consumable {
     public void consume(Player player) {
         player.setEnergy(player.getEnergy() + 1);
         player.inventoryManager.removeItem(player.getOnhandItem(), 1);
+        gp.timeM.setMinute(gp.timeM.getMinute() + 5);
     }
 }

@@ -43,6 +43,8 @@ public class food extends Item implements consumable, buysellable {
     public void consume(Player player) {
         player.setEnergy(player.getEnergy() + energy);
         player.inventoryManager.removeItem(player.getOnhandItem(), 1);
+        gp.timeM.setMinute(gp.timeM.getMinute() + 5);
+    
     }
 
     public void getinfo() {

@@ -9,6 +9,8 @@ import java.util.Map;
 import main.GamePanel;
 import main.InventoryManager;
 import main.KeyHandler;
+import object.NPCData;
+import object.OBJ_NPC;
 
 public class Player extends Entity {
 
@@ -23,11 +25,14 @@ public class Player extends Entity {
     private int totalFishCaught;
     public InventoryManager fishCaught;
     private int coalUseCount = 0; 
-    private boolean hasHarvested;
+    private int totalHarvest;
     public InventoryManager inventoryManager;
     public List<Recipe> recipesUnlocked = RecipeData.getAllRecipes(gp);
+    public List<OBJ_NPC> allNPCs = NPCData.getAllNPCs(gp);
     public boolean wentOut;
-    public boolean relationshipStatus;
+    public String marriedToWho;
+    public String fianceToWho;
+
 
     public Player(GamePanel gp, KeyHandler keyH){
         super(gp);
@@ -59,12 +64,12 @@ public class Player extends Entity {
         direction = "down";
         spriteNum = 1;
         defaultSpeed = 10; 
-        sprintSpeed = 15; 
+        sprintSpeed = 40; 
         energy = 100; 
         totalFishCaught = 0; 
         gold = 500; 
-        hasHarvested = false;
-        relationshipStatus = false; 
+        totalHarvest = 0;
+        marriedToWho = null;
     }
 
     // Add this method to Player class
@@ -83,6 +88,9 @@ public class Player extends Entity {
 
         equipment FishingRod = new equipment("Fishing Rod", gp);
         addItemToInventory(FishingRod, 1);
+
+        misc tes = new misc("Legend", gp, 0, 0);
+        addItemToInventory(tes, 100);
         
         fishCaught = new InventoryManager();
 
@@ -144,12 +152,12 @@ public class Player extends Entity {
         this.totalFishCaught = totalFishCaught;
     }
 
-    public boolean hasHarvested() {
-        return hasHarvested;
+    public int getTotalHarvest() {
+        return totalHarvest;
     }
     
-    public void setHasHarvested(boolean hasHarvested) {
-        this.hasHarvested = hasHarvested;
+    public void setTotalHarvest(int totalHarvest) {
+        this.totalHarvest = totalHarvest;
     }
     
     public void addItemToInventory(Item item, int quantity) {

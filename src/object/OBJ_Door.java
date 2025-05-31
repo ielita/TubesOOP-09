@@ -37,8 +37,15 @@ public class OBJ_Door extends SuperObject {
     @Override
     protected void onInteract() {
         if (collision) {
-            message = "Going to " + destinationMap + "...";
-            gp.tileM.mapManager.changeMap(destinationMap, destinationX, destinationY);
+            if (destinationMap.equals("farm")) {
+                // Go directly to the selected farm map, not "farm"
+                String actualFarmMap = gp.tileM.mapManager.getSelectedFarmMap();
+                message = "Going to " + actualFarmMap + "...";
+                gp.tileM.mapManager.changeMap(actualFarmMap, destinationX, destinationY);
+            } else {
+                message = "Going to " + destinationMap + "...";
+                gp.tileM.mapManager.changeMap(destinationMap, destinationX, destinationY);
+            }
             collision = false;
         }
     }
