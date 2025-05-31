@@ -1323,10 +1323,11 @@ public class UI {
         int frameHeight = gp.tileSize * 6;
         int frameX = (gp.screenWidth - frameWidth) / 2;
         int frameY = 222;
-
+        gp.player.updateGender();
+        String game = gp.player.playerImg;
         try {
             backgroundImage = ImageIO.read(new File("res/menu/menuScreen.png"));
-            userImage = ImageIO.read(new File("res/player/player_down_1.png"));
+            userImage = ImageIO.read(new File("res/player/"+game+"/player_down_1.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }

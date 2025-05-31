@@ -28,6 +28,7 @@ public class Player extends Entity {
     public List<Recipe> recipesUnlocked = RecipeData.getAllRecipes(gp);
     public boolean wentOut;
     public boolean relationshipStatus;
+    public String playerImg = "Abigail";
 
     public Player(GamePanel gp, KeyHandler keyH){
         super(gp);
@@ -46,6 +47,9 @@ public class Player extends Entity {
         solidAreaDefaultY = solidArea.y;
         solidArea.width = 32;
         solidArea.height = 32;
+
+        updateGender();
+
         getImage();
         setDefaultValues();
         initializeStartingItems(); // Add this line
@@ -219,20 +223,19 @@ public class Player extends Entity {
     }
 
     public void getImage() {
+        up1 = setup("player/"+playerImg+"/player_up_1");
+        up2 = setup("player/"+playerImg+"/player_up_2");
+        upidle = setup("player/"+playerImg+"/player_up_3");
+        downidle = setup("player/"+playerImg+"/player_down_3");
+        down1 = setup("player/"+playerImg+"/player_down_1");
+        down2 = setup("player/"+playerImg+"/player_down_2");
+        left1 = setup("player/"+playerImg+"/player_left_1");
+        left2 = setup("player/"+playerImg+"/player_left_2");
+        left3 = setup("player/"+playerImg+"/player_left_3");
 
-        up1 = setup("player/player_up_1");
-        up2 = setup("player/player_up_2");
-        upidle = setup("player/player_up_3");
-        downidle = setup("player/player_down_3");
-        down1 = setup("player/player_down_1");
-        down2 = setup("player/player_down_2");
-        left1 = setup("player/player_left_1");
-        left2 = setup("player/player_left_2");
-        left3 = setup("player/player_left_3");
-
-        right3 = setup("player/player_right_3");
-        right1 = setup("player/player_right_1");
-        right2 = setup("player/player_right_2");
+        right3 = setup("player/"+playerImg+"/player_right_3");
+        right1 = setup("player/"+playerImg+"/player_right_1");
+        right2 = setup("player/"+playerImg+"/player_right_2");
     }
 
     public void update() {
@@ -472,4 +475,15 @@ public class Player extends Entity {
         gp.timeM.skipDay();
 
     }
+
+    public void updateGender(){
+        if (!gp.ui.isMale){
+            this.playerImg = "Abigail";
+        }
+        else{
+            this.playerImg = "Bambang";
+        }
+        getImage();
+    }
+    
 }
