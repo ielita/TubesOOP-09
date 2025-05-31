@@ -13,7 +13,7 @@ import items.seed;
 public class MapManager {
     GamePanel gp;
     public String currentMap;
-    public String selectedFarmMap; // Store the randomly selected farm map
+    public String selectedFarmMap; 
     public int[][] mapTileNum;
     public int maxWorldCol;
     public int maxWorldRow;
@@ -82,7 +82,7 @@ public class MapManager {
     }
 
     public void changeMap(String newMap, int playerX, int playerY) {
-        // Save current farm state if leaving a farm
+        
         if (isFarmMap(currentMap)) {
             saveFarmState();
         }
@@ -128,7 +128,7 @@ public class MapManager {
     private void restoreFarmState() {
         if (savedFarmTiles == null) return;
         
-        // Check if dimensions match
+        
         if (savedFarmMaxCol != maxWorldCol || savedFarmMaxRow != maxWorldRow) {
             return;
         }

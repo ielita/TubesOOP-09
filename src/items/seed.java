@@ -17,7 +17,7 @@ public class seed extends Item implements buysellable {
         this.season = season;
     }
 
-    // Getters and setters
+    
     public int getHargaBeli() {
         return hargabeli;
     }
@@ -81,7 +81,7 @@ public class seed extends Item implements buysellable {
         }
     }
 
-    // Get the buy price for the resulting crop
+    
     public int getCropBuyPrice() {
         String cropType = this.cropType.toLowerCase();
         
@@ -101,7 +101,7 @@ public class seed extends Item implements buysellable {
         }
     }
 
-    // Plant this seed and return the resulting crop when ready
+    
     public crop plant() {
 
         crop harvestedCrop = new crop(
@@ -114,14 +114,14 @@ public class seed extends Item implements buysellable {
         return harvestedCrop;
     }
 
-    // Calculate total revenue from one harvest
+    
     public int getTotalRevenue() {
         return getCropSellPrice() * getCropYield();
     }
 
 
 
-    // Check if this is a multi-harvest crop
+    
     public boolean isMultiHarvest() {
         String cropLower = cropType.toLowerCase();
         return cropLower.equals("wheat") || cropLower.equals("blueberry") || 
@@ -129,7 +129,7 @@ public class seed extends Item implements buysellable {
     }
 
 
-    // Implement abstract method from Item class
+    
     @Override
     public void getinfo() {
 

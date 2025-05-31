@@ -115,7 +115,7 @@ public class AssetSetter {
     }
     
     private void setFarmObjects(String farmMapName) {
-        // Get the actual selected farm map name - FIXED THIS LINE
+        
         String selectedFarm = gp.tileM.mapManager.getSelectedFarmMap();
 
         gp.obj[0] = new OBJ_Door(gp, "insideHouse", 12, 20);

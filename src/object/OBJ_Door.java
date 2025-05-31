@@ -38,7 +38,7 @@ public class OBJ_Door extends SuperObject {
     protected void onInteract() {
         if (collision) {
             if (destinationMap.equals("farm")) {
-                // Go directly to the selected farm map, not "farm"
+                
                 String actualFarmMap = gp.tileM.mapManager.getSelectedFarmMap();
                 message = "Going to " + actualFarmMap + "...";
                 gp.tileM.mapManager.changeMap(actualFarmMap, destinationX, destinationY);

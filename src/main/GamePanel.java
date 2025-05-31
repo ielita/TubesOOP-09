@@ -44,6 +44,7 @@ public class GamePanel extends JPanel implements Runnable {
     public AssetSetter aSetter = new AssetSetter(this);
     public Player player = new Player(this, keyH);
     public TimeManager timeM = new TimeManager(this);
+    public boolean endGameStatsShown = false;
 
     public SuperObject obj[] = new SuperObject[20];
     public Store store;
@@ -170,9 +171,12 @@ public class GamePanel extends JPanel implements Runnable {
                 player.sleep();
                 autoSleepTriggered = true;
             }
-            if ((player.getGold() >= 17209 || player.marriedToWho != null) && gameState != endGameStatsState) {
+
+            if (!endGameStatsShown && (player.getGold() >= 17209 || player.marriedToWho != null)) {
                 gameState = endGameStatsState;
+                endGameStatsShown = true;
             }
+            
         }
         if (gameState == sleepState) {
             ui.updateSleepAnimation();

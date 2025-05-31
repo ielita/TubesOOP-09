@@ -9,19 +9,19 @@ import javax.imageio.ImageIO;
 import main.GamePanel;
 
 public abstract class Item {
-    // Common properties for all items
+    
     private String name;
     private BufferedImage image;
     public GamePanel gp;
     
-    // Constructor
+    
     public Item(String name, GamePanel gp) {
         this.gp = gp;
         this.name = name;
         this.image = loadImageFromResource();
     }
     
-    // Getters and setters
+    
     public String getName() {
         return name;
     }
@@ -37,7 +37,7 @@ public abstract class Item {
     public BufferedImage loadImageFromResource() {
         try {
             String path = "res/items/" + name + ".png";
-            
+
             return ImageIO.read(new File(path));
         } catch (IOException | IllegalArgumentException e) {
             System.err.println("Error loading image for item: " + name);
@@ -50,6 +50,6 @@ public abstract class Item {
         this.name = name;
     }
     
-    // Abstract method that all items must implement
+    
     public abstract void getinfo();
 }

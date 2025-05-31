@@ -192,6 +192,7 @@ public class KeyHandler implements KeyListener{
             return;
         }
 
+
         if (gp.gameState == gp.keyBindingState){
             int maxKeyBindNum = 0;
             switch(gp.ui.subState){
@@ -232,6 +233,18 @@ public class KeyHandler implements KeyListener{
             else if(gp.gameState == gp.optionsState){
                 gp.gameState = gp.playState;
             }
+            else if (gp.gameState == gp.inventoryState) {
+                gp.gameState = gp.playState;
+            }
+            else if (gp.gameState == gp.storeState) {
+                gp.gameState = gp.playState;
+            }
+            else if (gp.gameState == gp.endGameStatsState) {
+                gp.gameState = gp.playState;
+            }
+            else if (gp.gameState == gp.shippingBinState) {
+                gp.gameState = gp.playState;
+            }
         }
 
         if (gp.gameState == gp.cookingState) {
@@ -240,7 +253,7 @@ public class KeyHandler implements KeyListener{
 
             if (code == KeyEvent.VK_W || code == KeyEvent.VK_UP) {
                 cursorIndex = (cursorIndex - 1 + recipes.size()) % recipes.size();
-                cursorIndex2 = 0; // reset fuel index saat pindah resep
+                cursorIndex2 = 0; 
                 enterPressed = false;
             }
             if (code == KeyEvent.VK_S || code == KeyEvent.VK_DOWN) {
@@ -252,7 +265,7 @@ public class KeyHandler implements KeyListener{
             List<String> fuels = oven.getAvailableFuels();
 
             if (code == KeyEvent.VK_O) {
-                // O untuk geser fuel ke kanan
+                
                 cursorIndex2 = (cursorIndex2 + 1) % fuels.size();
             }
 
@@ -262,7 +275,7 @@ public class KeyHandler implements KeyListener{
                 String selectedFuel = fuels.get(cursorIndex2);
                 if (oven.canCook(selected)) {
                     oven.cook(selected, selectedFuel);
-                    gp.gameState = gp.playState; // kembali ke game utama
+                    gp.gameState = gp.playState; 
                     enterPressed = false;
                 }
             }
@@ -282,19 +295,19 @@ public class KeyHandler implements KeyListener{
             }
             if (code == KeyEvent.VK_ENTER) {
                 switch (menuOption) {
-                    case 0: // Talk
+                    case 0: 
                         gp.gameState = gp.npcChatState; 
                         break;
-                    case 1: // Gift
+                    case 1: 
                         gp.gameState = gp.npcGivingGiftState;
                         break;
-                    case 2: // Info
+                    case 2: 
                         gp.gameState = gp.npcInfoState; 
                         break;
-                    case 3: // Marry
+                    case 3: 
                         gp.gameState = gp.npcMarryState;
                         break;
-                    case 4: // Proposal
+                    case 4: 
                         gp.gameState = gp.npcProposalState;
                         break;
                 }
@@ -339,14 +352,14 @@ public class KeyHandler implements KeyListener{
             }
             if (code == KeyEvent.VK_ENTER) {
                 if (gp.player.inventoryManager.findItemByName("Proposal Ring") == null) {
-                    // Tidak ada ring, gagal
+                    
                 } else if (gp.player.fianceToWho != npc.name) {
-                    // Belum tunangan
+                    
                 } else if (!npc.canMarryToday()) {
-                    // Belum sehari setelah tunangan
+                    
                 } else {
                     npc.marry();
-                    // Efek lain sudah di method marry()
+                    
                 }
                 gp.gameState = gp.playState;
             }
@@ -398,14 +411,14 @@ public class KeyHandler implements KeyListener{
             if (code == KeyEvent.VK_ENTER) {
                 if (gp.player.inventoryManager.findItemByName("Proposal Ring") == null) {
                     gp.player.reduceEnergy(20);
-                    // Tidak ada ring, gagal
+                    
                 } else if (npc.getHeartPoints() < 150) {
                     gp.player.reduceEnergy(20);
                 } else if (gp.player.fianceToWho == npc.name) {
                   
                 } else if (gp.player.marriedToWho != null) {
                     gp.player.reduceEnergy(20);
-                    // Sudah menikah
+                    
                 } else {
                     npc.propose();
                     gp.player.reduceEnergy(10);
@@ -528,6 +541,7 @@ public class KeyHandler implements KeyListener{
                 }
 
             }
+
             if (code == KeyEvent.VK_Y){
                 Item onhandItem = gp.player.getOnhandItem();
 
@@ -677,14 +691,10 @@ public class KeyHandler implements KeyListener{
         if (code == KeyEvent.VK_3) {
             gp.timeM.setHour(gp.timeM.getHour() + 1);
         }
-
-        if (code == KeyEvent.VK_3) {
-            gp.timeM.setHour(gp.timeM.getHour() + 1);
-        }
-        if (code == KeyEvent.VK_4) { // Press 5 to force plant growth update
+        if (code == KeyEvent.VK_4) { 
             gp.tileM.mapManager.updatePlantGrowth();
         }
-        if (code == KeyEvent.VK_5) { // Press 6 to force crop harvest update
+        if (code == KeyEvent.VK_5) { 
             gp.tileM.mapManager.debugAllPlants();
         }
 

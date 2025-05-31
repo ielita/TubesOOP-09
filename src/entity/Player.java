@@ -32,7 +32,10 @@ public class Player extends Entity {
     public boolean wentOut;
     public String marriedToWho;
     public String fianceToWho;
-
+    private int totalIncome = 0;
+    private int totalExpenditure = 0;
+    private int[] seasonIncome = new int[4];     
+    private int[] seasonExpenditure = new int[4];   
 
     public Player(GamePanel gp, KeyHandler keyH){
         super(gp);
@@ -53,14 +56,14 @@ public class Player extends Entity {
         solidArea.height = 32;
         getImage();
         setDefaultValues();
-        initializeStartingItems(); // Add this line
+        initializeStartingItems(); 
     }
 
     public void setDefaultValues(){
-        // Default spawn position can be overridden by map changes
+        
         worldX = gp.tileSize * 2;
         worldY = gp.tileSize * 2;
-        speed = defaultSpeed;  // Use default speed initially
+        speed = defaultSpeed;  
         direction = "down";
         spriteNum = 1;
         defaultSpeed = 10; 
@@ -72,7 +75,7 @@ public class Player extends Entity {
         marriedToWho = null;
     }
 
-    // Add this method to Player class
+    
     private void initializeStartingItems() {
         equipment hoe = new equipment("Hoe", gp);
         addItemToInventory(hoe, 1); 
@@ -134,16 +137,42 @@ public class Player extends Entity {
 
     public void addGold(int amount) {
         this.gold += amount;
+        totalIncome += amount;
+        int seasonIdx = gp.timeM.getCurrentSeasonIndex();
+        seasonIncome[seasonIdx] += amount;
     }
 
     public boolean spendGold(int amount) {
         if (gold >= amount) {
             gold -= amount;
+            totalExpenditure += amount;
+            int seasonIdx = gp.timeM.getCurrentSeasonIndex();
+            seasonExpenditure[seasonIdx] += amount;
             return true;
         }
         return false;
     }
 
+    public int getTotalIncome() { return totalIncome; }
+
+    public int getTotalExpenditure() { return totalExpenditure; }
+
+    public int getAverageSeasonIncome() {
+        int seasons = 0, total = 0;
+        for (int i = 0; i < seasonIncome.length; i++) {
+            if (seasonIncome[i] > 0) { seasons++; total += seasonIncome[i]; }
+        }
+        return seasons > 0 ? total / seasons : 0;
+    }
+
+    public int getAverageSeasonExpenditure() {
+        int seasons = 0, total = 0;
+        for (int i = 0; i < seasonExpenditure.length; i++) {
+            if (seasonExpenditure[i] > 0) { seasons++; total += seasonExpenditure[i]; }
+        }
+        return seasons > 0 ? total / seasons : 0;
+    }
+    
     public int getTotalFishCaught() {
         return totalFishCaught;
     }
@@ -159,7 +188,7 @@ public class Player extends Entity {
     public void setTotalHarvest(int totalHarvest) {
         this.totalHarvest = totalHarvest;
     }
-    
+
     public void addItemToInventory(Item item, int quantity) {
         inventoryManager.addItem(item, quantity);
     }

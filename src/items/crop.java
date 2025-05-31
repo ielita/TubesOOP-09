@@ -42,7 +42,7 @@ public class crop extends Item implements consumable, buysellable{
         this.jumlahCropPanen = jumlahCropPanen;
     }
 
-    // Implement abstract methods
+    
     @Override
     public void consume(Player player) {
         player.setEnergy(player.getEnergy() + 3);

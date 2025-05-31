@@ -12,8 +12,8 @@ import main.GamePanel;
 public class OBJ_NPC extends SuperObject {
 
     private int heartPoints = 150;
-    private int chatFrequency = 0;
-    private int giftFrequency = 0;
+    public int chatFrequency = 0;
+    public int giftFrequency = 0;
 
     private final int maxHeartPoints = 150;
     private List<String> lovedItems;
@@ -87,7 +87,7 @@ public class OBJ_NPC extends SuperObject {
 
     public void gift(String itemName, items.Item item) {
         if (item == null) {
-            return; // Tidak ada item yang diberikan
+            return; 
         }
         giftFrequency++;
         if (evaluateGift(itemName, item)) {
@@ -124,7 +124,7 @@ public class OBJ_NPC extends SuperObject {
 
     public boolean evaluateGift(String itemName, items.Item item) {
         if (item instanceof items.equipment) {
-            // Tidak melakukan apa-apa, equipment tidak bisa diberikan
+            
             return false;
         }
         if (lovedItems.contains(itemName)) {

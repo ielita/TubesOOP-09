@@ -30,6 +30,7 @@ public class UI {
     private Font pixelify80;
     private Font pixelify120;
     private Font pixelify15;
+    private Font pixelify16;
     private Font pixelify50;
     private Font pixelify70;
     private Font pixelify32;
@@ -67,11 +68,11 @@ public class UI {
             pixelify36 = pixelify.deriveFont(Font.BOLD, 36f);
             pixelify80 = pixelify.deriveFont(Font.BOLD, 80f);
             pixelify120 = pixelify.deriveFont(Font.BOLD, 120f);
-            pixelify15 = pixelify.deriveFont(Font.PLAIN, 15f);
             pixelify50 = pixelify.deriveFont(Font.PLAIN, 50f);
             pixelify70 = pixelify.deriveFont(Font.PLAIN, 70f);
             pixelify32 = pixelify.deriveFont(Font.PLAIN, 32f);
             pixelify18 = pixelify.deriveFont(Font.PLAIN, 18f);
+            pixelify16 = pixelify.deriveFont(Font.PLAIN, 16f);
             pixelify80 = pixelify.deriveFont(Font.BOLD, 80f);
             pixelify30 = pixelify.deriveFont(Font.PLAIN, 30f);
             pixelify15 = pixelify.deriveFont(Font.PLAIN, 15f);
@@ -83,6 +84,7 @@ public class UI {
             pixelify80 = new Font("Arial", Font.BOLD, 80);
             pixelify120 = new Font("Arial", Font.BOLD, 120);
             pixelify15 = new Font("Arial", Font.PLAIN, 15);
+            pixelify16 = new Font("Arial", Font.PLAIN, 16);
             pixelify50 = new Font("Arial", Font.PLAIN, 50);
             pixelify70 = new Font("Arial", Font.PLAIN, 70);
             pixelify32 = new Font("Arial", Font.PLAIN, 32);
@@ -91,6 +93,7 @@ public class UI {
             pixelify30 = new Font("Arial", Font.PLAIN, 30);
         }
     }
+
 
     public void draw(Graphics2D g2) {
         this.g2 = g2;
@@ -124,6 +127,11 @@ public class UI {
         }
         if (gp.gameState == gp.npcInfoState) {
             drawNPCInfo();
+        }
+
+        if (gp.gameState == gp.endGameStatsState) {
+            drawEndGameStats();
+            return;
         }
 
         if (gp.gameState == gp.npcGivingGiftState) {
@@ -210,11 +218,12 @@ public class UI {
     }
 
     private void drawSubWindow(int frameX, int frameY, int frameWidth, int frameHeight) {
-        Color backgroundColor = new Color(0, 0, 0, 180); 
+        
+        Color backgroundColor = new Color(139, 69, 19, 240); 
         g2.setColor(backgroundColor);
         g2.fillRoundRect(frameX, frameY, frameWidth, frameHeight, 35, 35);
         
-        Color borderColor = new Color(255, 255, 255);
+        Color borderColor = new Color(205, 133, 63, 255);
         g2.setColor(borderColor);
         g2.setStroke(new java.awt.BasicStroke(5));
         g2.drawRoundRect(frameX + 5, frameY + 5, frameWidth - 10, frameHeight - 10, 25, 25);
@@ -262,9 +271,10 @@ public class UI {
         String text = "OPTIONS";
         textX = getXforCenteredText(text);
         textY = frameY + gp.tileSize + 20 ;
+        g2.setColor(Color.WHITE);
         g2.drawString(text, textX, textY);
         
-        textX = frameX +  gp.tileSize +10 ;
+        textX = frameX +  gp.tileSize -24 ;
         
         g2.setFont(pixelify32);
 
@@ -355,7 +365,8 @@ public class UI {
         int frameX = (gp.screenWidth - frameWidth) / 2;
         int frameY = (gp.screenHeight - frameHeight) / 2 ; 
         drawSubWindow(frameX, frameY, frameWidth, frameHeight);
-        
+
+        g2.setColor(Color.WHITE);
         g2.setFont(pixelify50);
         String text = "KEY BINDINGS";
         int textX = getXforCenteredText(text);
@@ -587,7 +598,7 @@ public class UI {
         object.OBJ_NPC npc = null;
         for (int i = 0; i < gp.obj.length; i++) {
             if (gp.obj[i] instanceof object.OBJ_NPC && gp.obj[i] != null) {
-                // Cek proximity, misal Manhattan distance <= 1
+                
                 int dx = Math.abs(gp.player.worldX - gp.obj[i].worldX) / gp.tileSize;
                 int dy = Math.abs(gp.player.worldY - gp.obj[i].worldY) / gp.tileSize;
                 if (dx + dy <= 1) {
@@ -601,10 +612,10 @@ public class UI {
         String name = npc.name;
 
         try {
-            // Load dynamic NPC icon
+            
             icon = ImageIO.read(new File("res/ui/" + name.toLowerCase() + "_icon.png"));
 
-            // Load all option images
+            
             talk_selected = ImageIO.read(new File("res/ui/talk_selected.png"));
             talk_def = ImageIO.read(new File("res/ui/talk_def.png"));
             gift_selected = ImageIO.read(new File("res/ui/gift_selected.png"));
@@ -623,19 +634,19 @@ public class UI {
         int gap = 5;
 
         if (icon != null && talk_selected != null) {
-            int maxWidth = talk_selected.getWidth(); // Assume all icons same width
+            int maxWidth = talk_selected.getWidth(); 
             int itemHeight = talk_selected.getHeight();
             int totalHeight = itemHeight * 5 + gap * 4;
 
             int x = gp.screenWidth - maxWidth - margin;
             int y = (gp.screenHeight - totalHeight) / 2;
 
-            // Draw NPC icon on the left
+            
             int leftImageX = x - icon.getWidth() - gap;
             int leftImageY = y + (totalHeight - icon.getHeight()) / 2;
             g2.drawImage(icon, leftImageX, leftImageY, null);
 
-            // Choose image for each menu option
+            
             BufferedImage[] options = {
                 gp.keyH.menuOption == 0 ? talk_selected : talk_def,
                 gp.keyH.menuOption == 1 ? gift_selected : gift_def,
@@ -644,13 +655,13 @@ public class UI {
                 gp.keyH.menuOption == 4 ? proposal_selected : proposal_def
             };
 
-            // Draw menu options
+            
             for (BufferedImage img : options) {
                 g2.drawImage(img, x, y, null);
                 y += itemHeight + gap;
             }
 
-            // Debug info (optional)
+            
             g2.setFont(pixelify18);
             g2.setColor(Color.RED);
             g2.drawString("menuOption: " + gp.keyH.menuOption, 20, 30);
@@ -658,7 +669,7 @@ public class UI {
     }
 
     public void drawNPCInfo() {
-        // Cari NPC terdekat
+        
         object.OBJ_NPC npc = null;
         for (int i = 0; i < gp.obj.length; i++) {
             if (gp.obj[i] instanceof object.OBJ_NPC && gp.obj[i] != null) {
@@ -688,15 +699,15 @@ public class UI {
             int y = gp.screenHeight - infoHeight - margin;
             g2.drawImage(infoImg, x, y, null);
 
-            // --- Teks di tengah bubble, warna coklat hangat, font kecil ---
+            
             g2.setFont(pixelify15);
-            g2.setColor(new Color(139, 69, 19)); // Coklat hangat
+            g2.setColor(new Color(139, 69, 19)); 
 
-            int textAreaWidth = infoWidth - 200; // lebih ke kanan & wrap lebih awal
-            int textX = x + 200; // margin kiri lebih besar
+            int textAreaWidth = infoWidth - 200; 
+            int textX = x + 200; 
             int textY = y + 25;
 
-            // Loved Items
+            
             g2.setColor(new Color(205, 133, 63));
             g2.drawString("Loved Items:", textX, textY);
             g2.drawString("Heart Point: " + npc.getHeartPoints(), textX + 317, textY);
@@ -704,14 +715,14 @@ public class UI {
             g2.setColor(new Color(139, 69, 19));
             textY = drawWrappedList(g2, npc.getLovedItems(), textX, textY, textAreaWidth);
 
-            // Liked Items
+            
             g2.setColor(new Color(205, 133, 63));
             g2.drawString("Liked Items:", textX, textY);
             textY += g2.getFontMetrics().getHeight();
             g2.setColor(new Color(139, 69, 19));
             textY = drawWrappedList(g2, npc.getLikedItems(), textX, textY, textAreaWidth);
 
-            // Hated Items
+            
             g2.setColor(new Color(205, 133, 63));
             g2.drawString("Hated Items:", textX, textY);
             textY += g2.getFontMetrics().getHeight();
@@ -912,7 +923,7 @@ public class UI {
     }
 
     public void drawChatNPC() {
-        // Cari NPC terdekat
+        
         object.OBJ_NPC npc = null;
         for (int i = 0; i < gp.obj.length; i++) {
             if (gp.obj[i] instanceof object.OBJ_NPC && gp.obj[i] != null) {
@@ -941,7 +952,7 @@ public class UI {
             int x = (gp.screenWidth - chatWidth) / 2;
             int y = gp.screenHeight - chatHeight - margin;
 
-            // Hanya gambar chat image di tengah bawah
+            
             g2.drawImage(chatImg, x, y, null);
         }
 
@@ -1499,10 +1510,10 @@ public class UI {
         int boxX = (gp.screenWidth - boxWidth) / 2;
         int boxY = (gp.screenHeight - boxHeight) / 2;
 
-        // Background utama (wood)
+        
         g2.setColor(new Color(139, 69, 19, 240));
         g2.fillRoundRect(boxX, boxY, boxWidth, boxHeight, 32, 32);
-        g2.setColor(new Color(205, 133, 63, 255)); // Outline terang
+        g2.setColor(new Color(205, 133, 63, 255)); 
         g2.setStroke(new BasicStroke(4));
         g2.drawRoundRect(boxX, boxY, boxWidth, boxHeight, 32, 32);
 
@@ -1542,7 +1553,7 @@ public class UI {
                 int detailX = boxX + boxWidth / 2 + 10;
                 int detailY = boxY + 80;
 
-                // Background detail item
+                
                 g2.setColor(new Color(90, 58, 42, 200));
                 g2.fillRoundRect(detailX - 10, detailY - 10, 260, 200, 16, 16);
                 g2.setColor(new Color(205, 133, 63, 255));
@@ -1572,7 +1583,7 @@ public class UI {
                 int fuelBoxWidth = 260;
                 int fuelBoxHeight = 90;
 
-                // Fuel box
+                
                 g2.setColor(new Color(90, 58, 42, 200));
                 g2.fillRoundRect(fuelBoxX, fuelBoxY, fuelBoxWidth, fuelBoxHeight, 12, 12);
                 g2.setColor(new Color(205, 133, 63, 255));
@@ -1891,6 +1902,73 @@ public class UI {
 
         g2.setColor(new Color(0, 0, 0));
         g2.drawRect(xis, textY, width, height);
+    }
+        
+    public void drawEndGameStats() {
+        int frameWidth = gp.tileSize * 10;   
+        int frameHeight = gp.tileSize * 9;
+        int frameX = (gp.screenWidth - frameWidth) / 2;
+        int frameY = (gp.screenHeight - frameHeight) / 2;
+
+        drawSubWindow(frameX, frameY, frameWidth, frameHeight);
+
+        int x = frameX + 24;
+        int y = frameY + 38;
+        int line = 26;       
+
+        g2.setFont(pixelify26);
+        g2.setColor(Color.WHITE);
+        g2.drawString("END GAME STATISTICS", x, y);
+        y += line + 8;
+
+        g2.setFont(pixelify16);
+
+        g2.drawString("Total Income: " + gp.player.getTotalIncome() + "g", x, y); y += line;
+        g2.drawString("Total Expenditure: " + gp.player.getTotalExpenditure() + "g", x, y); y += line;
+        g2.drawString("Avg Season Income: " + gp.player.getAverageSeasonIncome() + "g", x, y); y += line;
+        g2.drawString("Avg Season Expenditure: " + gp.player.getAverageSeasonExpenditure() + "g", x, y); y += line;
+        g2.drawString("Total Days Played: " + gp.timeM.getTotalDaysPlayed(), x, y); y += line + 6;
+
+        g2.setFont(pixelify18);
+        g2.drawString("NPCs Status:", x, y); y += line;
+        g2.setFont(pixelify12);
+        for (object.OBJ_NPC npc : gp.player.allNPCs) {
+            String npcLine = "- " + npc.name + " | " +
+                npc.getRelationshipStatus() +
+                " | Chat: " + npc.chatFrequency +
+                " | Gift: " + npc.giftFrequency;
+            g2.drawString(npcLine, x + 10, y);
+            y += 18;
+        }
+        y += 6;
+
+        int commonFishCount = 0;
+        int regularFishCount = 0;
+        int legendaryFishCount = 0;
+        for (items.Item i : gp.player.inventoryManager.getInventory().keySet()) {
+            if (i instanceof items.fish) {
+                items.fish f = (items.fish) i;
+                if (f.getRarity().equals("common")) {
+                    commonFishCount += gp.player.inventoryManager.getItemQuantity(i.getName());
+                } else if (f.getRarity().equals("regular")) {
+                    regularFishCount += gp.player.inventoryManager.getItemQuantity(i.getName());
+                } else if (f.getRarity().equals("legendary")) {
+                    legendaryFishCount += gp.player.inventoryManager.getItemQuantity(i.getName());
+                }
+            }
+        }
+        
+        g2.setFont(pixelify16);
+        g2.drawString("Crops Harvested: " + gp.player.getTotalHarvest(), x, y); y += line;
+        g2.drawString("Fish Caught: " + gp.player.getTotalFishCaught(), x, y); y += line;
+        g2.setFont(pixelify12);
+        g2.drawString("  - Common: " + commonFishCount, x + 18, y); y += 16;
+        g2.drawString("  - Regular: " + regularFishCount, x + 18, y); y += 16;
+        g2.drawString("  - Legendary: " + legendaryFishCount, x + 18, y); y += 16;
+
+        g2.setFont(pixelify16);
+        g2.setColor(Color.YELLOW);
+        g2.drawString("Tekan ESC untuk tutup", x, frameY + frameHeight - 18);
     }
 
     public int getXforCenteredText(String text) {

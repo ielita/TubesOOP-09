@@ -14,11 +14,11 @@ public class NPCData {
             List.of("Catfish", "Salmon", "Sardine"),
             List.of("Coal", "Wood"),
             gp),
-            
+
             new OBJ_NPC("Mayor Tadi",
             List.of("Legend"),
             List.of("Angler", "Crimsonfish", "Glacierfish"),
-            List.<String>of(), // Hated = semua selain loved dan liked, handle di OBJ_NPC
+            List.<String>of(), 
             gp),
 
             new OBJ_NPC("Caroline",

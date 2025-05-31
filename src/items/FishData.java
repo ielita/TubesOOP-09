@@ -7,7 +7,7 @@ public class FishData {
     public static List<fish> getAllFish(GamePanel gp) {
         List<fish> list = new ArrayList<>();
 
-        // 🟢 Common Fish
+        
         list.add(new fish(
             "Bullhead",
             List.of("mountainlake"),
@@ -36,7 +36,7 @@ public class FishData {
             gp
         ));
 
-        // 🔵 Regular Fish
+        
         list.add(new fish(
             "Largemouth Bass",
             List.of("mountainlake"),
@@ -146,7 +146,7 @@ public class FishData {
             gp
         ));
 
-        // 🟡 Legendary Fish
+        
         list.add(new fish(
             "Angler",
             List.of("farm"),

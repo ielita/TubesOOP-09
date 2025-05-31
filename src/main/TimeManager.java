@@ -104,6 +104,13 @@ public class TimeManager {
         return false;
     }
 
+    public int getCurrentSeasonIndex() {
+        return currentSeasonIndex;
+    }
+
+    public int getTotalDaysPlayed() {
+        return gp.timeM.currentSeasonIndex * gp.timeM.DAYS_PER_SEASON + gp.timeM.getDay();
+    }
     public boolean checkNewDayFlag() {
         return newDay;
     }

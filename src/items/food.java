@@ -23,7 +23,7 @@ public class food extends Item implements consumable, buysellable {
 
     private BufferedImage loadImage(String name) {
         try {
-            // Nama file: res/recipe/[nama makanan].png (spasi diganti _, lowercase)
+            
             String fileName = name + ".png";
             return ImageIO.read(new File("res/items/" + fileName));
         } catch (IOException e) {

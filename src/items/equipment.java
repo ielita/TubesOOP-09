@@ -132,8 +132,6 @@ public class equipment extends Item {
 
         if (getName().equals("Fishing Rod")) {
             if (player.getFacingTile() == 6) {
-                player.setEnergy(player.getEnergy() - 5);
-                gp.timeM.setMinute(gp.timeM.getMinute() + 15);
 
                 List<fish> allFish = FishData.getAllFish(gp);
                 List<fish> availableFish = new ArrayList<>();
@@ -175,6 +173,8 @@ public class equipment extends Item {
                     } else if ("legendary".equalsIgnoreCase(type)) {
                         min = 1; max = 500; tries = 7;
                     }
+                    player.setEnergy(player.getEnergy() - 5);
+                    gp.timeM.setMinute(gp.timeM.getMinute() + 15);
                     
                     gp.fishingMiniGame.start(caught, min, max, tries);
                     if (!gp.fishingMiniGame.getResultMessage().equals("Anda gagal mendapatkan ikan!")) {

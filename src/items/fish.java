@@ -92,7 +92,7 @@ public class fish extends Item implements buysellable, consumable {
         if ("Regular".equalsIgnoreCase(rarity)) C = 5;
         if ("Legendary".equalsIgnoreCase(rarity)) C = 25;
 
-        // Rumus harga jual
+        
         double harga = (4.0 / seasonCount) * (24.0 / totalHours) * (2.0 / weatherCount) * (4.0 / locationCount) * C;
         return (int) Math.round(harga);
     }

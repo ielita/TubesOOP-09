@@ -62,13 +62,13 @@ public class OBJ_Oven extends SuperObject {
     protected void onInteract() {
         if (collision) {
             gp.gameState = gp.cookingState;
-            gp.keyH.cursorIndex = 0; // Reset cursor index
+            gp.keyH.cursorIndex = 0; 
             collision = false;
             return;
         }
     }
 
-    // Ambil resep yang sudah unlocked (cek syarat unlock di sini)
+    
     public List<Recipe> getUnlockedRecipes() {
         List<Recipe> unlocked = new ArrayList<>();
         for (Recipe r : recipes) {
@@ -77,13 +77,13 @@ public class OBJ_Oven extends SuperObject {
         return unlocked;
     }
 
-    // Cek syarat unlock resep
+    
     public boolean isRecipeUnlocked(Recipe r) {
         switch (r.getUnlockType()) {
             case DEFAULT:
                 return true;
             case STORE:
-                return r.isUnlocked(); // unlock manual via store
+                return r.isUnlocked(); 
             case FISH_COUNT:
                 return gp.player.getTotalFishCaught() >= Integer.parseInt(r.getUnlockParam());
             case ITEM_OBTAIN:
@@ -105,7 +105,7 @@ public class OBJ_Oven extends SuperObject {
         this.coalUseCount = count;
     }
 
-    // Cek bahan (termasuk Any Fish)
+    
     public boolean canCook(Recipe recipe) {
         for (Map.Entry<String, Integer> entry : recipe.getIngredients().entrySet()) {
             String name = entry.getKey();
@@ -131,7 +131,7 @@ public class OBJ_Oven extends SuperObject {
         return true;
     }
 
-    // Cek fuel
+    
     public boolean hasFuel() {
         return inventory.getItemQuantity("Firewood") > 0 || inventory.getItemQuantity("Coal") > 0;
     }
@@ -139,7 +139,7 @@ public class OBJ_Oven extends SuperObject {
     public void cook(Recipe recipe, String fuel) {
         if (!canCook(recipe) || !hasFuel() || gp.ovenCookingJob != null) return;
 
-        // kurangi bahan
+        
         for (Map.Entry<String, Integer> entry : recipe.getIngredients().entrySet()) {
             String name = entry.getKey();
             int qty = entry.getValue();
@@ -159,7 +159,7 @@ public class OBJ_Oven extends SuperObject {
             }
         }
 
-        // fuel
+        
         if (fuel.equals("Firewood")) {
             inventory.removeItem(inventory.findItemByName("Firewood"), 1);
         } else if (fuel.equals("Coal")) {
@@ -186,10 +186,10 @@ public class OBJ_Oven extends SuperObject {
             int currentTotalMinutes = currentHour * 60 + currentMinute;
 
             int elapsedMinutes = currentTotalMinutes - startTotalMinutes;
-            if (elapsedMinutes < 0) elapsedMinutes += 24 * 60; // handling lewat tengah malam
+            if (elapsedMinutes < 0) elapsedMinutes += 24 * 60; 
 
             if (elapsedMinutes >= gp.ovenCookingJob.durationInMinutes) {
-                // Masak selesai, beri makanan ke inventory
+                
                 for (food f : foodList) {
                     if (f.getName().equals(gp.ovenCookingJob.recipe.getName())) {
                         inventory.addItem(f, 1);
