@@ -1320,9 +1320,9 @@ public class UI {
         BufferedImage userImage = null;
 
         int frameWidth = gp.tileSize * 10;
-        int frameHeight = gp.tileSize * 9;
+        int frameHeight = gp.tileSize * 6;
         int frameX = (gp.screenWidth - frameWidth) / 2;
-        int frameY = (gp.screenHeight - frameHeight) / 2 + 40;
+        int frameY = 222;
 
         try {
             backgroundImage = ImageIO.read(new File("res/menu/menuScreen.png"));
@@ -1343,11 +1343,11 @@ public class UI {
         g2.setFont(pixelify50);
         String text = "WELCOME TO";
         int textX = getXforCenteredText(text);
-        int textY = gp.tileSize;
+        int textY = 2 * gp.tileSize;
         g2.drawString(text, textX, textY);
 
         if (userImage != null) {
-            g2.drawImage(userImage, textX - 2 * gp.tileSize, textY + 2 * gp.tileSize, 2 * gp.tileSize, 2 * gp.tileSize, null);
+            g2.drawImage(userImage, textX - 2 * gp.tileSize, textY + 3 * gp.tileSize - 35, 2 * gp.tileSize, 2 * gp.tileSize, null);
         }
 
         g2.setFont(pixelify80);
@@ -1357,7 +1357,7 @@ public class UI {
         g2.drawString(text2, textX, textY);
 
         g2.setFont(pixelify32);
-        textY += gp.tileSize + 10;
+        textY += gp.tileSize + 40;
         String text3 = "Name";
         textX = getXforCenteredText(text3) - gp.tileSize - 15;
         g2.drawString(text3, textX, textY);
@@ -1374,7 +1374,7 @@ public class UI {
         g2.drawString(text5, textX, textY);
 
         textX += 2 * gp.tileSize;
-        textY = 3 * gp.tileSize - 25;
+        textY = 4 * gp.tileSize + 10;
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
         int width = 250;
         int height = 50;
