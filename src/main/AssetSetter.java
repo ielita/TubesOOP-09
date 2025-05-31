@@ -78,7 +78,6 @@ public class AssetSetter {
             gp.obj[5] = new OBJ_Door(gp, "store", 6, 9);
             gp.obj[5].worldX = (int)(41.5 * gp.tileSize);
             gp.obj[5].worldY = (int)(7.3 * gp.tileSize);
-            gp.obj[4].worldY = 49 * gp.tileSize;
 
             List<OBJ_NPC> npcs = NPCData.getAllNPCs(gp);
             int temp = 14;
