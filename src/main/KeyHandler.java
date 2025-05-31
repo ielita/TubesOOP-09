@@ -534,6 +534,12 @@ public class KeyHandler implements KeyListener{
         if (code == KeyEvent.VK_3) {
             gp.timeM.setHour(gp.timeM.getHour() + 1);
         }
+        if (code == KeyEvent.VK_4) { // Press 5 to force plant growth update
+            gp.tileM.mapManager.updatePlantGrowth();
+        }
+        if (code == KeyEvent.VK_5) { // Press 6 to force crop harvest update
+            gp.tileM.mapManager.debugAllPlants();
+        }
 
         if (code == KeyEvent.VK_B) {
             try {

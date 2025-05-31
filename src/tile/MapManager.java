@@ -50,10 +50,20 @@ public class MapManager {
     private void initializeArrays() {
         mapTileNum = new int[maxWorldCol][maxWorldRow];
         if ("farm".equals(currentMap)) {
-            plantGrowth = new int[maxWorldCol][maxWorldRow];
-            wateredToday = new boolean[maxWorldCol][maxWorldRow];
-            plantedSeeds = new seed[maxWorldCol][maxWorldRow];
+    if (plantGrowth == null) {
+        plantGrowth = new int[maxWorldCol][maxWorldRow];
+        System.out.println("Initialized plantGrowth array: " + maxWorldCol + "x" + maxWorldRow);
+    }
+    
+    if (wateredToday == null) {
+        wateredToday = new boolean[maxWorldCol][maxWorldRow];
+        System.out.println("Initialized wateredToday array: " + maxWorldCol + "x" + maxWorldRow);
+    }
+    
+    if (plantedSeeds == null) {
+        plantedSeeds = new seed[maxWorldCol][maxWorldRow];
         }
+    }
     }
 
     private void loadMap(BufferedReader br) {
@@ -170,34 +180,42 @@ public class MapManager {
             }
         }
     }
-    public void updatePlantGrowth() {
-        if (!"farm".equals(currentMap) || plantGrowth == null) {
-            if (savedFarmGrowth != null) {
-                updateSavedFarmState();
-            }
-            return;
+public void updatePlantGrowth() {
+    if (!"farm".equals(currentMap) || plantGrowth == null) {
+        if (savedFarmGrowth != null) {
+            updateSavedFarmState();
         }
-        for (int col = 0; col < maxWorldCol; col++) {
-            for (int row = 0; row < maxWorldRow; row++) {
-                int currentTile = mapTileNum[col][row];
-                if (currentTile == 9) {
-                    mapTileNum[col][row] = 7;
-                } else if (currentTile == 10) {
-                    mapTileNum[col][row] = 8;
-                    if (savedFarmWatered[col][row] 
-                    && savedFarmGrowth[col][row] > 0 
-                    && savedFarmSeeds[col][row] != null 
-                    && savedFarmSeeds[col][row].getSeason().equalsIgnoreCase(gp.timeM.getSeason())) {
-                        plantGrowth[col][row]--;
-                        if (plantGrowth[col][row] <= 0) {
-                            mapTileNum[col][row] = 11;
-                        }
+        return;
+    }
+    
+    for (int col = 0; col < maxWorldCol; col++) {
+        for (int row = 0; row < maxWorldRow; row++) {
+            int currentTile = mapTileNum[col][row];
+            
+            // Reset watered tiles back to dry state
+            if (currentTile == 9) {
+                mapTileNum[col][row] = 7; // watered tilled -> dry tilled
+            } else if (currentTile == 10) {
+                mapTileNum[col][row] = 8; // watered planted -> dry planted
+                
+                // ✅ Fix: Use current arrays instead of saved arrays
+                if (wateredToday[col][row] 
+                    && plantGrowth[col][row] > 0 
+                    && plantedSeeds[col][row] != null 
+                    && plantedSeeds[col][row].getSeason().equalsIgnoreCase(gp.timeM.getSeason())) {
+                    
+                    plantGrowth[col][row]--; // ✅ Decrease growth time
+                    
+                    if (plantGrowth[col][row] <= 0) {
+                        mapTileNum[col][row] = 11; // Ready to harvest
                     }
                 }
-                wateredToday[col][row] = false;
             }
+        
+            wateredToday[col][row] = false;
         }
     }
+}
 
     private void updateSavedFarmState() {
         for (int col = 0; col < savedFarmTiles.length; col++) {
@@ -228,13 +246,27 @@ public class MapManager {
         }
     }
 
-    public void initializePlantTracking() {
-        if (!"farm".equals(currentMap)) return;
-        if (maxWorldCol > 0 && maxWorldRow > 0) {
-            plantedSeeds = new seed[maxWorldCol][maxWorldRow];
-            plantGrowth = new int[maxWorldCol][maxWorldRow];
-        }
+public void initializePlantTracking() {
+    if (!"farm".equals(currentMap)) {
+        return;
     }
+    
+    // ✅ Only initialize if arrays are null - don't reset existing data!
+    if (plantGrowth == null) {
+        plantGrowth = new int[maxWorldCol][maxWorldRow];
+        System.out.println("Initialized plantGrowth array: " + maxWorldCol + "x" + maxWorldRow);
+    }
+    
+    if (wateredToday == null) {
+        wateredToday = new boolean[maxWorldCol][maxWorldRow];
+        System.out.println("Initialized wateredToday array: " + maxWorldCol + "x" + maxWorldRow);
+    }
+    
+    if (plantedSeeds == null) {
+        plantedSeeds = new seed[maxWorldCol][maxWorldRow];
+        System.out.println("Initialized plantedSeeds array: " + maxWorldCol + "x" + maxWorldRow);
+    }
+}
 
     public boolean isValidPosition(int col, int row) {
         return col >= 0 && row >= 0 && col < maxWorldCol && row < maxWorldRow;
@@ -261,5 +293,28 @@ public class MapManager {
 
     public String getCurrentMap() {
         return currentMap;
+    }
+    
+    public void debugAllPlants() {
+        if (!"farm".equals(currentMap) || plantedSeeds == null) return;
+        
+        System.out.println("=== ALL PLANTED SEEDS DEBUG ===");
+        int totalPlants = 0;
+        
+        for (int col = 0; col < maxWorldCol; col++) {
+            for (int row = 0; row < maxWorldRow; row++) {
+                if (plantedSeeds[col][row] != null) {
+                    totalPlants++;
+                    System.out.println("Plant " + totalPlants + " at (" + col + "," + row + "): " + 
+                                     plantedSeeds[col][row].getName() + 
+                                     " | Growth time: " + plantGrowth[col][row] + 
+                                     " | Watered today: " + wateredToday[col][row] + 
+                                     " | Tile: " + mapTileNum[col][row] + 
+                                     " | Season: " + plantedSeeds[col][row].getSeason());
+                }
+            }
+        }
+        System.out.println("Total plants found: " + totalPlants);
+        System.out.println("Current season: " + gp.timeM.getSeason());
     }
 }

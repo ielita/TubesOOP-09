@@ -26,10 +26,12 @@ public class Player extends Entity {
     private boolean hasHarvested;
     public InventoryManager inventoryManager;
     public List<Recipe> recipesUnlocked = RecipeData.getAllRecipes(gp);
+    public boolean wentOut;
 
     public Player(GamePanel gp, KeyHandler keyH){
         super(gp);
         this.keyH = keyH;
+        wentOut = false;
         
         screenX = gp.screenWidth/2 - (gp.tileSize/2);
         screenY = gp.screenHeight/2 - (gp.tileSize/2);
@@ -439,7 +441,7 @@ public class Player extends Entity {
         if (object.OBJ_ShippingBin.goldEarned > 0) {
             int goldFromShipping = object.OBJ_ShippingBin.goldEarned;
             addGold(goldFromShipping);
-            object.OBJ_ShippingBin.goldEarned = 0; // Reset for next day
+            object.OBJ_ShippingBin.goldEarned = 0; 
         }
         
         if (getEnergy() > 10) {
@@ -455,8 +457,6 @@ public class Player extends Entity {
     }
 
     private void forceCollapse() {
-
-        // Process shipping bin gold even when collapsing
         if (object.OBJ_ShippingBin.goldEarned > 0) {
             int goldFromShipping = object.OBJ_ShippingBin.goldEarned;
             addGold(goldFromShipping);

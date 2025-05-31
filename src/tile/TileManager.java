@@ -14,7 +14,7 @@ public class TileManager {
 
     public TileManager(GamePanel gp) {
         this.gp = gp;
-        tile = new Tile[50];
+        tile = new Tile[100];
         mapManager = new MapManager(gp);
         getTileImage();
     }
@@ -26,8 +26,7 @@ public class TileManager {
         setup(0, "grass", false);
         setup(1, "land", false);
         setup(2, "tree", true);
-        setup(3, "tree2", true);
-        setup(4, "wall", true);
+        setup(4, "grassrock", true);
         setup(5, "wall2", true);
         setup(6, "water", true);
         setup(7, "tilted", false);
@@ -50,6 +49,8 @@ public class TileManager {
         setup(24, "shippingbin4", true);
         setup(25, "shippingbin5", true);
         setup(26, "shippingbin6", true);
+
+
         setup(31, "house1", true);
         setup(32, "house2", true);
         setup(33, "house3", true);
@@ -86,6 +87,10 @@ public class TileManager {
         setup(64, "house34", true);
         setup(65, "house35", true);
         setup(66, "house36", true);
+        setup(67, "wooddoorup", true);
+        setup(68, "sand", false);
+        setup(69, "sandrock", true);
+        setup(70, "grassrock", true);
         
 }
 
@@ -124,4 +129,4 @@ public class TileManager {
             }
         }
     }
-
+}
