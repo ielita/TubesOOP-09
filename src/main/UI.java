@@ -1611,7 +1611,7 @@ public class UI {
         
     private void drawTopRightInfoPanel() {
         int panelWidth = 280;
-        int panelHeight = 160;
+        int panelHeight = 210;
         int panelX = gp.screenWidth - panelWidth - 40;
         int panelY = 20;
 
@@ -1683,7 +1683,7 @@ public class UI {
         String currentMap = gp.tileM.mapManager.getCurrentMap();
         if (currentMap != null && !currentMap.isEmpty()) {
             String displayName = getFormattedLocationName(currentMap);
-            String mapText = "📍 " + displayName;
+            String mapText = displayName;
             int mapX = panelX + (panelWidth - g2.getFontMetrics().stringWidth(mapText)) / 2;
 
             int locBgWidth = g2.getFontMetrics().stringWidth(mapText) + 16;
@@ -1696,6 +1696,42 @@ public class UI {
             g2.setColor(Color.WHITE);
             g2.drawString(mapText, mapX, locBgY + 18);
         }
+
+    int energySectionY = goldSectionY + goldSectionHeight + 60;
+    int energySectionHeight = 30;
+    int energyBarWidth = panelWidth - 40;
+    int energyBarHeight = 20;
+    
+    g2.setColor(new Color(60, 60, 60, 200));
+    g2.fillRoundRect(panelX + 20, energySectionY, energyBarWidth, energyBarHeight, 10, 10);
+    
+    int currentEnergy = gp.player.getEnergy();
+    int maxEnergy = 100;
+    float energyPercent = Math.max(0, (float)currentEnergy / maxEnergy);
+    int energyFillWidth = (int)(energyBarWidth * energyPercent);
+    
+    Color energyColor;
+    if (currentEnergy > 60) {
+        energyColor = new Color(76, 175, 80, 220); // Green
+    } else if (currentEnergy > 20) {
+        energyColor = new Color(255, 193, 7, 220); // Yellow
+    } else {
+        energyColor = new Color(244, 67, 54, 220); // Red
+    }
+    
+    g2.setColor(energyColor);
+    g2.fillRoundRect(panelX + 20, energySectionY, energyFillWidth, energyBarHeight, 10, 10);
+    
+    g2.setColor(new Color(255, 255, 255, 150));
+    g2.setStroke(new BasicStroke(2));
+    g2.drawRoundRect(panelX + 20, energySectionY, energyBarWidth, energyBarHeight, 10, 10);
+    
+    g2.setFont(pixelify18);
+    g2.setColor(Color.WHITE);
+    String energyText = "Energy: " + currentEnergy + "/" + maxEnergy;
+    int energyTextX = panelX + (panelWidth - g2.getFontMetrics().stringWidth(energyText)) / 2;
+    g2.drawString(energyText, energyTextX, energySectionY - 5);
+
     }
 
     private String getFormattedLocationName(String currentMap) {

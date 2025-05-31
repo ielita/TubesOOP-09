@@ -16,7 +16,7 @@ public class equipment extends Item {
         GamePanel gp = player.getGp();
 
         if (getName().equals("Hoe")) {
-            if (!"farm".equals(gp.tileM.mapManager.getCurrentMap())) return;
+            if (!"farm".equals(gp.tileM.mapManager.selectedFarmMap)) return;
 
             gp.timeM.setMinute(gp.timeM.getMinute() + 5);
             player.setEnergy(player.getEnergy() - 5);
@@ -47,7 +47,7 @@ public class equipment extends Item {
         }
 
         if (getName().equals("Watering Can")) {
-            if (!"farm".equals(gp.tileM.mapManager.getCurrentMap())) return;
+            if (!"farm".equals(gp.tileM.mapManager.selectedFarmMap)) return;
 
             int currentTile = player.getFacingTile();
             int[] coords = player.getFacingTileCoordinates();
@@ -71,7 +71,7 @@ public class equipment extends Item {
         }
 
         if (getName().equals("Sickle")) {
-            if (!"farm".equals(gp.tileM.mapManager.getCurrentMap())) return;
+            if (!"farm".equals(gp.tileM.mapManager.selectedFarmMap)) return;
 
             int[] coordinates = player.getFacingTileCoordinates();
             int col = coordinates[0];
@@ -105,7 +105,7 @@ public class equipment extends Item {
         }
 
         if (getName().equals("Pickaxe")) {
-            if (!"farm".equals(gp.tileM.mapManager.getCurrentMap())) return;
+            if (!"farm".equals(gp.tileM.mapManager.selectedFarmMap)) return;
 
             int currentTile = player.getFacingTile();
             int[] coords = player.getFacingTileCoordinates();
