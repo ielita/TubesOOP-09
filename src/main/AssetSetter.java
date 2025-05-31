@@ -23,7 +23,6 @@ public class AssetSetter {
             gp.obj[0].worldY = 1 * gp.tileSize;
             ((OBJ_Oven)gp.obj[0]).setCoalUseCount(gp.player.getCoalUseCount());
 
-            
             if (selectedFarm.equals("farm")) {
                 gp.obj[1] = new OBJ_Door(gp, "farm", 4, 8);
             } else if (selectedFarm.equals("farm1")) {
@@ -31,9 +30,7 @@ public class AssetSetter {
             } else if (selectedFarm.equals("farm2")) {
                 gp.obj[1] = new OBJ_Door(gp, "farm2", 26, 8);
             } else if (selectedFarm.equals("farm3")) {
-                gp.obj[1] = new OBJ_Door(gp, "farm3", 26, 20);
-            } else if (selectedFarm.equals("farm4")) {
-                gp.obj[1] = new OBJ_Door(gp, "farm4", 5, 18);
+                gp.obj[1] = new OBJ_Door(gp, "farm3", 5,18);
             } 
             gp.obj[1].worldX = 12 * gp.tileSize;
             gp.obj[1].worldY = 23 * gp.tileSize;
@@ -121,7 +118,7 @@ public class AssetSetter {
         // Get the actual selected farm map name - FIXED THIS LINE
         String selectedFarm = gp.tileM.mapManager.getSelectedFarmMap();
 
-        gp.obj[0] = new OBJ_Door(gp, "insideHouse", 12, 22);
+        gp.obj[0] = new OBJ_Door(gp, "insideHouse", 12, 20);
 
         gp.obj[1] = new OBJ_DoorOpen(gp, "town", 3, 21);
         gp.obj[2] = new OBJ_DoorOpen(gp, "town", 3, 22);
@@ -147,11 +144,6 @@ public class AssetSetter {
                 break;
 
             case "farm3": 
-                setHouseDoorPosition(26, 18);
-                setShippingBinPosition(21, 18); 
-                break;
-
-            case "farm4": 
                 setHouseDoorPosition(4, 16);
                 setShippingBinPosition(10, 14);
                 break;

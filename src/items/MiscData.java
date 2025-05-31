@@ -11,7 +11,7 @@ public class MiscData {
         List<misc> list = new ArrayList<>();
         list.add(new misc("Coal", gp,  10, 5));
         list.add(new misc("Firewood", gp, 15, 8));
-        list.add(new misc("Proposal Ring", gp, 400, 50));
+        list.add(new misc("Proposal Ring", gp, 500, 0));
         return list;
     }
 

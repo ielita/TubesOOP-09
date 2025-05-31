@@ -38,7 +38,7 @@ public class MapManager {
     }
 
     private void selectRandomFarmMap() {
-        String[] farmMaps = {"farm","farm1","farm2","farm3","farm4"};
+        String[] farmMaps = {"farm","farm1","farm2","farm3"};
         Random random = new Random();
         selectedFarmMap = farmMaps[random.nextInt(farmMaps.length)];
         System.out.println("Selected farm map: " + selectedFarmMap);
