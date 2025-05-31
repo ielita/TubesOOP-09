@@ -92,8 +92,6 @@ public class Player extends Entity {
         equipment FishingRod = new equipment("Fishing Rod", gp);
         addItemToInventory(FishingRod, 1);
 
-        misc tes = new misc("Legend", gp, 0, 0);
-        addItemToInventory(tes, 100);
         
         fishCaught = new InventoryManager();
 
@@ -102,21 +100,7 @@ public class Player extends Entity {
             addItemToInventory(parsnipSeed, 10); 
         }
         
-        seed potatoSeed = SeedData.getSeedByName(gp, "Potato Seeds");
-        if (potatoSeed != null) {
-            addItemToInventory(potatoSeed, 5); 
-        }
 
-        seed wheatSeed = SeedData.getSeedByName(gp, "Wheat Seeds");
-        if (wheatSeed != null) {
-            addItemToInventory(wheatSeed, 3); 
-        }
-        misc firewood = new misc("Firewood", gp,10,5);
-        addItemToInventory(firewood, 10); 
-        misc coal = new misc("Coal", gp, 15, 8);
-        addItemToInventory(coal, 5); 
-        crop grape = new crop( "Grape", gp,100, 10, 20);
-        addItemToInventory(grape, 5);
     }
 
     public int getGold() {
@@ -206,9 +190,10 @@ public class Player extends Entity {
     }
 
     public void plantSeed() {
-        if (!"farm".equals(gp.tileM.mapManager.selectedFarmMap)) {
-            return;
-        }
+            if (!"farm".equals(gp.tileM.mapManager.selectedFarmMap) 
+            && !"farm1".equals(gp.tileM.mapManager.selectedFarmMap)
+            && !"farm2".equals(gp.tileM.mapManager.selectedFarmMap)
+            && !"farm3".equals(gp.tileM.mapManager.selectedFarmMap)) return;
         
         Item onhand = getOnhandItem();
         if (onhand instanceof seed) {
