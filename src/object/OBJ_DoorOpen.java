@@ -50,9 +50,13 @@ public class OBJ_DoorOpen extends SuperObject {
         if (!hasTriggered && isPlayerInRange(gp,64)) {
             
             message = "Going to " + destinationMap + "...";
-            if (!gp.tileM.mapManager.getCurrentMap().equals("insideHouse")){
+            if (!(this.destinationMap.equals("insideHouse")) && !(this.destinationMap.equals("farm")) && gp.player.wentOut == false) {
                 gp.player.setEnergy(gp.player.getEnergy()-10);
                 gp.timeM.setMinute(gp.timeM.getMinute() + 15);
+                gp.player.wentOut = true;
+            }
+            if (this.destinationMap.equals("farm")) {
+                gp.player.wentOut = false;
             }
             gp.tileM.mapManager.changeMap(destinationMap, destinationX, destinationY);
             hasTriggered = true;

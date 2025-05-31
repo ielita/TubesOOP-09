@@ -23,7 +23,7 @@ public class OBJ_Door extends SuperObject {
         name = "Door";
 
         try {
-            image = ImageIO.read(new File("res/objects/Door1.png"));
+            image = ImageIO.read(new File(""));
             uTool.scaleImage(image, gp.tileSize, gp.tileSize);
         }
         catch (IOException e) {
@@ -38,10 +38,6 @@ public class OBJ_Door extends SuperObject {
     protected void onInteract() {
         if (collision) {
             message = "Going to " + destinationMap + "...";
-            if (!gp.tileM.mapManager.getCurrentMap().equals("insideHouse")){
-                gp.player.setEnergy(gp.player.getEnergy()-10);
-                gp.timeM.setMinute(gp.timeM.getMinute() + 15);
-            }
             gp.tileM.mapManager.changeMap(destinationMap, destinationX, destinationY);
             collision = false;
         }

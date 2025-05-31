@@ -14,7 +14,7 @@ public class TileManager {
 
     public TileManager(GamePanel gp) {
         this.gp = gp;
-        tile = new Tile[50];
+        tile = new Tile[100];
         mapManager = new MapManager(gp);
         getTileImage();
     }
@@ -26,8 +26,7 @@ public class TileManager {
         setup(0, "grass", false);
         setup(1, "land", false);
         setup(2, "tree", true);
-        setup(3, "tree2", true);
-        setup(4, "wall", true);
+        setup(4, "grassrock", true);
         setup(5, "wall2", true);
         setup(6, "water", true);
         setup(7, "tilted", false);
@@ -50,7 +49,50 @@ public class TileManager {
         setup(24, "shippingbin4", true);
         setup(25, "shippingbin5", true);
         setup(26, "shippingbin6", true);
-    }
+
+
+        setup(31, "house1", true);
+        setup(32, "house2", true);
+        setup(33, "house3", true);
+        setup(34, "house4", true);
+        setup(35, "house5", true);
+        setup(36, "house6", true);
+        setup(37, "house7", true);
+        setup(38, "house8", true);
+        setup(39, "house9", true);
+        setup(40, "house10", true);
+        setup(41, "house11", true);
+        setup(42, "house12", true);
+        setup(43, "house13", true);
+        setup(44, "house14", true);
+        setup(45, "house15", true);
+        setup(46, "house16", true);
+        setup(47, "house17", true);
+        setup(48, "house18", true);
+        setup(49, "house19", true);
+        setup(50, "house20", true);
+        setup(51, "house21", true);
+        setup(52, "house22", true);
+        setup(53, "house23", true);
+        setup(54, "house24", true);
+        setup(55, "house25", true);
+        setup(56, "house26", true);
+        setup(57, "house27", true);
+        setup(58, "house28", true);
+        setup(59, "house29", true);
+        setup(60, "house30", true);
+        setup(61, "house31", true);
+        setup(62, "house32", true);
+        setup(63, "house33", true);
+        setup(64, "house34", true);
+        setup(65, "house35", true);
+        setup(66, "house36", true);
+        setup(67, "wooddoorup", true);
+        setup(68, "sand", false);
+        setup(69, "sandrock", true);
+        setup(70, "grassrock", true);
+        
+}
 
     public void setup(int index, String imagePath, boolean collision) {
         UtilityTool uTool = new UtilityTool();
