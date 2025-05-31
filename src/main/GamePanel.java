@@ -72,6 +72,11 @@ public class GamePanel extends JPanel implements Runnable {
     public final int cookingState = 12;
     public final int storeState = 13;
     public final int setupGameInfoState = 14;
+    public final int npcInteractionState = 15;
+    public final int npcChattingState = 16;
+    public final int npcGivingGiftState = 17;
+    public final int npcMarryState = 18;
+    public final int npcProposalState = 19;     
 
     public GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));

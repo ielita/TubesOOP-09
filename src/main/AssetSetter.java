@@ -73,6 +73,15 @@ public class AssetSetter {
             gp.obj[4] = new OBJ_DoorOpen(gp, "ocean", 7, 3);
             gp.obj[4].worldX = 24 * gp.tileSize;
             gp.obj[4].worldY = 49 * gp.tileSize;
+
+            List<OBJ_NPC> npcs = NPCData.getAllNPCs(gp);
+            int temp = 14;
+            for (int i = 5 ; i < npcs.size() + 5; i++) {
+                gp.obj[i] = npcs.get(i);
+                gp.obj[i].worldX =  temp * gp.tileSize;
+                gp.obj[i].worldY = 28 * gp.tileSize;
+                temp +=3;
+            }
         }
 
         else if (mapName.equals("mountainlake")) {

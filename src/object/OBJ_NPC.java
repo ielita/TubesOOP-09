@@ -1,6 +1,12 @@
 package object;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
+
+import javax.imageio.ImageIO;
+
+import main.GamePanel;
 
 public class OBJ_NPC extends SuperObject {
 
@@ -11,13 +17,22 @@ public class OBJ_NPC extends SuperObject {
     private List<String> hatedItems;
     private String relationshipStatus = "single";
     private String location;
+    public GamePanel gp;
 
-    public OBJ_NPC(String name, String location, List<String> lovedItems, List<String> likedItems, List<String> hatedItems) {
+    public OBJ_NPC(String name, String location, List<String> lovedItems, List<String> likedItems, List<String> hatedItems, GamePanel gp) {
+        this.gp = gp;
         this.name = name;
         this.location = location;
         this.lovedItems = lovedItems;
         this.likedItems = likedItems;
         this.hatedItems = hatedItems;
+        String imagePath = "res/npc/" + name.toLowerCase() + ".png";
+        try {
+            image = ImageIO.read(new File(imagePath));
+            uTool.scaleImage(image, gp.tileSize, gp.tileSize);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public int getHeartPoints() {
@@ -59,23 +74,19 @@ public class OBJ_NPC extends SuperObject {
     @Override
     protected void onInteract() {
         if (collision) {
-            
+
         }
     }
 
-    public String evaluateGift(String itemName) {
+    public void evaluateGift(String itemName) {
         if (lovedItems.contains(itemName)) {
             increaseHeartPoints(20);
-            return name + " loves this gift! (+20 heart points)";
         } else if (likedItems.contains(itemName)) {
             increaseHeartPoints(10);
-            return name + " likes this gift. (+10 heart points)";
         } else if (hatedItems.contains(itemName)) {
             increaseHeartPoints(-10);
-            return name + " hates this gift... (-10 heart points)";
         } else {
             increaseHeartPoints(0);
-            return name + " feels neutral about this.";
         }
     }
 }
