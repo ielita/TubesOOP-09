@@ -19,7 +19,7 @@ public class FishData {
         ));
         list.add(new fish(
             "Carp",
-            List.of("mountainlake", "farm"),
+            List.of("mountainlake", "farm", "farm1" , "farm2", "farm3"),
             List.of("Any"),
             List.of("Any"),
             List.of("Any"),
@@ -66,7 +66,7 @@ public class FishData {
         ));
         list.add(new fish(
             "Midnight Carp",
-            List.of("mountainlake", "farm"),
+            List.of("mountainlake", "farm", "farm1" , "farm2", "farm3"),
             List.of("Winter", "Fall"),
             List.of("20.00–02.00"),
             List.of("Any"),
@@ -129,10 +129,10 @@ public class FishData {
         ));
         list.add(new fish(
             "Catfish",
-            List.of("forestriver", "farm"),
+            List.of("forestriver", "farm", "farm1" , "farm2", "farm3"),
             List.of("Spring", "Summer", "Fall"),
             List.of("06.00–22.00"),
-            List.of("Rainy"),
+            List.of("Sunny"),
             "Regular",
             gp
         ));
@@ -149,7 +149,7 @@ public class FishData {
         
         list.add(new fish(
             "Angler",
-            List.of("farm"),
+            List.of("farm", "farm1" , "farm2", "farm3"),
             List.of("Fall"),
             List.of("08.00–20.00"),
             List.of("Any"),

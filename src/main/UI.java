@@ -1903,26 +1903,30 @@ public class UI {
         g2.setColor(new Color(0, 0, 0));
         g2.drawRect(xis, textY, width, height);
     }
-        
+            
     public void drawEndGameStats() {
         int frameWidth = gp.tileSize * 10;   
         int frameHeight = gp.tileSize * 9;
         int frameX = (gp.screenWidth - frameWidth) / 2;
-        int frameY = (gp.screenHeight - frameHeight) / 2;
+        int frameY = (gp.screenHeight - frameHeight) / 2 + 10; // Turunin frame dikit
 
         drawSubWindow(frameX, frameY, frameWidth, frameHeight);
 
         int x = frameX + 24;
-        int y = frameY + 38;
+        int y = frameY + 48; // Awalnya 38, dinaikkan 10
         int line = 26;       
 
-        g2.setFont(pixelify26);
+        g2.setFont(pixelify32); // Perbesar judul
         g2.setColor(Color.WHITE);
-        g2.drawString("END GAME STATISTICS", x, y);
-        y += line + 8;
+
+        // Tengahkan tulisan
+        String title = "END GAME STATISTICS";
+        int titleWidth = g2.getFontMetrics().stringWidth(title);
+        int centerX = frameX + (frameWidth - titleWidth) / 2;
+        g2.drawString(title, centerX, y);
+        y += line + 12;
 
         g2.setFont(pixelify16);
-
         g2.drawString("Total Income: " + gp.player.getTotalIncome() + "g", x, y); y += line;
         g2.drawString("Total Expenditure: " + gp.player.getTotalExpenditure() + "g", x, y); y += line;
         g2.drawString("Avg Season Income: " + gp.player.getAverageSeasonIncome() + "g", x, y); y += line;
@@ -1957,7 +1961,7 @@ public class UI {
                 }
             }
         }
-        
+
         g2.setFont(pixelify16);
         g2.drawString("Crops Harvested: " + gp.player.getTotalHarvest(), x, y); y += line;
         g2.drawString("Fish Caught: " + gp.player.getTotalFishCaught(), x, y); y += line;
