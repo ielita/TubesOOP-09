@@ -272,6 +272,23 @@ public class KeyHandler implements KeyListener{
             }
         }
 
+        if (gp.gameState == gp.npcInteractionState) {
+            int maxOption = 4; // 5 opsi: 0-4
+            if (code == KeyEvent.VK_W || code == KeyEvent.VK_UP) {
+                menuOption = (menuOption - 1 + (maxOption + 1)) % (maxOption + 1);
+            }
+            if (code == KeyEvent.VK_S || code == KeyEvent.VK_DOWN) {
+                menuOption = (menuOption + 1) % (maxOption + 1);
+            }
+            if (code == KeyEvent.VK_ENTER) {
+               
+            }
+            if (code == KeyEvent.VK_ESCAPE) {
+                gp.gameState = gp.playState; 
+            }
+            return;
+        }
+
 
         if (gp.gameState == gp.inventoryState) {
             int invSize = gp.player.getInventory().size();

@@ -26,7 +26,7 @@ public class OBJ_NPC extends SuperObject {
         this.lovedItems = lovedItems;
         this.likedItems = likedItems;
         this.hatedItems = hatedItems;
-        String imagePath = "res/npc/" + name.toLowerCase() + ".png";
+        String imagePath = "res/npc/ninja.png";
         try {
             image = ImageIO.read(new File(imagePath));
             uTool.scaleImage(image, gp.tileSize, gp.tileSize);
@@ -74,9 +74,10 @@ public class OBJ_NPC extends SuperObject {
     @Override
     protected void onInteract() {
         if (collision) {
-
+            gp.keyH.menuOption = 0;
+            gp.gameState = gp.npcInteractionState;
         }
-    }
+}
 
     public void evaluateGift(String itemName) {
         if (lovedItems.contains(itemName)) {

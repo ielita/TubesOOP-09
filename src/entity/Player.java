@@ -264,7 +264,6 @@ public class Player extends Entity {
 
             collisionOn = false;
             gp.cChecker.checkTile(this);
-            gp.cChecker.checkEntity(this, gp.npc);
 
             int objIndex = gp.cChecker.checkObject(this, true);
 

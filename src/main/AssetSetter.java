@@ -81,11 +81,11 @@ public class AssetSetter {
 
             List<OBJ_NPC> npcs = NPCData.getAllNPCs(gp);
             int temp = 14;
-            for (int i = 5 ; i < npcs.size() + 5; i++) {
-                gp.obj[i] = npcs.get(i);
-                gp.obj[i].worldX =  temp * gp.tileSize;
-                gp.obj[i].worldY = 28 * gp.tileSize;
-                temp +=3;
+            for (int i = 0; i < npcs.size(); i++) {
+                gp.obj[i + 6] = npcs.get(i);
+                gp.obj[i + 6].worldX = temp * gp.tileSize;
+                gp.obj[i + 6].worldY = 25 * gp.tileSize;
+                temp += 3;
             }
         }
 

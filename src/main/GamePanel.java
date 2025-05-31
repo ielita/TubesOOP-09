@@ -45,8 +45,7 @@ public class GamePanel extends JPanel implements Runnable {
     public Player player = new Player(this, keyH);
     public TimeManager timeM = new TimeManager(this);
 
-    public SuperObject obj[] = new SuperObject[10];
-    public Entity npc[] = new Entity[10];
+    public SuperObject obj[] = new SuperObject[20];
     public Store store;
     public FishingMiniGame fishingMiniGame = new minigame.FishingMiniGame();
     public OBJ_Oven.CookingJob ovenCookingJob = null;
@@ -182,11 +181,6 @@ public class GamePanel extends JPanel implements Runnable {
         for (int i = 0; i < obj.length; i++) {
             if (obj[i] != null) {
                 obj[i].draw(g2, this);
-            }
-        }
-        for (int i = 0; i < npc.length; i++) {
-            if (npc[i] != null) {
-                npc[i].draw(g2);
             }
         }
         player.draw(g2);

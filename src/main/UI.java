@@ -115,6 +115,10 @@ public class UI {
             drawInventory();
         }
 
+        if (gp.gameState == gp.npcInteractionState) {
+            drawInteractionMenu();
+        }
+
         if(gp.gameState == gp.fishingMiniGameState) {
             drawFishingMiniGame();
         }
@@ -553,6 +557,87 @@ public class UI {
         }
     }
 
+    public void drawInteractionMenu() {
+        BufferedImage icon = null;
+        BufferedImage talk_selected = null, talk_def = null;
+        BufferedImage gift_selected = null, gift_def = null;
+        BufferedImage info_selected = null, info_def = null;
+        BufferedImage marry_selected = null, marry_def = null;
+        BufferedImage proposal_selected = null, proposal_def = null;
+
+        object.OBJ_NPC npc = null;
+        for (int i = 0; i < gp.obj.length; i++) {
+            if (gp.obj[i] instanceof object.OBJ_NPC && gp.obj[i] != null) {
+                // Cek proximity, misal Manhattan distance <= 1
+                int dx = Math.abs(gp.player.worldX - gp.obj[i].worldX) / gp.tileSize;
+                int dy = Math.abs(gp.player.worldY - gp.obj[i].worldY) / gp.tileSize;
+                if (dx + dy <= 1) {
+                    npc = (object.OBJ_NPC) gp.obj[i];
+                    break;
+                }
+            }
+        }
+        if (npc == null) return; 
+
+        String name = npc.name;
+
+        try {
+            // Load dynamic NPC icon
+            icon = ImageIO.read(new File("res/ui/" + name.toLowerCase() + "_icon.png"));
+
+            // Load all option images
+            talk_selected = ImageIO.read(new File("res/ui/talk_selected.png"));
+            talk_def = ImageIO.read(new File("res/ui/talk_def.png"));
+            gift_selected = ImageIO.read(new File("res/ui/gift_selected.png"));
+            gift_def = ImageIO.read(new File("res/ui/gift_def.png"));
+            info_selected = ImageIO.read(new File("res/ui/info_selected.png"));
+            info_def = ImageIO.read(new File("res/ui/info_def.png"));
+            marry_selected = ImageIO.read(new File("res/ui/marry_selected.png"));
+            marry_def = ImageIO.read(new File("res/ui/marry_def.png"));
+            proposal_selected = ImageIO.read(new File("res/ui/proposal_selected.png"));
+            proposal_def = ImageIO.read(new File("res/ui/proposal_def.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        int margin = 50;
+        int gap = 5;
+
+        if (icon != null && talk_selected != null) {
+            int maxWidth = talk_selected.getWidth(); // Assume all icons same width
+            int itemHeight = talk_selected.getHeight();
+            int totalHeight = itemHeight * 5 + gap * 4;
+
+            int x = gp.screenWidth - maxWidth - margin;
+            int y = (gp.screenHeight - totalHeight) / 2;
+
+            // Draw NPC icon on the left
+            int leftImageX = x - icon.getWidth() - gap;
+            int leftImageY = y + (totalHeight - icon.getHeight()) / 2;
+            g2.drawImage(icon, leftImageX, leftImageY, null);
+
+            // Choose image for each menu option
+            BufferedImage[] options = {
+                gp.keyH.menuOption == 0 ? talk_selected : talk_def,
+                gp.keyH.menuOption == 1 ? gift_selected : gift_def,
+                gp.keyH.menuOption == 2 ? info_selected : info_def,
+                gp.keyH.menuOption == 3 ? marry_selected : marry_def,
+                gp.keyH.menuOption == 4 ? proposal_selected : proposal_def
+            };
+
+            // Draw menu options
+            for (BufferedImage img : options) {
+                g2.drawImage(img, x, y, null);
+                y += itemHeight + gap;
+            }
+
+            // Debug info (optional)
+            g2.setFont(pixelify18);
+            g2.setColor(Color.RED);
+            g2.drawString("menuOption: " + gp.keyH.menuOption, 20, 30);
+        }
+    }
+
     public void drawInventory() {
         int cols = 8;
         int rows = 4;
@@ -707,11 +792,6 @@ public class UI {
         int marginY = 18;
         int x = gp.getWidth() - popupWidth - marginX;
         int y = gp.getHeight() - popupHeight - marginY;
-
-        
-        g2.setColor(new Color(139, 69, 19, 240)); 
-        g2.fillRoundRect(x + 4, y + 4, popupWidth, popupHeight, 18, 18);
-
         
         g2.setColor(new Color(139, 69, 19, 240)); 
         g2.fillRoundRect(x, y, popupWidth, popupHeight, 18, 18);
@@ -753,15 +833,11 @@ public class UI {
         int boxY = (gp.screenHeight - boxHeight) / 2 ;
 
         
-        g2.setColor(new Color(0, 0, 0, 120));
-        g2.fillRoundRect(boxX + 6, boxY + 6, boxWidth, boxHeight, 36, 36);
-
-        
-        g2.setColor(new Color(40, 70, 40, 230));
+        g2.setColor(new Color(139, 69, 19, 240)); 
         g2.fillRoundRect(boxX, boxY, boxWidth, boxHeight, 36, 36);
 
         
-        g2.setColor(Color.WHITE);
+        g2.setColor(new Color(205, 133, 63, 255));
         g2.setStroke(new java.awt.BasicStroke(4));
         g2.drawRoundRect(boxX, boxY, boxWidth, boxHeight, 36, 36);
 
