@@ -26,6 +26,7 @@ public class Player extends Entity {
     private boolean hasHarvested;
     public InventoryManager inventoryManager;
     public List<Recipe> recipesUnlocked = RecipeData.getAllRecipes(gp);
+    public boolean relationshipStatus;
 
     public Player(GamePanel gp, KeyHandler keyH){
         super(gp);
@@ -61,6 +62,7 @@ public class Player extends Entity {
         totalFishCaught = 0; 
         gold = 500; 
         hasHarvested = false;
+        relationshipStatus = false; 
     }
 
     // Add this method to Player class
