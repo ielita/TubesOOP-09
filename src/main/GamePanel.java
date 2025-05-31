@@ -38,8 +38,7 @@ public class GamePanel extends JPanel implements Runnable {
     public KeyHandler keyH = new KeyHandler(this);
     public UI ui = new UI(this);
     Thread gameThread;
-    Sound music = new Sound();
-    Sound soundEffect = new Sound();
+    Sound music = Sound.getInstance();
     public CollisionChecker cChecker = new CollisionChecker(this);
     public AssetSetter aSetter = new AssetSetter(this);
     public Player player = new Player(this, keyH);
@@ -176,7 +175,7 @@ public class GamePanel extends JPanel implements Runnable {
                 gameState = endGameStatsState;
                 endGameStatsShown = true;
             }
-            
+
         }
         if (gameState == sleepState) {
             ui.updateSleepAnimation();
@@ -211,10 +210,5 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void stopMusic() {
         music.stop();
-    }
-
-    public void playSE(int i) {
-        soundEffect.setFile(i);
-        soundEffect.play();
     }
 }
