@@ -52,7 +52,7 @@ public class Entity{
         }
     }
     
-    public BufferedImage  setup(String imagePath){
+    public BufferedImage setup(String imagePath){
 
         UtilityTool uTool = new UtilityTool();
         BufferedImage image = null;
